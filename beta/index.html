@@ -206,6 +206,48 @@ select,.inp{padding:7px 9px;border:1px solid var(--line-strong);border-radius:7p
 }
 .btn.icon{padding:7px 9px}
 
+/* ---------- MC script: rundown "Script" view + live prompter ---------- */
+.rd-mode{display:inline-flex;border:1px solid var(--line-strong);border-radius:7px;overflow:hidden}
+.rd-mode button{border:0;background:var(--surface);color:var(--muted);padding:8px 12px;font:500 13px/1 var(--f-body);cursor:pointer}
+.rd-mode button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.script-wrap{border:1px solid var(--line);border-radius:10px;background:var(--surface);box-shadow:var(--shadow);margin-bottom:40px}
+.script-head{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}
+.script{padding:16px 20px 24px;max-width:900px;font-size:15px;line-height:1.75}
+.script p,.prompter p{margin:0 0 10px;overflow-wrap:anywhere}
+.sc-red{font-weight:700;color:color-mix(in srgb,var(--tally) 75%,var(--ink))}
+.sc-note{font-size:12.5px;font-style:italic;color:var(--muted);background:var(--surface-2);padding:1px 6px;border-radius:4px}
+.chip{display:inline-flex;align-items:center;gap:5px;vertical-align:baseline;font:600 12px/1.1 var(--f-mono);padding:4px 9px 4px 7px;margin:0 3px;border-radius:999px;border:1px solid color-mix(in srgb,var(--c,#64748b) 60%,var(--line));background:color-mix(in srgb,var(--c,#64748b) 14%,var(--surface));color:var(--ink);white-space:nowrap}
+button.chip{cursor:pointer}
+.chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c,#64748b)}
+.chip.sel{outline:2px solid var(--accent);outline-offset:1px}
+.chip.gone{opacity:.45}
+.chip .tm{font-weight:500;opacity:.8}
+.sc-checks{font-size:13px;background:var(--surface-2);border-radius:8px;padding:8px 12px}
+.sc-checks ul{margin:6px 0 0;padding-left:18px;max-height:140px;overflow:auto}
+.sc-empty{padding:24px 20px;display:grid;gap:10px;max-width:640px}
+.sc-empty p{margin:0;color:var(--muted)}
+.prompter{position:relative;max-height:38vh;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 20px;font-size:18px;line-height:1.7}
+.prompter .past{color:var(--muted);opacity:.5}
+.prompter .later{color:var(--muted)}
+.prompter .zone{color:var(--ink);background:color-mix(in srgb,var(--accent) 14%,transparent);border-radius:3px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.prompter .chip.done{opacity:.4}
+.prompter .chip.now{background:var(--tally);color:var(--tally-ink);border-color:var(--tally)}
+.prompter .chip.now::before{background:var(--tally-ink)}
+.prompter .chip.next{outline:2px solid var(--warn);outline-offset:1px}
+.prompter .chip.next.sb{background:var(--warn);color:#111;animation:sbpulse 1s ease-in-out infinite}
+@keyframes sbpulse{50%{opacity:.55}}
+@media (prefers-reduced-motion:reduce){.prompter .chip.next.sb{animation:none}}
+.prompter-l{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted);margin:0 0 6px}
+.live-main{display:grid;gap:14px}
+@media (min-width:1000px){
+  .live-main.has-script{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:stretch}
+  .live-main.has-script .live-now{grid-template-columns:minmax(0,1fr);align-content:start}
+  .live-main.has-script .live-num{font-size:52px}
+  .live-main.has-script .live-seg{font-size:clamp(22px,2.2vw,30px)}
+  .live-main.has-script .prompter-box{display:flex;flex-direction:column;min-height:0}
+  .live-main.has-script .prompter{flex:1;max-height:min(46vh,420px)}
+}
+
 /* ---------- live ---------- */
 .live{display:grid;gap:14px;padding-block:16px 48px}
 .live-bar{display:flex;flex-wrap:wrap;gap:10px 16px;justify-content:space-between;align-items:center}
@@ -310,6 +352,7 @@ details.adv summary{cursor:pointer;list-style:revert}
 .fld>span,.fld legend{font:500 11px/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:0}
 .fld input,.fld textarea{padding:8px 10px;border:1px solid var(--line-strong);border-radius:7px;background:var(--surface);width:100%;min-width:0}
 .fld textarea{resize:vertical}
+.fld input[type="radio"],.fld input[type="checkbox"]{width:auto;padding:0;border:0;margin:3px 0 0;flex:none}
 .fld input[readonly],.fld textarea[readonly]{background:var(--surface-2);border-color:transparent}
 .src-ed{display:grid;gap:8px}
 .sr-row{display:grid;grid-template-columns:34px 76px minmax(0,1fr) minmax(0,1.3fr) minmax(0,1fr) auto;gap:6px;align-items:center;padding:6px;border-radius:9px;background:var(--surface-2);border-left:4px solid var(--c)}
@@ -434,6 +477,25 @@ dialog::backdrop{background:rgba(8,12,16,.5)}
   </div>
 </dialog>
 
+<dialog id="scriptDlg" aria-labelledby="scriptDlgT">
+  <form class="dlg" id="scriptForm" novalidate>
+    <h2 id="scriptDlgT">Import MC script</h2>
+    <div id="scSum"></div>
+    <fieldset class="fld">
+      <legend>Put the cues in</legend>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="scFor" value="new" checked><span><b>A new event</b><small id="scNewName"></small></span></label>
+        <label class="opt" data-needs-cur><input type="radio" name="scFor" value="replace"><span><b>This event (replace its cues)</b><small>The current cues are replaced. Undo brings them back.</small></span></label>
+      </div>
+    </fieldset>
+    <p class="pd" style="margin:0">Green text in Word = a call, at the words where you switch. Red = segment and who speaks.</p>
+    <div class="dlg-acts">
+      <button type="button" class="btn" id="scCancel">Cancel</button>
+      <button type="submit" class="btn primary">Import</button>
+    </div>
+  </form>
+</dialog>
+
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
 <!-- read-only copy for viewers without a Claude account; refreshed with tools/embed-snapshot.mjs -->
@@ -505,7 +567,7 @@ const S = {
   call: null, callT: 0, callTick: 1000, beeps: 0, mute: LS.get('cs.mute', false),
   kruSrc: LS.get('cs.kru', null), kruAll: false,
   hidden: LS.get('cs.hidden', {}), paper: LS.get('cs.paper', 'a4'),
-  panelId: null, crewCols: LS.get('cs.crewcols', false)
+  panelId: null, crewCols: LS.get('cs.crewcols', false), rdMode: LS.get('cs.rdmode', 'list'), scriptImport: null
 };
 
 /* ---------- helpers ---------- */
@@ -531,7 +593,7 @@ function cueTimes(ev) {
 }
 function totalDur(ev) { let min = 0, n = 0; ev.cues.forEach(c => { if (c.dur != null) { min += c.dur; n++; } }); return { min, n }; }
 function mcList(ev) { const set = new Set(); ev.cues.forEach(c => { if (c.mc) set.add(c.mc); }); ['Both'].forEach(x => set.add(x)); return Array.from(set); }
-function slug(s) { return (str(s).toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40)) || 'event'; }
+function slug(s) { return (str(s).toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40).replace(/-+$/, '')) || 'event'; }
 function orderedIds() {
   return Object.keys(S.events).sort((a, b) => {
     const A = S.events[a], B = S.events[b];
@@ -557,8 +619,17 @@ function normEvent(e) {
     name: str(e.name) || 'Untitled event', theme: str(e.theme), date: str(e.date), start: str(e.start), venue: str(e.venue),
     mcs: str(e.mcs), director: str(e.director), notes: str(e.notes), sources, cues,
     words: normWords(e.words),
-    createdAt: Number(e.createdAt) || Date.now(), updatedAt: Number(e.updatedAt) || Date.now()
+    createdAt: Number(e.createdAt) || Date.now(), updatedAt: Number(e.updatedAt) || Date.now(),
+    ...(normScript(e.script) ? { script: normScript(e.script) } : {})
   };
+}
+/* The imported MC script: paragraphs of parts. k = s (said, black) · r (red: segment / who / note to MC)
+   · n (green note, not a call) · c (green call, id = the cue it made). */
+function normScript(x) {
+  if (!x || typeof x !== 'object' || !Array.isArray(x.paras)) return null;
+  const K = ['s', 'r', 'n', 'c'];
+  const paras = x.paras.filter(Array.isArray).map(p => p.filter(q => q && K.includes(q.k)).map(q => (q.k === 'c' ? { k: 'c', t: str(q.t), id: str(q.id) } : { k: q.k, t: str(q.t) })));
+  return { file: str(x.file), at: Number(x.at) || 0, paras };
 }
 
 /* ---------- director calls ("Okay camera CAM1 standby" … "in 3, 2, 1" … "CAM1 masuk") ---------- */
@@ -792,7 +863,7 @@ function emptyHtml() {
     <p>Check your internet, then try again.</p><div class="empty-acts"><button class="btn primary" data-act="reload">Try again</button></div></div>`;
   return `<div class="empty"><div class="eyebrow">Empty cue sheet</div><h2>No events yet</h2>
     <p>${S.mode === 'snapshot' ? 'No copy of the cue sheet is ready for this view yet. Sign in to Claude to see the latest version, or ask the director for the PDF.' : S.canWrite ? 'Create your first event to start planning camera, graphics, laptop and audio cues from the MC script. You can also import a backup file (JSON) you downloaded before.' : 'The owner has not added any events yet.'}</p>
-    ${S.canWrite ? `<div class="empty-acts"><button class="btn primary" data-act="new-event">${icon('plus')} Create event</button><label class="btn file">Import backup<input type="file" class="importFile sr" accept=".json,application/json"></label></div>` : ''}</div>`;
+    ${S.canWrite ? `<div class="empty-acts"><button class="btn primary" data-act="new-event">${icon('plus')} Create event</button>${scriptInput('Import MC script (.docx)')}<label class="btn file">Import backup<input type="file" class="importFile sr" accept=".json,application/json"></label></div>` : ''}</div>`;
 }
 
 /* ---------- render: rundown ---------- */
@@ -800,7 +871,7 @@ function rowText(c) { return [c.seg, c.mc, c.cue, c.note, kindOf(c.kind).label, 
 function renderRundown() {
   const el = $('#view-rundown'); const ev = S.ev;
   if (!ev) { el.innerHTML = emptyHtml(); return; }
-  const ro = !S.canWrite; const crewOn = !!S.crewCols;
+  const ro = !S.canWrite; const scriptMode = S.rdMode === 'script'; const crewOn = !!S.crewCols && !scriptMode;
   const vis = crewOn ? ev.sources.filter(s => !S.hidden[s.id]) : [];
   const menuOpen = !!($('.print-menu', el) && $('.print-menu', el).open);
   el.innerHTML = `
@@ -808,14 +879,16 @@ function renderRundown() {
     <div class="tb-l">
       ${ro ? '' : `<button class="btn primary" data-act="add-end">${icon('plus')} Add cue</button>
       <button class="btn" data-act="undo"${S.undo.length ? '' : ' disabled'}>${icon('undo')} Undo</button>`}
-      <label class="search">${icon('search')}<span class="sr">Search cues</span><input id="rdFilter" type="search" placeholder="Search…" value="${esc(S.filter)}"></label>
+      <div class="rd-mode" role="group" aria-label="Show as"><button data-act="rd-mode" data-mode="list" aria-pressed="${!scriptMode}">List</button><button data-act="rd-mode" data-mode="script" aria-pressed="${scriptMode}">Script</button></div>
+      ${scriptMode ? '' : `<label class="search">${icon('search')}<span class="sr">Search cues</span><input id="rdFilter" type="search" placeholder="Search…" value="${esc(S.filter)}"></label>`}
     </div>
     <div class="tb-r">
       ${crewOn ? `<div class="colvis" role="group" aria-label="Show or hide crew columns">${ev.sources.map(s => `<button class="vis-chip${S.hidden[s.id] ? ' off' : ''}" data-act="vis" data-src="${esc(s.id)}" style="${srcStyle(s)}" aria-pressed="${!S.hidden[s.id]}" title="${esc(s.name)}">${esc(s.code)}</button>`).join('')}</div>` : ''}
-      <button class="btn" data-act="crew-cols" aria-pressed="${crewOn}">${icon('users')} ${crewOn ? 'Hide crew tasks' : 'Show crew tasks'}</button>
+      ${scriptMode ? '' : `<button class="btn" data-act="crew-cols" aria-pressed="${crewOn}">${icon('users')} ${crewOn ? 'Hide crew tasks' : 'Show crew tasks'}</button>`}
       <details class="menu print-menu"${menuOpen ? ' open' : ''}><summary class="btn primary">${icon('print')} Print ${icon('down')}</summary>
         <div class="menu-pop" role="menu">
           <button class="mi" data-act="pdf-director" role="menuitem">${icon('file')}<span>Director sheet (PDF)<small>When to call, what to call, tick boxes. A4.</small></span></button>
+          ${ev.script ? `<button class="mi" data-act="pdf-script" role="menuitem">${icon('file')}<span>MC script with calls (PDF)<small>The full script, each call numbered beside it.</small></span></button>` : ''}
           <button class="mi" data-act="pdf-rundown" role="menuitem">${icon('file')}<span>Full rundown (PDF)<small>Every crew column, for the switcher desk.</small></span></button>
           <div class="mi-row"><label for="paperSel">Rundown paper size</label><select id="paperSel"><option value="a4"${S.paper === 'a4' ? ' selected' : ''}>A4</option><option value="a3"${S.paper === 'a3' ? ' selected' : ''}>A3</option></select></div>
           <div class="mi-sep"></div>
@@ -825,12 +898,43 @@ function renderRundown() {
       </details>
     </div>
   </div>
+  ${scriptMode ? scriptViewHtml(ev, ro) : `
   <div class="list${crewOn ? ' crew-on' : ''}" style="${crewOn ? `--cols:58px 300px 230px 92px ${vis.map(() => '180px').join(' ')} 190px` : ''}"><div class="list-in" role="list" aria-label="Cues">
     <div class="cue-row head" aria-hidden="true"><div>#</div><div>Segment · MC line</div><div>Call</div><div>On air</div>${vis.map(s => `<div style="${srcStyle(s)}"><span class="code">${esc(s.code)}</span></div>`).join('')}<div>Note</div></div>
     ${(() => { const times = cueTimes(ev); return ev.cues.map((c, i) => rowHtml(c, i, vis, times[i])).join(''); })()}
   </div></div>
-  ${ev.cues.length ? `<p class="foot-note">Click a cue to edit it.${ro ? '' : ' Use the arrows in the edit panel to move between cues.'}</p>` : `<p class="empty-row">No cues yet.${ro ? '' : ' Press “Add cue” to start.'}</p>`}`;
-  applyFilter();
+  ${ev.cues.length ? `<p class="foot-note">Click a cue to edit it.${ro ? '' : ' Use the arrows in the edit panel to move between cues.'}</p>` : `<p class="empty-row">No cues yet.${ro ? '' : ' Press “Add cue” to start, or import an MC script (Script view).'}</p>`}`}`;
+  if (!scriptMode) applyFilter();
+}
+const scriptInput = label => `<label class="btn file">${icon('file')} ${label}<input type="file" class="scriptFile sr" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"></label>`;
+function chipLabel(ev, c, i) { const pg = srcById(c.pgm); const lt = ev.sources.some(s => isLtSource(s) && str(c.tasks[s.id]).trim()); return `<b>${pad(i + 1)}</b> ${esc(pg ? pg.code : '—')}${lt && !(pg && isLtSource(pg)) ? ' + LT' : ''}`; }
+/** The script as HTML. live = index of the cue on air (prompter), or -1 (rundown Script view). */
+function scriptBodyHtml(ev, live) {
+  const at = {}; ev.cues.forEach((c, i) => { at[c.id] = i; });
+  let passed = -1; const zoneOf = () => (live < 0 ? '' : passed < live ? 'past' : passed === live ? 'zone' : 'later');
+  return ev.script.paras.map(ps => `<p>${ps.map(x => {
+    if (x.k === 'c') {
+      const i = at[x.id];
+      if (i == null) return `<span class="chip gone" title="${esc(x.t)}">deleted</span>`;
+      passed = i; const c = ev.cues[i]; const pg = srcById(c.pgm);
+      const st = live < 0 ? (S.panelId === c.id ? ' sel' : '') : i < live ? ' done' : i === live ? ' now' : i === live + 1 ? ' next' + (S.call ? ' sb' : '') : '';
+      const timing = live >= 0 && i === live + 1 && !c.cue ? ' <span class="tm">· your timing</span>' : '';
+      const tag = live < 0 ? 'button' : 'span';
+      return `<${tag} class="chip${st}" data-cue="${esc(c.id)}" style="${pg ? srcStyle(pg) : ''}" title="${esc(x.t)}">${chipLabel(ev, c, i)}${timing}</${tag}>`;
+    }
+    const cls = [x.k === 'r' ? 'sc-red' : x.k === 'n' ? 'sc-note' : '', zoneOf()].filter(Boolean).join(' ');
+    return cls ? `<span class="${cls}">${esc(x.t)}</span>` : esc(x.t);
+  }).join('')}</p>`).join('');
+}
+function scriptViewHtml(ev, ro) {
+  if (!ev.script) return `<div class="script-wrap"><div class="sc-empty"><h2 class="ph">No MC script yet</h2>
+    <p>Import the MC script from Word (.docx). Colour each camera call <b style="color:#1E9A57">green</b> at the words where you switch, and the segment and MC names <b style="color:#D7263D">red</b>. The app makes one cue per green call.</p>
+    ${ro ? '' : `<div>${scriptInput('Import MC script (.docx)')}</div>`}</div></div>`;
+  const d = new Date(ev.script.at || 0);
+  return `<div class="script-wrap">
+    <div class="script-head"><span>${icon('file')} ${esc(ev.script.file || 'MC script')}${ev.script.at ? ` · imported ${d.getDate()} ${MONTHS[d.getMonth()].slice(0, 3)} ${pad(d.getHours())}:${pad(d.getMinutes())}` : ''} · click a call to edit it</span>${ro ? '' : scriptInput('Import again')}</div>
+    <div class="script">${scriptBodyHtml(ev, -1)}</div>
+  </div>`;
 }
 function rowHtml(c, i, vis, t) {
   const k = esc(c.id); const pg = srcById(c.pgm); const cl = callInto(S.ev, i);
@@ -854,14 +958,15 @@ function applyFilter() {
 function openPanel(id, focusSeg) {
   if (!S.ev || !cueById(id)) return;
   S.panelId = id; renderPanel();
-  $$('#view-rundown .cue-row[data-id]').forEach(r => r.classList.toggle('sel', r.dataset.id === id));
+  $$('#view-rundown .cue-row[data-id], #view-rundown .chip[data-cue]').forEach(r => r.classList.toggle('sel', (r.dataset.id || r.dataset.cue) === id));
+  const chip = $$('#view-rundown .chip[data-cue]').find(r => r.dataset.cue === id); if (chip) chip.scrollIntoView({ block: 'nearest' });
   const row = $$('#view-rundown .cue-row[data-id]').find(r => r.dataset.id === id); if (row) row.scrollIntoView({ block: 'nearest' });
   const f = focusSeg ? $('#cuePanel [data-pf="seg"]') : $('#cuePanel [data-act="p-close"]'); if (f) f.focus({ preventScroll: true });
 }
 function closePanel() {
   const p = $('#cuePanel'); if (!p) return;
   const was = S.panelId; S.panelId = null; p.hidden = true; p.innerHTML = ''; document.body.classList.remove('panel-open');
-  $$('#view-rundown .cue-row.sel').forEach(r => r.classList.remove('sel'));
+  $$('#view-rundown .cue-row.sel, #view-rundown .chip.sel').forEach(r => r.classList.remove('sel'));
   if (was) { const row = $$('#view-rundown .cue-row[data-id]').find(r => r.dataset.id === was); if (row && document.activeElement === document.body) row.focus({ preventScroll: true }); }
 }
 function renderPanel() {
@@ -880,6 +985,7 @@ function renderPanel() {
       <button class="btn icon" data-act="p-close" data-k="${k}:close" title="Close (Esc)" aria-label="Close">${icon('x')}</button>
     </div>
     <div class="pn-body">
+      ${(() => { const m = scriptMark(ev, c.id); return m ? `<p class="hintline" style="margin:0">In the script: <b>${esc(m)}</b></p>` : ''; })()}
       <label class="fld"><span>Segment</span><input type="text" data-pf="seg" data-k="${k}:seg" value="${esc(c.seg)}" placeholder="Segment name"${RO}></label>
       <div class="row3">
         <label class="fld"><span>Type</span><select data-pf="kind" data-k="${k}:kind"${DIS}>${KINDS.map(x => `<option value="${x.id}"${x.id === c.kind ? ' selected' : ''}>${x.label}</option>`).join('')}</select></label>
@@ -936,6 +1042,7 @@ function renderLive() {
       <button class="btn" data-act="mute" aria-pressed="${S.mute ? 'true' : 'false'}">${S.mute ? 'Sound: off' : 'Sound: on'}</button>
     </div>` : ''}
     <div id="callPanel" class="call-panel" aria-live="assertive"></div>
+    <div class="live-main${ev.script ? ' has-script' : ''}">
     <div class="live-now" style="--k:${kindColor(k)}">
       <div class="live-num"><span class="l">Cue</span>${pad(i + 1)}<span class="of">/${pad(ev.cues.length)}</span></div>
       <div style="min-width:0">
@@ -945,6 +1052,9 @@ function renderLive() {
         ${c.note ? `<div class="live-note">${icon('alert')}<span>${esc(c.note)}</span></div>` : ''}
       </div>
     </div>
+    ${ev.script ? `<div class="prompter-box"><div class="prompter-l"><span class="l">MC script</span><span>Highlighted: what the MC says before your next call</span></div>
+      <div class="prompter" id="prompter">${scriptBodyHtml(ev, i)}</div></div>` : ''}
+    </div>
     <div class="tally-row">
       <div class="tally on"><span class="tl">ON AIR</span><span class="tv">${pg ? esc(pg.code + ' · ' + pg.name) : 'No PGM set'}</span></div>
       <div class="tally pvw"><span class="tl">NEXT</span><span class="tv">${n ? (npg ? esc(npg.code + ' · ' + npg.name) : '—') : 'End'}</span></div>
@@ -953,12 +1063,21 @@ function renderLive() {
     ${n ? `<div class="live-next"><span class="l">Up next</span> <b>${pad(i + 2)}</b> ${esc(n.seg || '(untitled)')}${n.mc ? ` · MC ${esc(n.mc)}` : ''}${n.cue ? `<div class="nq">${esc(n.cue)}</div>` : ''}</div>` : `<div class="live-next">This is the last cue.</div>`}
     <p class="hint">Keyboard: <b>S</b> standby · <b>Space</b> GO (in 3 2 1) · <b>Esc</b> cancel · right / left arrow to move cues without a call.</p>`;
   tickLive(); drawCall();
+  const pr = $('#prompter'); // keep the cue on air near the top of the prompter
+  if (pr) { const t = pr.querySelector('.chip.now') || pr.querySelector('.zone'); pr.scrollTop = t ? Math.max(0, t.offsetTop - 24) : 0; }
+}
+/** The raw green text that made this cue, if it came from an imported script. */
+function scriptMark(ev, id) {
+  if (!ev.script) return '';
+  for (const ps of ev.script.paras) for (const x of ps) if (x.k === 'c' && x.id === id) return x.t.replace(/\s*\n\s*/g, ' · ');
+  return '';
 }
 
 /* ----- call flow: STANDBY → GO → "in" 3 · 2 · 1 → "CAM1 masuk" → next cue ----- */
 function drawCall() {
   const el = $('#callPanel'); if (!el) return;
   const c = S.call; el.className = 'call-panel' + (c ? ' ' + c.stage : '');
+  const nxChip = $('#prompter .chip.next'); if (nxChip) nxChip.classList.toggle('sb', !!c);
   const cancel = $('[data-act="call-cancel"]'); if (cancel) cancel.disabled = !c;
   if (!c) { el.innerHTML = ''; return; }
   const cl = callInto(S.ev, c.to); if (!cl) { el.innerHTML = ''; return; }
@@ -1141,6 +1260,7 @@ function renderTetapan() {
         <button class="btn" data-act="export-json">${icon('file')} Download backup</button>
         ${S.gas ? `<button class="btn" data-act="forget-link" title="This device will forget your link">Sign out on this device</button>` : ''}
         ${ro ? '' : `<label class="btn file">Import backup<input type="file" class="importFile sr" accept=".json,application/json"></label>
+        ${scriptInput('Import MC script (.docx)')}
         <button class="btn" data-act="dup-event">${icon('dup')} Duplicate this event</button>
         <button class="btn danger" data-act="del-event">${icon('trash')} Delete this event</button>`}
       </div>
@@ -1270,6 +1390,46 @@ async function pdfDirector(btn) {
   } catch (e) { toast('PDF failed: ' + (e && e.message || e), 'warn'); }
   finally { if (btn) { btn.disabled = false; btn.innerHTML = lbl; } }
 }
+/** The MC script to print: the words, and beside them each call numbered at the point it happens. */
+async function pdfScript(btn) {
+  const ev = S.ev; if (!ev || !ev.script) { toast('Import an MC script first.', 'warn'); return; }
+  const lbl = btn ? btn.innerHTML : ''; if (btn) { btn.disabled = true; btn.textContent = 'Making PDF…'; }
+  try {
+    const J = await getJsPDF();
+    const doc = new J({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const at = {}; ev.cues.forEach((c, i) => { at[c.id] = i; });
+    /* rows: the words said up to a call, then that call */
+    const rows = []; let words = '', heads = '';
+    const flush = (call) => { const t = words.replace(/[ \t]+/g, ' ').replace(/\s*\n\s*/g, '\n').trim(); if (t || call) rows.push({ t, call, head: heads.trim() }); words = ''; heads = ''; };
+    ev.script.paras.forEach(ps => {
+      ps.forEach(x => {
+        if (x.k === 'c') { flush(at[x.id] == null ? null : at[x.id]); return; }
+        if (x.k === 'n') { words += ' [' + x.t.trim() + '] '; return; }
+        words += x.t;
+      });
+      words += '\n';
+    });
+    flush(null);
+    const body = rows.map(r => {
+      let call = '';
+      if (r.call != null) { const c = ev.cues[r.call], cl = callInto(ev, r.call), pg = srcById(c.pgm); call = `${pad(r.call + 1)}  ${pg ? pg.code : '-'}\n${scriptMark(ev, c.id)}\n> ${cl.go}`; }
+      return [r.call != null ? '' : ' ', P(r.t), P(call)];
+    });
+    doc.autoTable({
+      head: [['OK', 'MC script', 'Call (at the end of these words)']], body, startY: 25, theme: 'grid',
+      margin: { left: 8, right: 8, top: 25, bottom: 12 },
+      styles: { font: 'helvetica', fontSize: 9.6, cellPadding: 2.2, overflow: 'linebreak', valign: 'bottom', lineColor: [205, 210, 217], lineWidth: 0.15, textColor: [18, 24, 32] },
+      headStyles: { fillColor: [30, 36, 44], textColor: [255, 255, 255], fontStyle: 'bold', fontSize: 9, valign: 'middle' },
+      columnStyles: { 0: { cellWidth: 9 }, 1: { cellWidth: 'auto' }, 2: { cellWidth: 56, fontStyle: 'bold', fillColor: [237, 247, 241], textColor: [14, 80, 46] } },
+      didParseCell: d => { if (d.section === 'body' && d.column.index === 2 && !d.cell.raw) d.cell.styles.fillColor = [255, 255, 255]; },
+      didDrawCell: d => { if (d.section === 'body' && d.column.index === 0 && d.cell.raw === '') { doc.setDrawColor(60, 66, 74); doc.setLineWidth(0.35); doc.rect(d.cell.x + 2, d.cell.y + d.cell.height - 7, 4.6, 4.6); } },
+      didDrawPage: () => pdfHeader(doc, ev, 'MC SCRIPT + CALLS')
+    });
+    pdfFooters(doc);
+    await offerFile(slug(ev.name) + '-script.pdf', doc.output('blob'));
+  } catch (e) { toast('PDF failed: ' + (e && e.message || e), 'warn'); }
+  finally { if (btn) { btn.disabled = false; btn.innerHTML = lbl; } }
+}
 function hslToRgb(h, s, l) { const a = s * Math.min(l, 1 - l); const f = n => { const k = (n + h / 30) % 12; return Math.round(255 * (l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)))); }; return [f(0), f(8), f(4)]; }
 async function pdfKru(list, btn) {
   const ev = S.ev; if (!ev || !list.length) return;
@@ -1344,6 +1504,160 @@ async function importFile(file) {
   } catch (e) { toast('Import failed: ' + (e && e.message || e), 'warn'); }
 }
 
+/* ---------- MC script from Word (.docx): green = a call, red = segment / who speaks ----------
+   The director marks the script in Word: each green paragraph is one call placed at the exact
+   words where the switch happens; red headings name the segment and the MC. See docs/PLAN-teks-mc.md. */
+async function unzipText(buf, want) { // just enough of the ZIP format to read one file out of a .docx
+  const u8 = new Uint8Array(buf), dv = new DataView(buf), dec = new TextDecoder();
+  let e = -1; for (let i = u8.length - 22; i >= Math.max(0, u8.length - 65557); i--) if (dv.getUint32(i, true) === 0x06054b50) { e = i; break; }
+  if (e < 0) throw new Error('not a Word file');
+  let p = dv.getUint32(e + 16, true);
+  for (let n = dv.getUint16(e + 10, true); n > 0; n--) {
+    if (dv.getUint32(p, true) !== 0x02014b50) break;
+    const method = dv.getUint16(p + 10, true), size = dv.getUint32(p + 20, true), nl = dv.getUint16(p + 28, true), xl = dv.getUint16(p + 30, true), cl = dv.getUint16(p + 32, true), off = dv.getUint32(p + 42, true);
+    if (dec.decode(u8.subarray(p + 46, p + 46 + nl)) === want) {
+      const start = off + 30 + dv.getUint16(off + 26, true) + dv.getUint16(off + 28, true); const data = u8.subarray(start, start + size);
+      if (method === 0) return dec.decode(data);
+      if (method !== 8 || typeof DecompressionStream === 'undefined') throw new Error('this browser cannot open Word files; update it and try again');
+      return new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).text();
+    }
+    p += 46 + nl + xl + cl;
+  }
+  throw new Error('not a Word document');
+}
+function hsl(hex) { const [r, g, b] = hexRgb(hex).map(v => v / 255); const mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn, l = (mx + mn) / 2; if (!d) return { h: 0, s: 0, l }; let h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; h *= 60; if (h < 0) h += 360; return { h, s: d / (1 - Math.abs(2 * l - 1)), l }; }
+const WNS = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+function runKind(r) { // green text / highlight / shading = call · red = heading · anything else = said
+  const pr = Array.from(r.childNodes).find(x => x.localName === 'rPr'); if (!pr) return 's';
+  const get = (tag, at) => { const x = Array.from(pr.childNodes).find(y => y.localName === tag); return x ? x.getAttributeNS(WNS, at) || x.getAttribute('w:' + at) : ''; };
+  const hl = get('highlight', 'val');
+  if (/green/i.test(hl)) return 'c'; if (/^(red|darkRed)$/i.test(hl)) return 'r';
+  for (const v of [get('color', 'val'), get('shd', 'fill')]) {
+    if (!/^[0-9a-f]{6}$/i.test(v || '')) continue; const c = hsl(v);
+    if (c.s > 0.25 && c.l > 0.12 && c.l < 0.85) { if (c.h >= 75 && c.h <= 170) return 'c'; if (c.h <= 15 || c.h >= 345) return 'r'; }
+  }
+  return 's';
+}
+const tcase = s => s.toLowerCase().replace(/(^|[\s(/-])(\p{L})/gu, (m, a, b) => a + b.toUpperCase());
+const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+function kindFromSection(s) {
+  const u = s.toUpperCase();
+  return /PERARAKAN|PROCESSION/.test(u) ? 'perarakan' : /SIJIL|ANUGERAH|HADIAH|AWARD/.test(u) ? 'anugerah' : /TARANNUM|KHATAM|DOA|ISBAT|QURAN|TILAWAH/.test(u) ? 'quran'
+    : /UCAPAN|SPEECH/.test(u) ? 'ucapan' : /MONTAJ|TAYANGAN|VIDEO/.test(u) ? 'multimedia' : /NASYID|PERSEMBAHAN|PERFORM/.test(u) ? 'persembahan' : /PENUTUP|CLOSING/.test(u) ? 'penutup' : 'mc';
+}
+/** .docx bytes → { cues, script, mcs, sections, checks }. Source names come from the event's sources. */
+async function parseScript(buf, sources) {
+  const xml = await unzipText(buf, 'word/document.xml');
+  const doc = new DOMParser().parseFromString(xml, 'application/xml');
+  if (doc.getElementsByTagName('parsererror').length) throw new Error('the document could not be read');
+  /* 1. paragraphs → parts of the same kind */
+  const paras = Array.from(doc.getElementsByTagNameNS(WNS, 'p')).map(p => {
+    const parts = [];
+    Array.from(p.getElementsByTagNameNS(WNS, 'r')).forEach(r => {
+      let t = ''; Array.from(r.childNodes).forEach(x => { if (x.localName === 't') t += x.textContent; else if (x.localName === 'tab') t += ' '; else if (x.localName === 'br' || x.localName === 'cr') t += '\n'; });
+      if (!t) return; const k = runKind(r); const last = parts[parts.length - 1];
+      if (last && last.k === k) last.t += t; else parts.push({ k, t });
+    });
+    // green · (blank) · green inside one paragraph is one call
+    for (let i = parts.length - 2; i > 0; i--) if (parts[i].k === 's' && !parts[i].t.trim() && parts[i - 1].k === 'c' && parts[i + 1].k === 'c') { parts[i - 1].t += '\n' + parts[i + 1].t; parts.splice(i, 2); }
+    return parts;
+  }).filter(ps => ps.some(x => x.t.trim()));
+  /* 2. who speaks: single-word names in red brackets, e.g. (AZIZI) (FARAH) */
+  const speakers = new Set();
+  paras.forEach(ps => ps.forEach(x => { if (x.k === 'r') for (const m of x.t.matchAll(/\(\s*([\p{L}]+)\s*\)/gu)) speakers.add(m[1].toUpperCase()); }));
+  const NOTE_MC = /^(LIHAT|IKUT|TENGOK|JANGAN|SAMA|SEE|FOLLOW)/i;
+  /* 3. source names: the code and the name of each source, longest first */
+  const alias = [];
+  sources.forEach(s => new Set([s.code, s.name.replace(/\([^)]*\)/g, '').trim()]).forEach(n => {
+    n = str(n).trim(); if (!n) return;
+    const body = reEsc(n.toUpperCase()).replace(/([A-Z])(?=\d)/g, '$1\\s*').replace(/\s+/g, '\\s*');
+    alias.push({ s, len: n.length, start: new RegExp('^' + body + '(?![A-Z0-9])', 'i'), any: new RegExp('(^|[^A-Z0-9])' + body + '(?![A-Z0-9])', 'i') });
+  }));
+  alias.sort((a, b) => b.len - a.len);
+  const lineSrc = l => { for (const a of alias) { const m = a.start.exec(l); if (m) return { src: a.s, rest: l.slice(m[0].length).trim() }; } return null; };
+  const unknownish = l => l.replace(/\([^)]*\)/g, ' ').trim().split(/\s+/).filter(Boolean).length <= 3;
+  /* 4. walk the script */
+  const cues = [], out = [], checks = []; let section = '', speaker = '', said = '', pending = [], lastPgm = '';
+  const sectionsSeen = new Set(), mcs = [];
+  const sayText = t => t.replace(/\(\s*([\p{L}]+)\s*\)/gu, (m, w) => (speakers.has(w.toUpperCase()) ? ' ' : m));
+  const seeSpeaker = t => { for (const m of t.matchAll(/\(\s*([\p{L}]+)\s*\)/gu)) if (speakers.has(m[1].toUpperCase())) { speaker = tcase(m[1]); if (!mcs.includes(speaker)) mcs.push(speaker); } };
+  paras.forEach(ps => {
+    const op = [];
+    const allRed = ps.every(x => x.k === 'r' || !x.t.trim());
+    let heading = false;
+    if (allRed) {
+      const t = ps.map(x => x.t).join(' ');
+      const inner = Array.from(t.matchAll(/\(([^)]*)\)/g)).map(m => m[1].trim()).filter(x => x && !speakers.has(x.toUpperCase()) && !NOTE_MC.test(x));
+      const hasWho = Array.from(t.matchAll(/\(\s*([\p{L}]+)\s*\)/gu)).some(m => speakers.has(m[1].toUpperCase()));
+      const outside = t.replace(/\([^)]*\)/g, ' ').replace(/\s+/g, ' ').trim();
+      if (inner.length && !outside) { section = inner[0]; heading = true; }
+      else if (hasWho && outside && !/[()]/.test(outside) && outside.split(' ').length <= 5) { section = outside; heading = true; }
+      if (heading) sectionsSeen.add(section.toUpperCase());
+    }
+    ps.forEach(x => {
+      if (x.k !== 'c') { seeSpeaker(x.t); if (!heading) said += sayText(x.t); op.push({ k: x.k, t: x.t }); return; }
+      /* one call: lines; "LAPTOP STANDBY. LT PENGHARGAAN" holds two */
+      const lines = [];
+      x.t.split('\n').map(l => l.trim()).filter(Boolean).forEach(l => l.split(/\.\s+(?=\S)/).forEach((f, i) => { f = f.trim(); if (!f) return; if (i && !lineSrc(f) && lines.length) lines[lines.length - 1] += '. ' + f; else lines.push(f); }));
+      const items = lines.map(l => Object.assign({ line: l }, lineSrc(l) || {}));
+      if (!items.some(it => it.src)) { // a green note with no source: goes with the next call
+        lines.forEach(l => pending.push((unknownish(l) ? '⚠ ' : '') + l)); op.push({ k: 'n', t: x.t.trim() }); return;
+      }
+      const c = newCue(); const note = pending.splice(0); let pgm = '';
+      items.forEach(it => {
+        if (!it.src) { note.push((unknownish(it.line) ? '⚠ ' : '') + it.line); return; }
+        const s = it.src, lt = isLtSource(s); let rest = it.rest;
+        if (rest.startsWith('/')) { note.push(it.line); rest = ''; }
+        const sb = /^STANDBY\b\.?/i.exec(rest);
+        if (sb) { rest = rest.slice(sb[0].length).trim(); note.push(s.name + ' standby' + (rest ? ' (' + rest.replace(/^\((.*)\)$/, '$1') + ')' : '')); return; }
+        const detail = rest.replace(/^\((.*)\)$/s, '$1').trim();
+        if (detail && alias.some(a => a.s !== s && a.any.test(detail))) note.push(it.line);
+        if (!lt && !pgm) pgm = s.id; else if (!lt && pgm !== s.id) note.push('also ' + s.code);
+        const task = detail || (lt ? 'ON' : '');
+        if (task) c.tasks[s.id] = c.tasks[s.id] ? c.tasks[s.id] + ' / ' + task : task;
+      });
+      const words = said.replace(/\s+/g, ' ').trim().split(' ').filter(Boolean);
+      Object.assign(c, { seg: section ? tcase(section) : 'MC script', kind: kindFromSection(section), mc: speaker, pgm: pgm || lastPgm, cue: words.length > 14 ? '…' + words.slice(-14).join(' ') : words.join(' '), note: note.join(' · ') });
+      if (/⚠/.test(c.note)) checks.push({ n: cues.length + 1, t: c.note });
+      lastPgm = c.pgm; said = ''; cues.push(c); op.push({ k: 'c', t: x.t.trim(), id: c.id });
+    });
+    said += ' '; out.push(op);
+  });
+  if (pending.length && cues.length) { const c = cues[cues.length - 1]; c.note = [c.note, ...pending].filter(Boolean).join(' · '); }
+  return { cues, script: { file: '', at: Date.now(), paras: out }, mcs, sections: sectionsSeen.size, checks };
+}
+async function importScript(file) {
+  if (!file || !S.canWrite) return;
+  if (file.size > 10 * 1024 * 1024) { toast('Import failed: the file is too big (over 10 MB).', 'warn'); return; }
+  let res;
+  try { res = await parseScript(await file.arrayBuffer(), S.ev ? S.ev.sources : clone(DEFAULT_SOURCES)); }
+  catch (e) { toast('Could not read this file' + (e && e.message ? ' (' + e.message + ')' : '') + '. Save it in Word as a .docx file and try again.', 'warn'); return; }
+  if (!res.cues.length) { toast('No green call marks found. In Word, colour each camera call green, then import again.', 'warn'); return; }
+  res.file = file.name; S.scriptImport = res;
+  const d = $('#scriptDlg'), hasCur = !!S.ev;
+  $('#scSum').innerHTML = `<p class="pd" style="margin:0"><b>${res.cues.length} calls</b> · ${res.sections} segments · MC: ${esc(res.mcs.join(', ') || '—')}</p>
+    ${res.checks.length ? `<div class="sc-checks"><b>${res.checks.length} to check</b> (shown as ⚠ in the note):<ul>${res.checks.map(c => `<li>Cue ${pad(c.n)}: ${esc(c.t)}</li>`).join('')}</ul></div>` : ''}`;
+  $('#scNewName').textContent = (hasCur ? S.ev.name : file.name.replace(/\.docx$/i, '')) + ' (script)' + (hasCur ? '. The current rundown stays as it is.' : '');
+  $$('[data-needs-cur]', d).forEach(x => { x.hidden = !hasCur; });
+  $$('input[name="scFor"]', d).forEach(r => { r.checked = r.value === 'new'; });
+  try { d.showModal(); } catch (e) { d.setAttribute('open', ''); }
+}
+async function applyScript(mode) {
+  const res = S.scriptImport; S.scriptImport = null; if (!res) return;
+  const script = Object.assign(res.script, { file: res.file, at: Date.now() });
+  S.rdMode = 'script'; LS.set('cs.rdmode', 'script');
+  if (mode === 'replace' && S.ev) {
+    pushUndo(); S.ev.cues = res.cues; S.ev.script = script; touch();
+    if (S.view !== 'rundown') goView('rundown'); else renderAll();
+  } else {
+    const base = S.ev ? clone(S.ev) : { sources: clone(DEFAULT_SOURCES) };
+    const data = Object.assign(base, { name: (S.ev ? S.ev.name : res.file.replace(/\.docx$/i, '')) + ' (script)', cues: res.cues, script });
+    if (!await createEvent(data)) return;
+    if (S.view !== 'rundown') goView('rundown');
+  }
+  toast(`Imported ${res.cues.length} cues from the MC script.`);
+}
+
 /* ---------- events ---------- */
 function closeMenus(except) { $$('details.menu[open]').forEach(m => { if (m !== except) m.open = false; }); }
 document.addEventListener('click', e => {
@@ -1359,7 +1673,7 @@ document.addEventListener('click', e => {
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
   if ($$('details.menu[open]').length) { closeMenus(); return; }
-  if (S.panelId && S.view === 'rundown' && !$('#newDlg').open && !$('#copyDlg').open) { e.preventDefault(); closePanel(); }
+  if (S.panelId && S.view === 'rundown' && !$('#newDlg').open && !$('#copyDlg').open && !$('#scriptDlg').open) { e.preventDefault(); closePanel(); }
 });
 $('#eventSel').addEventListener('change', e => { if (e.target.value) { closePanel(); selectEvent(e.target.value); } });
 window.addEventListener('hashchange', () => { readHash(); renderAll(); });
@@ -1375,8 +1689,10 @@ rd.addEventListener('change', e => { if (e.target.id === 'paperSel') { S.paper =
 rd.addEventListener('click', e => {
   if (!S.ev) return;
   const b = e.target.closest('[data-act]');
-  if (!b) { const row = e.target.closest('.cue-row[data-id]'); if (row) openPanel(row.dataset.id); return; }
+  if (!b) { const row = e.target.closest('.cue-row[data-id], .chip[data-cue]'); if (row) openPanel(row.dataset.id || row.dataset.cue); return; }
   const act = b.dataset.act;
+  if (act === 'rd-mode') { S.rdMode = b.dataset.mode === 'script' ? 'script' : 'list'; LS.set('cs.rdmode', S.rdMode); renderRundown(); return; }
+  if (act === 'pdf-script') { pdfScript(b); return; }
   if (act === 'vis') { const id = b.dataset.src; if (S.hidden[id]) delete S.hidden[id]; else S.hidden[id] = true; LS.set('cs.hidden', S.hidden); renderRundown(); return; }
   if (act === 'crew-cols') { S.crewCols = !S.crewCols; LS.set('cs.crewcols', S.crewCols); renderRundown(); return; }
   if (act === 'pdf-rundown') { pdfRundown(b); return; }
@@ -1449,7 +1765,7 @@ lv.addEventListener('change', e => { if (e.target.id === 'liveJump') setLive(Num
 document.addEventListener('keydown', e => {
   if (S.view !== 'live' || !S.ev) return;
   const tg = e.target && e.target.tagName; if (tg === 'INPUT' || tg === 'TEXTAREA' || tg === 'SELECT' || (e.target && e.target.isContentEditable)) return;
-  if ($('#newDlg').open || $('#copyDlg').open) return;
+  if ($('#newDlg').open || $('#copyDlg').open || $('#scriptDlg').open) return;
   if (e.ctrlKey || e.metaKey || e.altKey) return;
   if (e.key === ' ') { e.preventDefault(); callGo(); }
   else if (e.key === 's' || e.key === 'S') { e.preventDefault(); callStandby(); }
@@ -1518,7 +1834,13 @@ st.addEventListener('click', e => {
       .catch(err => toast('Could not delete' + (err && err.message ? ': ' + err.message : '.'), 'warn'));
   }
 });
-document.addEventListener('change', e => { if (e.target.classList && e.target.classList.contains('importFile')) { importFile(e.target.files && e.target.files[0]); e.target.value = ''; } });
+document.addEventListener('change', e => {
+  const cl = e.target.classList; if (!cl) return;
+  if (cl.contains('importFile')) { importFile(e.target.files && e.target.files[0]); e.target.value = ''; }
+  else if (cl.contains('scriptFile')) { importScript(e.target.files && e.target.files[0]); e.target.value = ''; }
+});
+$('#scCancel').addEventListener('click', () => { S.scriptImport = null; $('#scriptDlg').close(); });
+$('#scriptForm').addEventListener('submit', e => { e.preventDefault(); const mode = ($$('input[name="scFor"]').find(r => r.checked) || {}).value || 'new'; $('#scriptDlg').close(); applyScript(mode); });
 
 /* dialogs */
 $('#nfCancel').addEventListener('click', () => $('#newDlg').close());
@@ -1699,6 +2021,6 @@ async function init() {
 }
 init();
 /* test hook: only the local test runner (tests/run.html) defines __CS_TEST__ */
-if (typeof window.__CS_TEST__ === 'function') window.__CS_TEST__({ S, esc, normEvent, cueTimes, slug, stable, crewText, importFile, createEvent, selectEvent, renderAll, touch, flush, pdfRundown, pdfKru, pdfDirector, callInto, setLive, openPanel, closePanel });
+if (typeof window.__CS_TEST__ === 'function') window.__CS_TEST__({ S, esc, normEvent, cueTimes, slug, stable, crewText, importFile, createEvent, selectEvent, renderAll, touch, flush, pdfRundown, pdfKru, pdfDirector, callInto, setLive, openPanel, closePanel, parseScript, importScript, pdfScript });
 })();
 </script>

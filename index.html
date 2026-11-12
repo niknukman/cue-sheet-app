@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ms">
+<html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
@@ -42,7 +42,7 @@
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-body{background:var(--bg);color:var(--ink);font:400 14px/1.45 var(--f-body);-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 14px/1.45 var(--f-body);-webkit-font-smoothing:antialiased}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--surface)}
 .wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));max-width:1680px;margin-inline:auto}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -57,6 +57,7 @@ svg{width:16px;height:16px;flex:none}
 .brand-mark{width:34px;height:34px;border-radius:8px;background:var(--ink);display:grid;place-items:center}
 .brand-mark i{width:11px;height:11px;border-radius:50%;background:var(--tally);box-shadow:0 0 0 3px color-mix(in srgb,var(--tally) 35%,transparent)}
 .brand-k{font:700 20px/1 var(--f-display);letter-spacing:.07em;text-transform:uppercase}
+.theme-btn{padding:7px 9px}
 .brand-s{font:500 10.5px/1.3 var(--f-mono);color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
 .event-pick{display:flex;gap:8px;align-items:center;flex:1 1 360px;min-width:0;justify-content:flex-end}
 .event-pick select{flex:1 1 auto;min-width:0;max-width:440px;font-weight:500}
@@ -91,80 +92,119 @@ select,.inp{padding:7px 9px;border:1px solid var(--line-strong);border-radius:7p
 .ib.del:hover,.ib.armed{color:var(--tally-ink);background:var(--tally)}
 .ib svg{width:14px;height:14px}
 
-.code{display:inline-block;font:600 11.5px/1 var(--f-mono);padding:5px 6px;border-radius:5px;background:var(--c,#64748b);color:var(--cfg,#fff);letter-spacing:.05em;min-width:42px;text-align:center}
+/* source code chip: calm neutral pill, the source colour only as a small dot */
+.code{display:inline-flex;align-items:center;gap:5px;font:600 11.5px/1 var(--f-mono);padding:4px 7px 4px 6px;border-radius:5px;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);letter-spacing:.04em;white-space:nowrap}
+.code::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c,#64748b);flex:none}
+.code.onair{color:var(--tally);border-color:color-mix(in srgb,var(--tally) 55%,var(--line));background:var(--tally-soft)}
 .badge{display:inline-block;font:600 10px/1 var(--f-mono);letter-spacing:.08em;padding:4px 6px;border-radius:4px;vertical-align:middle}
 .badge.on{background:var(--tally);color:var(--tally-ink)}
 .badge.pvw{background:var(--preview);color:#fff}
 
 .banner{display:flex;gap:8px;align-items:center;padding:9px 12px;border-radius:8px;background:var(--accent-soft);color:var(--ink);font-size:13px;margin-top:14px}
-.banner.warn{background:var(--warn-soft)}
+.banner.warn{background:var(--surface-2);color:var(--muted)}
 
-/* ---------- event head ---------- */
-.ev-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px 28px;padding-block:20px 10px;align-items:end}
+/* ---------- event head: one thin line ---------- */
+.ev-head{display:flex;flex-wrap:wrap;align-items:center;gap:4px 16px;padding-block:14px 10px}
 .eyebrow{font:500 11px/1.3 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.ev-name{font:700 clamp(28px,3.6vw,44px)/1 var(--f-display);letter-spacing:.005em;text-wrap:balance;margin-top:6px}
-.ev-theme{font:italic 400 15px/1.4 var(--f-body);color:var(--accent);margin-top:6px}
-.ev-meta{display:flex;flex-wrap:wrap;gap:4px 20px;color:var(--muted);font-size:13px;margin-top:10px}
-.ev-meta b{color:var(--ink);font-weight:500}
-.stats{display:flex;gap:22px}
-.stat .v{font:600 24px/1 var(--f-mono);font-variant-numeric:tabular-nums}
-.stat .l{font:500 10.5px/1.3 var(--f-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-top:5px}
-.legend{display:flex;flex-wrap:wrap;gap:8px;padding-block:6px 14px;align-items:stretch}
-.legend .lg-t{font:600 13px/1 var(--f-display);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);align-self:center;margin-right:4px}
-.lg{display:flex;align-items:center;gap:9px;padding:6px 11px 6px 6px;border-radius:8px;background:var(--surface);border:1px solid var(--line);min-width:0}
-.lg-n{font-weight:500;font-size:13px;line-height:1.2}
-.lg-d{font-size:11.5px;color:var(--muted);line-height:1.25}
+.ev-name{font:700 26px/1.1 var(--f-display);letter-spacing:.01em;margin:0}
+.ev-facts{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;color:var(--muted);font-size:13px}
+.ev-facts b{color:var(--ink);font:600 13px/1 var(--f-mono)}
+.ev-more{font-size:13px;color:var(--muted)}
+.ev-more summary{cursor:pointer;color:var(--accent);font-weight:500}
+.ev-more dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;margin:8px 0 0}
+.ev-more dt{color:var(--muted)} .ev-more dd{margin:0;color:var(--ink)}
 
 /* ---------- toolbar ---------- */
-.toolbar{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;padding-block:4px 12px}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;padding-block:2px 12px}
 .tb-l,.tb-r{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .search{display:flex;align-items:center;gap:6px;padding:0 9px;border:1px solid var(--line-strong);border-radius:7px;background:var(--surface);color:var(--muted)}
 .search input{border:0;background:transparent;padding:7px 0;width:210px;max-width:46vw;outline:none}
 .colvis{display:flex;flex-wrap:wrap;gap:4px}
-.vis-chip{font:600 11px/1 var(--f-mono);letter-spacing:.04em;padding:6px 7px;border-radius:5px;cursor:pointer;border:1px solid transparent;background:var(--c);color:var(--cfg)}
-.vis-chip.off{background:transparent;color:var(--muted);border-color:var(--line-strong);text-decoration:line-through}
+.vis-chip{display:inline-flex;align-items:center;gap:5px;font:600 11px/1 var(--f-mono);letter-spacing:.04em;padding:5px 7px;border-radius:5px;cursor:pointer;border:1px solid var(--line);background:var(--surface-2);color:var(--ink)}
+.vis-chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c)}
+.vis-chip.off{background:transparent;color:var(--muted);text-decoration:line-through}
+.vis-chip.off::before{opacity:.35}
 
-/* ---------- rundown table ---------- */
-.table-wrap{overflow:auto;max-height:78vh;border:1px solid var(--line);border-radius:10px;background:var(--surface);box-shadow:var(--shadow)}
-table.rd{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%}
-.rd th,.rd td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);vertical-align:top;padding:0;background:var(--surface)}
-.rd thead th{position:sticky;top:0;z-index:3;background:var(--surface-2);text-align:left;padding:9px 10px;font-weight:500;vertical-align:bottom}
-.rd .c-num{position:sticky;left:0;z-index:2;width:62px;min-width:62px;border-left:4px solid var(--k,transparent)}
-.rd thead .c-num{z-index:5;border-left-color:var(--surface-2);font:600 12px var(--f-mono);color:var(--muted)}
-.rd .c-seg{width:268px;min-width:268px}
-@media (min-width:900px){.rd .c-seg{position:sticky;left:62px;z-index:2;box-shadow:1px 0 0 var(--line)} .rd thead .c-seg{z-index:5}}
-.rd .c-pgm{width:116px;min-width:116px}
-.rd .c-src{width:176px;min-width:176px}
-.rd .c-note{width:190px;min-width:190px}
-.rd thead th.c-src{border-top:4px solid var(--c);padding-top:7px}
-.th-k{display:block;font:600 12px/1 var(--f-mono);color:var(--tally);letter-spacing:.08em}
-.th-n{display:block;font-weight:600;font-size:13px;margin-top:6px;line-height:1.2}
-.th-s{display:block;font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.25}
-.th-c{font-size:11.5px;color:var(--muted);font-weight:400}
-.c-num .num{font:600 18px/1 var(--f-mono);padding:9px 0 0 9px;font-variant-numeric:tabular-nums}
-.c-num .time{font:500 11px/1 var(--f-mono);color:var(--muted);padding:5px 0 0 9px}
-.rtools{display:grid;grid-template-columns:repeat(2,26px);gap:2px;padding:8px 4px 8px 4px;opacity:.55}
-tr:hover .rtools,tr:focus-within .rtools{opacity:1}
-.rd textarea,.rd input.cell{display:block;width:100%;border:0;background:transparent;resize:none;padding:8px 10px;line-height:1.4;font-size:13px;min-height:34px;field-sizing:content;border-radius:0}
-.rd textarea:focus,.rd input.cell:focus{outline:2px solid var(--accent);outline-offset:-2px;background:var(--surface)}
-.rd textarea[readonly]:focus{outline:none}
-.rd textarea::placeholder,.rd input::placeholder{color:color-mix(in srgb,var(--muted) 55%,transparent)}
-.rd textarea.seg{font-weight:600;font-size:14px;padding-bottom:2px}
-.rd textarea.cue{font-style:italic;color:var(--muted);font-size:12.5px;padding-top:4px}
-.seg-meta{display:flex;gap:6px;padding:4px 10px 2px;align-items:center}
-.kind-sel{font:500 11.5px var(--f-body);padding:3px 6px;border-radius:999px;border:1px solid color-mix(in srgb,var(--k) 55%,var(--line));background:color-mix(in srgb,var(--k) 13%,var(--surface));color:var(--ink);max-width:118px}
-.seg-meta input{border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-size:12px;background:var(--surface);min-width:0}
-.seg-meta .mc{flex:1 1 auto;width:70px}
-.seg-meta .dur{width:56px;flex:none;font-family:var(--f-mono)}
-.seg-meta input[readonly]{border-color:transparent;padding-inline:0}
-.c-pgm-in{padding:8px}
-.pgm-sel{width:100%;font:600 12.5px var(--f-mono);color:var(--tally);background:var(--tally-soft);border:1px solid color-mix(in srgb,var(--tally) 45%,transparent);border-radius:6px;padding:6px 5px}
-.pgm-sel:disabled{opacity:1}
-.pgm-name{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.25}
-.rd td.c-src.is-pgm{background:color-mix(in srgb,var(--tally) 8%,var(--surface));box-shadow:inset 3px 0 0 var(--tally)}
-.rd td.c-src.is-pgm textarea{font-weight:500}
+/* print menu */
+.menu{position:relative}
+.menu>summary{list-style:none}
+.menu>summary::-webkit-details-marker{display:none}
+.menu-pop{position:absolute;right:0;top:calc(100% + 6px);z-index:25;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:6px;display:grid;gap:2px;width:min(300px,calc(100vw - 32px))}
+.mi{display:flex;gap:10px;align-items:flex-start;text-align:left;padding:8px 10px;border-radius:7px;border:0;background:transparent;color:var(--ink);font:500 13.5px/1.3 var(--f-body);cursor:pointer;width:100%}
+.mi:hover,.mi:focus-visible{background:var(--surface-2)}
+.mi:disabled{opacity:.5}
+.mi small{display:block;color:var(--muted);font-size:12px;font-weight:400;margin-top:2px}
+.mi svg{margin-top:1px}
+.mi-sep{height:1px;background:var(--line);margin:4px 2px}
+.mi-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 10px;font-size:12.5px;color:var(--muted)}
+
+/* ---------- rundown: compact list, one line per cue (click to edit) ---------- */
+.list{border:1px solid var(--line);border-radius:10px;background:var(--surface);box-shadow:var(--shadow);overflow-x:auto}
+.list-in{min-width:100%}
+.list{--cols:58px minmax(220px,2.3fr) minmax(190px,1.5fr) 92px minmax(150px,1.1fr)}
+.list.crew-on .list-in{width:max-content}
+.cue-row{display:grid;grid-template-columns:var(--cols);border-bottom:1px solid var(--line);cursor:pointer;outline-offset:-2px}
+.cue-row:last-child{border-bottom:0}
+.cue-row>div{padding:8px 10px;min-width:0}
+.cue-row:hover{background:color-mix(in srgb,var(--surface-2) 70%,var(--surface))}
+.cue-row.sel{background:var(--accent-soft)}
+.cue-row.head{cursor:default;background:var(--surface-2);font:500 10.5px/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.cue-row.head>div{padding-block:8px}
+.r-num{font:600 16px/1 var(--f-mono);font-variant-numeric:tabular-nums;border-left:3px solid var(--k,transparent)}
+.r-num .time{display:block;font:500 11px/1 var(--f-mono);color:var(--muted);margin-top:5px}
+.clamp1,.clamp2{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
+.clamp1{-webkit-line-clamp:1}.clamp2{-webkit-line-clamp:2}
+.r-title{font-weight:600;font-size:14px;line-height:1.3}
+.r-mc{font-size:12.5px;line-height:1.35;color:var(--muted);margin-top:2px}
+.r-mc i{font-style:italic}
+.r-call{font-size:12.5px;line-height:1.35}
+.r-call .sb{color:var(--muted)}
+.r-call .go{font-weight:600}
+.r-note{font-size:12.5px;line-height:1.35;color:var(--ink)}
+.r-task{font-size:12.5px;line-height:1.35;white-space:pre-line}
+.r-task.is-pgm{box-shadow:inset 3px 0 0 var(--tally)}
+.r-task .none{color:var(--line-strong)}
 .empty-row{color:var(--muted);padding:14px 4px}
 .foot-note{color:var(--muted);font-size:12.5px;padding-block:10px 40px}
+@media (max-width:700px){
+  .list{border:0;background:transparent;box-shadow:none;overflow:visible}
+  .list.crew-on .list-in{width:auto}
+  .cue-row.head{display:none}
+  .cue-row{grid-template-columns:44px minmax(0,1fr) auto;grid-template-areas:"num seg pgm" "num call call" "num note note";background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-bottom:8px}
+  .cue-row:last-child{border-bottom:1px solid var(--line)}
+  .r-num{grid-area:num}.r-seg{grid-area:seg}.r-pgm{grid-area:pgm}
+  .r-call{grid-area:call;padding-top:0!important}.r-note{grid-area:note;padding-top:0!important}
+  .r-note:empty{display:none}
+  .r-task{display:none}
+}
+
+/* ---------- edit panel (one cue) ---------- */
+.cue-panel{position:fixed;top:0;right:0;bottom:0;width:min(460px,100vw);background:var(--surface);border-left:1px solid var(--line);box-shadow:-14px 0 36px rgba(0,0,0,.2);z-index:29;display:flex;flex-direction:column}
+.pn-head{display:flex;align-items:center;gap:6px;padding:12px 12px 12px 16px;border-bottom:1px solid var(--line)}
+.pn-head h2{font:700 24px/1 var(--f-display);margin-right:auto}
+.pn-head h2 small{font:500 13px var(--f-mono);color:var(--muted);margin-left:6px}
+.pn-body{overflow:auto;padding:14px 16px 20px;display:grid;gap:12px;flex:1;align-content:start}
+.pn-sec{font:600 11px/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:6px;padding-top:12px;border-top:1px solid var(--line)}
+.pn-foot{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
+.pn-foot .danger{margin-left:auto}
+.fld select{padding:8px 10px;border:1px solid var(--line-strong);border-radius:7px;background:var(--surface);width:100%;min-width:0}
+.fld>span .code{margin-right:6px;text-transform:none;letter-spacing:.04em}
+.row3{display:grid;grid-template-columns:1.2fr 1fr .7fr;gap:10px}
+.fld.pgm select{color:var(--tally);font:600 13px var(--f-mono)}
+.hintline{font-size:12px;color:var(--muted);margin:-4px 0 0}
+@media (min-width:1100px){body.panel-open main.wrap{padding-right:calc(460px + 16px)}}
+/* phone: top bar = event picker row + tabs (no brand row, status as a dot) */
+@media (max-width:640px){
+  .brand{display:none}
+  .topbar-in{padding-block:8px 2px}
+  .event-pick{flex:1 1 100%;gap:6px}
+  .event-pick select{max-width:none}
+  #newEventBtn .lbl{display:none}
+  .status{font-size:0;gap:0;padding:9px}
+  .ev-name{font-size:22px}
+  .toolbar .search input{width:120px}
+}
+.btn.icon{padding:7px 9px}
 
 /* ---------- live ---------- */
 .live{display:grid;gap:14px;padding-block:16px 48px}
@@ -211,7 +251,7 @@ details.adv summary{cursor:pointer;list-style:revert}
 .tally.pvw{background:var(--preview-soft);color:var(--ink);border:1px solid color-mix(in srgb,var(--preview) 50%,transparent)}
 .tally.pvw .tl{background:var(--preview);color:#fff}
 .live-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:10px}
-.lcard{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--c);border-radius:10px;padding:12px 13px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.lcard{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--c);border-radius:10px;padding:12px 13px;display:flex;flex-direction:column;gap:8px;min-width:0}
 .lcard.on{outline:3px solid var(--tally);outline-offset:-1px;background:color-mix(in srgb,var(--tally) 6%,var(--surface))}
 .lcard.pvw{outline:2px dashed var(--preview);outline-offset:-1px}
 .lc-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -219,6 +259,7 @@ details.adv summary{cursor:pointer;list-style:revert}
 .lc-h .badge{margin-left:auto}
 .lc-crew{font-size:11.5px;color:var(--muted);margin-top:-4px}
 .lcard .now{font-size:16px;font-weight:500;line-height:1.35;white-space:pre-line;overflow-wrap:anywhere}
+.lcard.idle{opacity:.5}
 .lcard.idle .now{color:var(--muted);font-weight:400;font-size:14px}
 .lcard .nxt{font-size:12.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:7px;margin-top:auto;white-space:pre-line;overflow-wrap:anywhere}
 .l{font:600 10px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
@@ -319,8 +360,6 @@ dialog::backdrop{background:rgba(8,12,16,.5)}
 .toast[data-tone="warn"]{background:var(--warn);color:#fff}
 
 @media (max-width:640px){
-  .ev-head{grid-template-columns:minmax(0,1fr)}
-  .stats{gap:18px}
   .tally-row{grid-template-columns:minmax(0,1fr)}
   .live-now{grid-template-columns:minmax(0,1fr);padding:16px}
   .live-num{font-size:52px}
@@ -329,8 +368,8 @@ dialog::backdrop{background:rgba(8,12,16,.5)}
   .kl-num{padding-left:12px}
 }
 @media print{
-  .topbar,.toolbar,.rtools,.legend,.banner,.tabs{display:none!important}
-  .table-wrap{max-height:none;overflow:visible;box-shadow:none}
+  .topbar,.toolbar,.banner,.tabs,.cue-panel{display:none!important}
+  .list{overflow:visible;box-shadow:none}
   body{background:#fff}
 }
 </style>
@@ -339,61 +378,59 @@ dialog::backdrop{background:rgba(8,12,16,.5)}
   <div class="wrap topbar-in">
     <div class="brand">
       <div class="brand-mark" aria-hidden="true"><i></i></div>
-      <div><div class="brand-k">Cue Sheet</div><div class="brand-s">Kru multimedia</div></div>
+      <div class="brand-k">Cue Sheet</div>
     </div>
     <div class="event-pick">
-      <label for="eventSel" class="sr">Pilih majlis</label>
-      <select id="eventSel" disabled><option>Memuatkan…</option></select>
-      <button class="btn" id="newEventBtn" data-act="new-event" hidden>+ Majlis baru</button>
-      <span class="status" id="status" role="status">Memuatkan</span>
+      <label for="eventSel" class="sr">Choose event</label>
+      <select id="eventSel" disabled><option>Loading…</option></select>
+      <button class="btn" id="newEventBtn" data-act="new-event" title="New event" hidden>+<span class="lbl"> New event</span></button>
+      <span class="status" id="status" role="status">Loading</span>
+      <button class="btn theme-btn" data-act="theme" id="themeBtn" title="Switch light / dark"></button>
     </div>
   </div>
-  <nav class="wrap tabs" aria-label="Paparan">
-    <a href="#rundown" data-view="rundown">Rundown</a>
-    <a href="#live" data-view="live"><span class="dot" aria-hidden="true"></span>Mod Live</a>
-    <a href="#kru" data-view="kru">Ikut Kru</a>
-    <a href="#tetapan" data-view="tetapan">Tetapan</a>
-  </nav>
+  <nav class="wrap tabs" aria-label="Views"></nav>
 </header>
 
 <main class="wrap">
-  <section id="evHead" aria-label="Maklumat majlis"></section>
-  <section id="view-rundown" aria-label="Rundown"><div class="loading"><div class="sk"></div><div class="sk"></div><div class="sk short"></div><p>Memuatkan rundown…</p></div></section>
-  <section id="view-live" class="live" aria-label="Mod live" hidden></section>
-  <section id="view-kru" class="kru" aria-label="Helaian ikut kru" hidden></section>
-  <section id="view-tetapan" aria-label="Tetapan" hidden></section>
+  <section id="evHead" aria-label="Event"></section>
+  <section id="view-rundown" aria-label="Rundown"><div class="loading"><div class="sk"></div><div class="sk"></div><div class="sk short"></div><p>Loading rundown…</p></div></section>
+  <section id="view-live" class="live" aria-label="Live" hidden></section>
+  <section id="view-crew" class="kru" aria-label="Crew sheets" hidden></section>
+  <section id="view-settings" aria-label="Settings" hidden></section>
 </main>
+
+<aside id="cuePanel" class="cue-panel" aria-label="Edit cue" hidden></aside>
 
 <dialog id="newDlg" aria-labelledby="newDlgT">
   <form class="dlg" id="newForm" novalidate>
-    <h2 id="newDlgT">Majlis baru</h2>
-    <label class="fld"><span>Nama majlis</span><input id="nfName" type="text" placeholder="cth. Hari Anugerah Cemerlang 2027" autocomplete="off"></label>
+    <h2 id="newDlgT">New event</h2>
+    <label class="fld"><span>Event name</span><input id="nfName" type="text" placeholder="e.g. Awards Night 2027" autocomplete="off"></label>
     <div class="row2">
-      <label class="fld"><span>Tarikh</span><input id="nfDate" type="date"></label>
-      <label class="fld"><span>Masa mula</span><input id="nfStart" type="time"></label>
+      <label class="fld"><span>Date</span><input id="nfDate" type="date"></label>
+      <label class="fld"><span>Start time</span><input id="nfStart" type="time"></label>
     </div>
     <fieldset class="fld">
-      <legend>Mula daripada</legend>
+      <legend>Start from</legend>
       <div class="opts">
-        <label class="opt"><input type="radio" name="nfFrom" value="blank" checked><span><b>Kosong</b><small>Sumber lalai: Main Cam (MC), LT MC, PTZ, CAM 1 (Stage), Fly, Laptop, Audio. Tiada cue.</small></span></label>
-        <label class="opt" data-needs-cur><input type="radio" name="nfFrom" value="sources"><span><b>Salin sumber &amp; kru</b><small>Ambil senarai sumber dan nama kru daripada <i class="nf-cur"></i>.</small></span></label>
-        <label class="opt" data-needs-cur><input type="radio" name="nfFrom" value="all"><span><b>Salin semua</b><small>Sumber, kru, semua cue dan tugasan daripada <i class="nf-cur"></i>. Sesuai untuk majlis yang formatnya sama.</small></span></label>
+        <label class="opt"><input type="radio" name="nfFrom" value="blank" checked><span><b>Blank</b><small>Default sources: Main Cam (MC), LT MC, PTZ, CAM 1 (Stage), Fly, Laptop, Audio. No cues.</small></span></label>
+        <label class="opt" data-needs-cur><input type="radio" name="nfFrom" value="sources"><span><b>Copy sources &amp; crew</b><small>Take the sources and crew names from <i class="nf-cur"></i>.</small></span></label>
+        <label class="opt" data-needs-cur><input type="radio" name="nfFrom" value="all"><span><b>Copy everything</b><small>Sources, crew, all cues and tasks from <i class="nf-cur"></i>. Good for an event with the same format.</small></span></label>
       </div>
     </fieldset>
     <div class="err" id="nfErr" aria-live="polite"></div>
     <div class="dlg-acts">
-      <button type="button" class="btn" id="nfCancel">Batal</button>
-      <button type="submit" class="btn primary">Cipta majlis</button>
+      <button type="button" class="btn" id="nfCancel">Cancel</button>
+      <button type="submit" class="btn primary">Create event</button>
     </div>
   </form>
 </dialog>
 
 <dialog id="copyDlg" aria-labelledby="copyDlgT">
   <div class="dlg">
-    <h2 id="copyDlgT">Salin teks</h2>
-    <p class="pd" style="margin:0">Teks sudah dipilih. Tekan Ctrl+C (atau tahan dan pilih Salin di telefon), kemudian tampal dalam WhatsApp.</p>
+    <h2 id="copyDlgT">Copy text</h2>
+    <p class="pd" style="margin:0">The text is selected. Press Ctrl+C (or long-press and choose Copy on a phone), then paste it in WhatsApp.</p>
     <textarea id="copyTa" readonly></textarea>
-    <div class="dlg-acts"><button type="button" class="btn primary" id="copyClose">Tutup</button></div>
+    <div class="dlg-acts"><button type="button" class="btn primary" id="copyClose">Close</button></div>
   </div>
 </dialog>
 
@@ -426,36 +463,37 @@ const LS = {
 const MAX_DOC = 250 * 1024;
 const docSize = o => new Blob([JSON.stringify(o)]).size;
 const kb = n => Math.ceil(n / 1024) + ' KB';
-const TOO_BIG = n => `Majlis ini terlalu besar untuk disimpan (${kb(n)}, had 250 KB). Pendekkan teks panjang atau pecahkan kepada dua majlis.`;
+const TOO_BIG = n => `This event is too big to save (${kb(n)}, limit 250 KB). Shorten long text or split it into two events.`;
 
 /* ---------- constants ---------- */
-const VIEWS = ['rundown', 'live', 'kru', 'tetapan'];
+const VIEWS = ['rundown', 'live', 'crew', 'settings'];
+const OLD_VIEWS = { kru: 'crew', tetapan: 'settings' }; // links made before the English update
 const KINDS = [
-  { id: 'mc', label: 'Pengacara', h: 205 },
-  { id: 'perarakan', label: 'Perarakan', h: 28 },
-  { id: 'quran', label: 'Al-Quran & Doa', h: 158 },
-  { id: 'ucapan', label: 'Ucapan', h: 228 },
+  { id: 'mc', label: 'MC', h: 205 },
+  { id: 'perarakan', label: 'Procession', h: 28 },
+  { id: 'quran', label: 'Quran & prayer', h: 158 },
+  { id: 'ucapan', label: 'Speech', h: 228 },
   { id: 'multimedia', label: 'Multimedia', h: 46 },
-  { id: 'persembahan', label: 'Persembahan', h: 285 },
-  { id: 'anugerah', label: 'Anugerah', h: 330 },
-  { id: 'penutup', label: 'Penutup', h: 190 },
-  { id: 'lain', label: 'Lain-lain', h: 215 }
+  { id: 'persembahan', label: 'Performance', h: 285 },
+  { id: 'anugerah', label: 'Award', h: 330 },
+  { id: 'penutup', label: 'Closing', h: 190 },
+  { id: 'lain', label: 'Other', h: 215 }
 ];
 const KIND_IDS = KINDS.map(k => k.id);
 const kindOf = id => KINDS.find(k => k.id === id) || KINDS[KINDS.length - 1];
 const kindColor = k => `hsl(${k.h} 52% 50%)`;
 const DEFAULT_SOURCES = [
-  { id: 'main', code: 'MAIN', name: 'Main Cam (MC)', desc: 'Kamera utama', crew: '', color: '#2F6FDE' },
-  { id: 'ltmc', code: 'LT', name: 'LT MC', desc: 'Lower third: nama & tajuk', crew: '', color: '#8B5CF6' },
-  { id: 'ptz', code: 'PTZ', name: 'PTZ', desc: 'Kamera kawalan jauh', crew: '', color: '#0E9AA7' },
-  { id: 'cam1', code: 'CAM1', name: 'CAM 1 (Stage)', desc: 'Kamera pentas', crew: '', color: '#2E9E4F' },
-  { id: 'fly', code: 'FLY', name: 'Fly', desc: 'Kamera bergerak (roving)', crew: '', color: '#E2702A' },
-  { id: 'laptop', code: 'LAP', name: 'Laptop', desc: 'Slide, video & grafik', crew: '', color: '#C99A06' },
-  { id: 'audio', code: 'AUD', name: 'Audio', desc: 'Mikrofon, muzik & SFX', crew: '', color: '#B5559B' }
+  { id: 'main', code: 'MAIN', name: 'Main Cam (MC)', desc: 'Main camera', crew: '', color: '#2F6FDE' },
+  { id: 'ltmc', code: 'LT', name: 'LT MC', desc: 'Lower third: name & title', crew: '', color: '#8B5CF6' },
+  { id: 'ptz', code: 'PTZ', name: 'PTZ', desc: 'Remote camera', crew: '', color: '#0E9AA7' },
+  { id: 'cam1', code: 'CAM1', name: 'CAM 1 (Stage)', desc: 'Stage camera', crew: '', color: '#2E9E4F' },
+  { id: 'fly', code: 'FLY', name: 'Fly', desc: 'Roving camera', crew: '', color: '#E2702A' },
+  { id: 'laptop', code: 'LAP', name: 'Laptop', desc: 'Slides, video & graphics', crew: '', color: '#C99A06' },
+  { id: 'audio', code: 'AUD', name: 'Audio', desc: 'Mics, music & SFX', crew: '', color: '#B5559B' }
 ];
 const NEW_COLORS = ['#2F6FDE', '#8B5CF6', '#0E9AA7', '#2E9E4F', '#E2702A', '#C99A06', '#B5559B', '#5B7083', '#C2410C', '#0F766E'];
-const DAYS = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
-const MONTHS = ['Januari', 'Februari', 'Mac', 'April', 'Mei', 'Jun', 'Julai', 'Ogos', 'September', 'Oktober', 'November', 'Disember'];
+const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 /* ---------- state ---------- */
 const S = {
@@ -466,7 +504,8 @@ const S = {
   liveIdx: 0, liveSince: Date.now(), wake: null,
   call: null, callT: 0, callTick: 1000, beeps: 0, mute: LS.get('cs.mute', false),
   kruSrc: LS.get('cs.kru', null), kruAll: false,
-  hidden: LS.get('cs.hidden', {}), paper: LS.get('cs.paper', 'a4')
+  hidden: LS.get('cs.hidden', {}), paper: LS.get('cs.paper', 'a4'),
+  panelId: null, crewCols: LS.get('cs.crewcols', false)
 };
 
 /* ---------- helpers ---------- */
@@ -479,10 +518,10 @@ const cueById = id => S.ev.cues.find(c => c.id === id);
 function fmtDate(d) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(d || '')) return '';
   const [y, m, day] = d.split('-').map(Number); const dt = new Date(y, m - 1, day);
-  return `${DAYS[dt.getDay()]}, ${day} ${MONTHS[m - 1]} ${y}`;
+  return `${DAYS[dt.getDay()]}, ${day} ${MONTHS[m - 1].slice(0, 3)} ${y}`;
 }
 function fmtShort(d) { if (!/^\d{4}-\d{2}-\d{2}$/.test(d || '')) return ''; const [y, m, day] = d.split('-').map(Number); return `${day} ${MONTHS[m - 1].slice(0, 3)} ${y}`; }
-function fmtDur(min) { const t = Math.round(min); const h = Math.floor(t / 60), m = t % 60; return h ? `${h}j ${pad(m)}m` : `${m} min`; }
+function fmtDur(min) { const t = Math.round(min); const h = Math.floor(t / 60), m = t % 60; return h ? `${h}h ${pad(m)}m` : `${m} min`; }
 function hhmm(min) { const t = Math.round(min); return pad(Math.floor(t / 60) % 24) + ':' + pad(t % 60); }
 function cueTimes(ev) {
   const m = /^(\d{1,2}):(\d{2})$/.exec(ev.start || '');
@@ -491,8 +530,8 @@ function cueTimes(ev) {
   return ev.cues.map(c => { const t = ok ? hhmm(acc) : ''; if (c.dur != null) acc += c.dur; else ok = false; return t; });
 }
 function totalDur(ev) { let min = 0, n = 0; ev.cues.forEach(c => { if (c.dur != null) { min += c.dur; n++; } }); return { min, n }; }
-function mcList(ev) { const set = new Set(); ev.cues.forEach(c => { if (c.mc) set.add(c.mc); }); ['Bersama'].forEach(x => set.add(x)); return Array.from(set); }
-function slug(s) { return (str(s).toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40)) || 'majlis'; }
+function mcList(ev) { const set = new Set(); ev.cues.forEach(c => { if (c.mc) set.add(c.mc); }); ['Both'].forEach(x => set.add(x)); return Array.from(set); }
+function slug(s) { return (str(s).toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40)) || 'event'; }
 function orderedIds() {
   return Object.keys(S.events).sort((a, b) => {
     const A = S.events[a], B = S.events[b];
@@ -508,14 +547,14 @@ function normEvent(e) {
   const seenS = new Set(), seenC = new Set();
   const sources = (Array.isArray(e.sources) ? e.sources : clone(DEFAULT_SOURCES)).filter(s => s && typeof s === 'object').map(s => {
     let id = str(s.id).replace(/[^\w-]/g, '') || 's' + rid(5); while (seenS.has(id)) id = 's' + rid(5); seenS.add(id);
-    return { id, code: str(s.code) || 'SRC', name: str(s.name) || str(s.code) || 'Sumber', desc: str(s.desc), crew: str(s.crew), color: /^#[0-9a-f]{6}$/i.test(s.color) ? s.color : '#5B7083' };
+    return { id, code: str(s.code) || 'SRC', name: str(s.name) || str(s.code) || 'Source', desc: str(s.desc), crew: str(s.crew), color: /^#[0-9a-f]{6}$/i.test(s.color) ? s.color : '#5B7083' };
   });
   const cues = (Array.isArray(e.cues) ? e.cues : []).filter(c => c && typeof c === 'object').map(c => {
     let id = str(c.id).replace(/[^\w-]/g, '') || 'c' + rid(7); while (seenC.has(id)) id = 'c' + rid(7); seenC.add(id);
     return { id, seg: str(c.seg), kind: KIND_IDS.includes(c.kind) ? c.kind : 'lain', mc: str(c.mc), cue: str(c.cue), pgm: str(c.pgm), dur: num(c.dur), note: str(c.note), tasks: objStr(c.tasks), sb: str(c.sb), go: str(c.go) };
   });
   return {
-    name: str(e.name) || 'Majlis tanpa nama', theme: str(e.theme), date: str(e.date), start: str(e.start), venue: str(e.venue),
+    name: str(e.name) || 'Untitled event', theme: str(e.theme), date: str(e.date), start: str(e.start), venue: str(e.venue),
     mcs: str(e.mcs), director: str(e.director), notes: str(e.notes), sources, cues,
     words: normWords(e.words),
     createdAt: Number(e.createdAt) || Date.now(), updatedAt: Number(e.updatedAt) || Date.now()
@@ -525,9 +564,9 @@ function normEvent(e) {
 /* ---------- director calls ("Okay camera CAM1 standby" … "in 3, 2, 1" … "CAM1 masuk") ---------- */
 const DEFAULT_WORDS = { standby: 'Okay camera {src} standby', standbyOther: 'Okay {src} standby', go: '{src} masuk', back: 'back to {src}', ltStandby: 'LT standby', lt: 'LT in', count: 'in' };
 const WORD_LABELS = [
-  ['standby', 'Standby kamera', 'Okay camera {src} standby'], ['standbyOther', 'Standby bukan kamera (laptop, video)', 'Okay {src} standby'], ['go', 'Masuk ke sumber', '{src} masuk'],
-  ['back', 'Balik ke kamera utama', 'back to {src}'], ['ltStandby', 'LT bersedia', 'LT standby'],
-  ['lt', 'LT masuk', 'LT in'], ['count', 'Sebelum kiraan 3 2 1', 'in']
+  ['standby', 'Camera standby', 'Okay camera {src} standby'], ['standbyOther', 'Standby, not a camera (laptop, video)', 'Okay {src} standby'], ['go', 'Cut to a source', '{src} masuk'],
+  ['back', 'Back to the main camera', 'back to {src}'], ['ltStandby', 'LT ready', 'LT standby'],
+  ['lt', 'LT on screen', 'LT in'], ['count', 'Said before 3 2 1', 'in']
 ];
 function normWords(w) { const o = {}; Object.keys(DEFAULT_WORDS).forEach(k => { const v = w && typeof w === 'object' ? str(w[k]).trim() : ''; o[k] = v || DEFAULT_WORDS[k]; }); return o; }
 const isLtSource = s => /^LT\b/i.test(s.code) || /lower\s*third|^LT\b/i.test(s.name);
@@ -543,7 +582,7 @@ function callInto(ev, i) {
   const fill = t => t.replace(/\{src\}/g, code);
   let sb = [switching ? fill(isCamera(src, ev) ? W.standby : W.standbyOther) : '', lt ? W.ltStandby : ''].filter(Boolean).join(' · ');
   let go = [switching ? fill(isMain ? W.back : W.go) : '', lt ? W.lt : ''].filter(Boolean).join(' · ');
-  if (!sb) sb = 'Standby cue seterusnya'; if (!go) go = 'Seterusnya';
+  if (!sb) sb = 'Standby next cue'; if (!go) go = 'Next';
   return { sb: str(c.sb).trim() || sb, go: str(c.go).trim() || go, autoSb: sb, autoGo: go, src, lt, count: W.count };
 }
 
@@ -562,7 +601,12 @@ const ICONS = {
   eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
   alert: '<path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17v.5"/>',
   chat: '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>',
-  dup: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M4 16V5a1 1 0 0 1 1-1h11"/>'
+  dup: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M4 16V5a1 1 0 0 1 1-1h11"/>',
+  x: '<path d="M6 6l12 12M18 6 6 18"/>',
+  print: '<path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  moon: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+  users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/>'
 };
 const icon = n => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n] || ''}</svg>`;
 
@@ -576,7 +620,7 @@ function captureFocus() { const a = document.activeElement; if (!a || !a.dataset
 function restoreFocus(f) { if (!f) return; const el = $$('[data-k]').find(x => x.dataset.k === f.k); if (!el) return; el.focus({ preventScroll: true }); try { if (f.s != null) el.setSelectionRange(f.s, f.e); } catch (x) {} }
 function arm(btn, key, label) {
   if (S.armed === key) { S.armed = null; return true; }
-  S.armed = key; btn.classList.add('armed'); const old = btn.innerHTML; if (label) btn.textContent = label; btn.title = 'Tekan sekali lagi untuk sahkan';
+  S.armed = key; btn.classList.add('armed'); const old = btn.innerHTML; if (label) btn.textContent = label; btn.title = 'Press again to confirm';
   clearTimeout(arm.t); arm.t = setTimeout(() => { if (S.armed === key) { S.armed = null; btn.classList.remove('armed'); btn.innerHTML = old; } }, 3000);
   return false;
 }
@@ -590,12 +634,12 @@ function getCap(name) {
 async function offerFile(filename, data) {
   const dl = await getCap('downloads');
   if (dl) {
-    try { await dl.save({ filename, data }); toast('Fail sedia: ' + filename); }
+    try { await dl.save({ filename, data }); toast('File ready: ' + filename); }
     catch (e) {
       const c = e && e.code;
       if (c === 'declined') return;
-      if (c === 'rate_limited') toast('Ada tetingkap simpan yang masih terbuka. Cuba lagi sebentar.', 'warn');
-      else toast('Tidak dapat simpan fail' + (e && e.message ? ': ' + e.message : '.'), 'warn');
+      if (c === 'rate_limited') toast('A save window is still open. Try again in a moment.', 'warn');
+      else toast('Could not save the file' + (e && e.message ? ': ' + e.message : '.'), 'warn');
     }
     return;
   }
@@ -604,14 +648,14 @@ async function offerFile(filename, data) {
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); return;
   }
-  toast('Muat turun tidak tersedia dalam paparan ini.', 'warn');
+  toast('Downloads are not available here.', 'warn');
 }
 
 /* ---------- persistence ---------- */
 function touch() {
   if (!S.ev || !S.canWrite) return;
   S.dirty = true; S.ev.updatedAt = Date.now();
-  setStatus('Belum disimpan', 'busy');
+  setStatus('Not saved yet', 'busy');
   clearTimeout(S.saveT); S.saveT = setTimeout(flush, 700);
 }
 async function flush() {
@@ -620,27 +664,27 @@ async function flush() {
   if (S.saving) { S.pending = true; return; }
   if (!S.dirty) return;
   const id = S.curId; const body = clone(S.ev); const size = docSize(body);
-  if (size > MAX_DOC) { setStatus('Terlalu besar: tidak disimpan', 'warn'); if (!flush.warned) toast(TOO_BIG(size), 'warn'); flush.warned = true; return; }
+  if (size > MAX_DOC) { setStatus('Too big: not saved', 'warn'); if (!flush.warned) toast(TOO_BIG(size), 'warn'); flush.warned = true; return; }
   flush.warned = false;
-  S.saving = true; S.dirty = false; setStatus('Menyimpan…', 'busy');
+  S.saving = true; S.dirty = false; setStatus('Saving…', 'busy');
   try {
     if (S.mode === 'db') await S.db.doc('events/' + id).set(body);
     S.events[id] = body;
     if (S.mode === 'local' && !LS.set('cs.events', S.events)) throw { code: 'quota_exceeded' };
     S.retried = false;
-    setStatus(S.mode === 'local' ? 'Disimpan (pelayar ini)' : 'Disimpan', 'ok');
+    setStatus(S.mode === 'local' ? 'Saved (this browser)' : 'Saved', 'ok');
   } catch (e) {
     S.dirty = true; const c = e && e.code;
     if (c === 'conflict' && S.db && S.db.forget) { // someone else saved this event first: take theirs
-      S.dirty = false; setStatus('Dimuat semula', 'warn');
-      toast('Ada orang lain telah ubah majlis ini. Versi terkini dimuat semula; perubahan terakhir anda tidak disimpan.', 'warn');
+      S.dirty = false; setStatus('Reloaded', 'warn');
+      toast('Someone else changed this event. The latest version is loaded; your last change was not saved.', 'warn');
       S.db.forget(id);
     }
-    else if (c === 'permission_denied') { S.canWrite = false; S.roReason = 'Link ini sudah ditukar atau tidak lagi boleh mengubah data. Minta link terkini daripada pemilik.'; setStatus('Baca sahaja', 'warn'); renderAll(); }
-    else if (c === 'invalid_argument' || c === 'transform_error') { S.canWrite = false; S.roReason = 'Perubahan tidak dapat disimpan. Anda mungkin hanya ada akses lihat.'; setStatus('Baca sahaja', 'warn'); renderAll(); }
-    else if (c === 'unavailable' && !S.retried) { S.retried = true; setStatus('Cuba simpan semula…', 'busy'); setTimeout(flush, 700 + Math.random() * 900); }
-    else if (c === 'quota_exceeded') { setStatus('Gagal simpan', 'warn'); toast('Storan penuh. Padam majlis lama yang tidak diperlukan.', 'warn'); }
-    else { setStatus('Gagal simpan', 'warn'); toast('Gagal simpan' + (e && e.message ? ': ' + e.message : '') + '. Perubahan masih ada di skrin; cuba edit semula.', 'warn'); }
+    else if (c === 'permission_denied') { S.canWrite = false; S.roReason = 'This link was changed or can no longer edit. Ask the owner for the latest link.'; setStatus('Read-only', 'warn'); renderAll(); }
+    else if (c === 'invalid_argument' || c === 'transform_error') { S.canWrite = false; S.roReason = 'Changes cannot be saved. You may only have view access.'; setStatus('Read-only', 'warn'); renderAll(); }
+    else if (c === 'unavailable' && !S.retried) { S.retried = true; setStatus('Retrying save…', 'busy'); setTimeout(flush, 700 + Math.random() * 900); }
+    else if (c === 'quota_exceeded') { setStatus('Save failed', 'warn'); toast('Storage is full. Delete old events you do not need.', 'warn'); }
+    else { setStatus('Save failed', 'warn'); toast('Save failed' + (e && e.message ? ': ' + e.message : '') + '. Your change is still on screen; try editing again.', 'warn'); }
   } finally {
     S.saving = false;
     if (S.pending) { S.pending = false; flush(); }
@@ -659,7 +703,7 @@ async function removeEvent(id) {
   if (S.mode === 'local') LS.set('cs.events', S.events);
 }
 function pushUndo() { if (!S.ev) return; S.undo.push(JSON.stringify(S.ev)); if (S.undo.length > 50) S.undo.shift(); $$('[data-act="undo"]').forEach(b => { b.disabled = false; }); }
-function doUndo() { const s = S.undo.pop(); if (!s) return; S.ev = JSON.parse(s); S.undoKey = null; touch(); renderAll(); toast('Perubahan terakhir dibatalkan'); }
+function doUndo() { const s = S.undo.pop(); if (!s) return; S.ev = JSON.parse(s); S.undoKey = null; touch(); renderAll(); toast('Last change undone'); }
 
 async function selectEvent(id) {
   if (S.dirty || S.saving) await flush();
@@ -695,57 +739,60 @@ function renderTop() {
   if (S.curId && !ids.includes(S.curId) && S.ev) ids.unshift(S.curId);
   sel.innerHTML = ids.length
     ? ids.map(id => { const e = id === S.curId && S.ev ? S.ev : S.events[id]; return `<option value="${esc(id)}"${id === S.curId ? ' selected' : ''}>${esc(e.name || id)}${e.date ? ' · ' + esc(fmtShort(e.date)) : ''}</option>`; }).join('')
-    : `<option value="">${S.loaded ? 'Tiada majlis lagi' : 'Memuatkan…'}</option>`;
+    : `<option value="">${S.loaded ? 'No events yet' : 'Loading…'}</option>`;
   sel.disabled = ids.length < 1;
   $('#newEventBtn').hidden = !S.canWrite || !S.loaded;
-  $$('.tabs a').forEach(a => { if (a.dataset.view === S.view) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
-  if (!S.canWrite && S.loaded) setStatus('Baca sahaja', '');
+  /* three tabs; the crew sheets page is opened from Print (crew links land on it) */
+  const tabs = [['rundown', 'Rundown'], ['live', '<span class="dot" aria-hidden="true"></span>Live'], ['settings', 'Settings']];
+  if (S.view === 'crew' || (S.gas && S.gas.role === 'crew')) tabs.push(['crew', 'Crew sheets']);
+  $('.tabs').innerHTML = tabs.map(([v, l]) => `<a href="#${v}" data-view="${v}"${v === S.view ? ' aria-current="page"' : ''}>${l}</a>`).join('');
+  drawThemeBtn();
+  if (!S.canWrite && S.loaded) setStatus('Read-only', '');
 }
-function legendHtml(ev) {
-  if (!ev.sources.length) return '';
-  return `<div class="legend" aria-label="Rujukan sumber"><span class="lg-t">Rujukan sumber</span>${ev.sources.map(s => `<div class="lg" style="${srcStyle(s)}"><span class="code">${esc(s.code)}</span><div><div class="lg-n">${esc(s.name)}</div>${(s.desc || s.crew) ? `<div class="lg-d">${esc(s.desc)}${s.desc && s.crew ? ' · ' : ''}${s.crew ? 'Kru: ' + esc(s.crew) : ''}</div>` : ''}</div></div>`).join('')}</div>`;
-}
+/* light / dark: follows the device until the button is pressed, then remembered on this device */
+function curTheme() { const t = document.documentElement.dataset.theme; return t === 'light' || t === 'dark' ? t : (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
+function applyTheme(t) { if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; }
+function drawThemeBtn() { const b = $('#themeBtn'); if (!b) return; const dark = curTheme() === 'dark'; b.innerHTML = icon(dark ? 'sun' : 'moon') + `<span class="sr">${dark ? 'Light mode' : 'Dark mode'}</span>`; b.title = dark ? 'Switch to light' : 'Switch to dark'; }
+function toggleTheme() { const t = curTheme() === 'dark' ? 'light' : 'dark'; applyTheme(t); LS.set('cs.theme', t); drawThemeBtn(); }
+applyTheme(LS.get('cs.theme', null));
 function renderHead() {
   const el = $('#evHead');
   el.hidden = S.view === 'live';
   if (!S.ev) { el.innerHTML = S.mode === 'local' && S.loaded ? localBanner() : ''; return; }
   const ev = S.ev; const tot = totalDur(ev);
+  const more = [['Theme', ev.theme], ['Venue', ev.venue], ['MC', ev.mcs], ['Director', ev.director]].filter(x => x[1]);
   el.innerHTML = `
-    ${S.canWrite ? '' : `<div class="banner">${icon('eye')}<span>${esc(S.roReason || 'Paparan baca sahaja. Hanya pemilik dan editor boleh ubah cue sheet ini.')}</span></div>`}
+    ${S.canWrite ? '' : `<div class="banner">${icon('eye')}<span>${esc(S.roReason || 'Read-only view. Only the owner and editors can change this cue sheet.')}</span></div>`}
     ${S.mode === 'local' ? localBanner() : ''}
     <div class="ev-head">
-      <div>
-        <div class="eyebrow">${esc(fmtDate(ev.date) || 'Tarikh belum ditetapkan')}${ev.start ? ' · Mula ' + esc(ev.start) : ''}</div>
-        <h1 class="ev-name">${esc(ev.name)}</h1>
-        ${ev.theme ? `<div class="ev-theme">“${esc(ev.theme)}”</div>` : ''}
-        <div class="ev-meta">${ev.venue ? `<span>Lokasi <b>${esc(ev.venue)}</b></span>` : ''}${ev.mcs ? `<span>Pengacara <b>${esc(ev.mcs)}</b></span>` : ''}${ev.director ? `<span>Pengarah <b>${esc(ev.director)}</b></span>` : ''}</div>
+      <h1 class="ev-name">${esc(ev.name)}</h1>
+      <div class="ev-facts">
+        <span>${esc(fmtDate(ev.date) || 'No date yet')}${ev.start ? ' · ' + esc(ev.start) : ''}</span>
+        <span><b>${ev.cues.length}</b> cues</span>
+        ${tot.n ? `<span><b>${fmtDur(tot.min)}</b>${tot.n < ev.cues.length ? ` (${tot.n}/${ev.cues.length} timed)` : ''}</span>` : ''}
+        ${more.length ? `<details class="ev-more"><summary>Details</summary><dl>${more.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('')}</dl></details>` : ''}
       </div>
-      <div class="stats">
-        <div class="stat"><div class="v">${ev.cues.length}</div><div class="l">Cue</div></div>
-        <div class="stat"><div class="v">${ev.sources.length}</div><div class="l">Sumber</div></div>
-        <div class="stat"><div class="v">${tot.n ? fmtDur(tot.min) : '—'}</div><div class="l">${tot.n && tot.n < ev.cues.length ? `Anggaran ${tot.n}/${ev.cues.length}` : 'Anggaran masa'}</div></div>
-      </div>
-    </div>
-    ${S.view === 'tetapan' ? '' : legendHtml(ev)}`;
+    </div>`;
 }
-function localBanner() { return `<div class="banner warn">${icon('alert')}<span>Mod luar talian: data disimpan dalam pelayar ini sahaja. Guna Tetapan → Muat turun JSON untuk simpan salinan.</span></div>`; }
+function localBanner() { return `<div class="banner warn">${icon('alert')}<span>Offline copy: saved in this browser only. Use Settings → Download backup to keep a copy.</span></div>`; }
 function renderView() {
   VIEWS.forEach(v => { $('#view-' + v).hidden = v !== S.view; });
   if (S.view === 'rundown') renderRundown();
   else if (S.view === 'live') renderLive();
-  else if (S.view === 'kru') renderKru();
+  else if (S.view === 'crew') renderKru();
   else renderTetapan();
+  if (S.view !== 'rundown') closePanel(); else renderPanel();
   wakeLock(S.view === 'live');
 }
 function emptyHtml() {
-  if (!S.loaded) return `<div class="loading"><div class="sk"></div><div class="sk"></div><div class="sk short"></div><p>Memuatkan rundown…</p></div>`;
-  if (S.mode === 'nolink') return `<div class="empty"><div class="eyebrow">Cue Sheet Multimedia</div><h2>${S.linkBad ? 'Link tidak sah' : 'Buka melalui link anda'}</h2>
-    <p>${S.linkBad ? 'Link ini salah atau sudah ditukar oleh pengarah. Minta link terkini (biasanya dihantar melalui WhatsApp).' : 'App ini dibuka melalui link khas daripada pengarah majlis. Klik link yang dihantar kepada anda, contohnya dalam WhatsApp.'}</p></div>`;
-  if (S.mode === 'offline') return `<div class="empty"><div class="eyebrow">Tiada sambungan</div><h2>Tidak dapat capai server</h2>
-    <p>Semak internet anda, kemudian cuba lagi.</p><div class="empty-acts"><button class="btn primary" data-act="reload">Cuba lagi</button></div></div>`;
-  return `<div class="empty"><div class="eyebrow">Cue sheet kosong</div><h2>Belum ada majlis</h2>
-    <p>${S.mode === 'snapshot' ? 'Salinan cue sheet belum disediakan untuk paparan ini. Log masuk ke Claude untuk lihat versi terkini, atau minta PDF daripada pengarah.' : S.canWrite ? 'Cipta majlis pertama untuk mula menyusun cue kamera, grafik, laptop dan audio ikut teks pengacara. Anda juga boleh import fail JSON yang dimuat turun sebelum ini.' : 'Pemilik belum menambah majlis dalam cue sheet ini.'}</p>
-    ${S.canWrite ? `<div class="empty-acts"><button class="btn primary" data-act="new-event">${icon('plus')} Cipta majlis</button><label class="btn file">Import JSON<input type="file" class="importFile sr" accept=".json,application/json"></label></div>` : ''}</div>`;
+  if (!S.loaded) return `<div class="loading"><div class="sk"></div><div class="sk"></div><div class="sk short"></div><p>Loading rundown…</p></div>`;
+  if (S.mode === 'nolink') return `<div class="empty"><div class="eyebrow">Cue Sheet</div><h2>${S.linkBad ? 'Link not valid' : 'Open it with your link'}</h2>
+    <p>${S.linkBad ? 'This link is wrong or was changed by the director. Ask for the latest link (usually sent on WhatsApp).' : 'This app opens through a special link from the event director. Tap the link that was sent to you, for example on WhatsApp.'}</p></div>`;
+  if (S.mode === 'offline') return `<div class="empty"><div class="eyebrow">No connection</div><h2>Cannot reach the server</h2>
+    <p>Check your internet, then try again.</p><div class="empty-acts"><button class="btn primary" data-act="reload">Try again</button></div></div>`;
+  return `<div class="empty"><div class="eyebrow">Empty cue sheet</div><h2>No events yet</h2>
+    <p>${S.mode === 'snapshot' ? 'No copy of the cue sheet is ready for this view yet. Sign in to Claude to see the latest version, or ask the director for the PDF.' : S.canWrite ? 'Create your first event to start planning camera, graphics, laptop and audio cues from the MC script. You can also import a backup file (JSON) you downloaded before.' : 'The owner has not added any events yet.'}</p>
+    ${S.canWrite ? `<div class="empty-acts"><button class="btn primary" data-act="new-event">${icon('plus')} Create event</button><label class="btn file">Import backup<input type="file" class="importFile sr" accept=".json,application/json"></label></div>` : ''}</div>`;
 }
 
 /* ---------- render: rundown ---------- */
@@ -753,132 +800,158 @@ function rowText(c) { return [c.seg, c.mc, c.cue, c.note, kindOf(c.kind).label, 
 function renderRundown() {
   const el = $('#view-rundown'); const ev = S.ev;
   if (!ev) { el.innerHTML = emptyHtml(); return; }
-  const ro = !S.canWrite; const vis = ev.sources.filter(s => !S.hidden[s.id]);
-  const times = cueTimes(ev); const q = S.filter.trim().toLowerCase();
+  const ro = !S.canWrite; const crewOn = !!S.crewCols;
+  const vis = crewOn ? ev.sources.filter(s => !S.hidden[s.id]) : [];
+  const menuOpen = !!($('.print-menu', el) && $('.print-menu', el).open);
   el.innerHTML = `
   <div class="toolbar">
     <div class="tb-l">
-      ${ro ? '' : `<button class="btn primary" data-act="add-end">${icon('plus')} Tambah cue</button>
-      <button class="btn" data-act="undo"${S.undo.length ? '' : ' disabled'}>${icon('undo')} Buat asal</button>`}
-      <label class="search">${icon('search')}<span class="sr">Cari cue</span><input id="rdFilter" type="search" placeholder="Cari segmen, nama, tugasan…" value="${esc(S.filter)}"></label>
+      ${ro ? '' : `<button class="btn primary" data-act="add-end">${icon('plus')} Add cue</button>
+      <button class="btn" data-act="undo"${S.undo.length ? '' : ' disabled'}>${icon('undo')} Undo</button>`}
+      <label class="search">${icon('search')}<span class="sr">Search cues</span><input id="rdFilter" type="search" placeholder="Search…" value="${esc(S.filter)}"></label>
     </div>
     <div class="tb-r">
-      <div class="colvis" role="group" aria-label="Tunjuk atau sorok lajur sumber">${ev.sources.map(s => `<button class="vis-chip${S.hidden[s.id] ? ' off' : ''}" data-act="vis" data-src="${esc(s.id)}" style="${srcStyle(s)}" aria-pressed="${!S.hidden[s.id]}" title="${esc(s.name)}">${esc(s.code)}</button>`).join('')}</div>
-      <label class="sr" for="paperSel">Saiz kertas PDF</label>
-      <select id="paperSel"><option value="a4"${S.paper === 'a4' ? ' selected' : ''}>A4</option><option value="a3"${S.paper === 'a3' ? ' selected' : ''}>A3</option></select>
-      <button class="btn primary" data-act="pdf-director" title="Untuk cetak: bila panggil, apa nak panggil, kotak tanda">${icon('file')} PDF director</button>
-      <button class="btn" data-act="pdf-rundown">${icon('file')} PDF rundown</button>
+      ${crewOn ? `<div class="colvis" role="group" aria-label="Show or hide crew columns">${ev.sources.map(s => `<button class="vis-chip${S.hidden[s.id] ? ' off' : ''}" data-act="vis" data-src="${esc(s.id)}" style="${srcStyle(s)}" aria-pressed="${!S.hidden[s.id]}" title="${esc(s.name)}">${esc(s.code)}</button>`).join('')}</div>` : ''}
+      <button class="btn" data-act="crew-cols" aria-pressed="${crewOn}">${icon('users')} ${crewOn ? 'Hide crew tasks' : 'Show crew tasks'}</button>
+      <details class="menu print-menu"${menuOpen ? ' open' : ''}><summary class="btn primary">${icon('print')} Print ${icon('down')}</summary>
+        <div class="menu-pop" role="menu">
+          <button class="mi" data-act="pdf-director" role="menuitem">${icon('file')}<span>Director sheet (PDF)<small>When to call, what to call, tick boxes. A4.</small></span></button>
+          <button class="mi" data-act="pdf-rundown" role="menuitem">${icon('file')}<span>Full rundown (PDF)<small>Every crew column, for the switcher desk.</small></span></button>
+          <div class="mi-row"><label for="paperSel">Rundown paper size</label><select id="paperSel"><option value="a4"${S.paper === 'a4' ? ' selected' : ''}>A4</option><option value="a3"${S.paper === 'a3' ? ' selected' : ''}>A3</option></select></div>
+          <div class="mi-sep"></div>
+          <button class="mi" data-act="open-crew" role="menuitem">${icon('users')}<span>Crew sheets<small>One list per crew member, with WhatsApp copy.</small></span></button>
+          <button class="mi" data-act="pdf-allkru" role="menuitem">${icon('files')}<span>All crew sheets (PDF)<small>One page per crew member.</small></span></button>
+        </div>
+      </details>
     </div>
   </div>
-  <datalist id="mcList">${mcList(ev).map(m => `<option value="${esc(m)}"></option>`).join('')}</datalist>
-  <div class="table-wrap"><table class="rd">
-    <thead><tr>
-      <th class="c-num" scope="col">#</th>
-      <th class="c-seg" scope="col"><span class="th-n" style="margin-top:0">Segmen</span><span class="th-s">Jenis · MC · minit · isyarat MC</span></th>
-      <th class="c-pgm" scope="col"><span class="th-k">PGM</span><span class="th-s">Sumber ke udara</span></th>
-      ${vis.map(s => `<th class="c-src" scope="col" style="${srcStyle(s)}"><span class="code">${esc(s.code)}</span><span class="th-n">${esc(s.name)}</span>${s.crew ? `<span class="th-s">${esc(s.crew)}</span>` : (s.desc ? `<span class="th-s">${esc(s.desc)}</span>` : '')}</th>`).join('')}
-      <th class="c-note" scope="col"><span class="th-n" style="margin-top:0">Catatan</span><span class="th-s">Untuk semua kru</span></th>
-    </tr></thead>
-    <tbody>${ev.cues.map((c, i) => rowHtml(c, i, vis, times[i], ro, q)).join('')}</tbody>
-  </table></div>
-  ${ev.cues.length ? `<p class="foot-note">Petua: lajur yang bertanda merah ialah sumber PGM (ke udara) untuk cue itu. Klik kod sumber di atas untuk sorok lajur yang anda tidak perlukan.</p>` : `<p class="empty-row">Belum ada cue.${ro ? '' : ' Tekan “Tambah cue” untuk mula.'}</p>`}`;
-  autosize(el);
+  <div class="list${crewOn ? ' crew-on' : ''}" style="${crewOn ? `--cols:58px 300px 230px 92px ${vis.map(() => '180px').join(' ')} 190px` : ''}"><div class="list-in" role="list" aria-label="Cues">
+    <div class="cue-row head" aria-hidden="true"><div>#</div><div>Segment · MC line</div><div>Call</div><div>On air</div>${vis.map(s => `<div style="${srcStyle(s)}"><span class="code">${esc(s.code)}</span></div>`).join('')}<div>Note</div></div>
+    ${(() => { const times = cueTimes(ev); return ev.cues.map((c, i) => rowHtml(c, i, vis, times[i])).join(''); })()}
+  </div></div>
+  ${ev.cues.length ? `<p class="foot-note">Click a cue to edit it.${ro ? '' : ' Use the arrows in the edit panel to move between cues.'}</p>` : `<p class="empty-row">No cues yet.${ro ? '' : ' Press “Add cue” to start.'}</p>`}`;
+  applyFilter();
 }
-function rowHtml(c, i, vis, time, ro, q) {
-  const hide = q && !rowText(c).includes(q);
-  const RO = ro ? ' readonly' : ''; const DIS = ro ? ' disabled' : '';
-  const k = esc(c.id); const pg = srcById(c.pgm);
-  return `<tr data-id="${k}"${hide ? ' hidden' : ''} style="--k:${kindColor(kindOf(c.kind))}">
-    <td class="c-num">
-      <div class="num">${pad(i + 1)}</div>${time ? `<div class="time">${time}</div>` : ''}
-      ${ro ? '' : `<div class="rtools">
-        <button class="ib" data-act="up" data-k="${k}:up" title="Naik" aria-label="Naikkan cue ${i + 1}">${icon('up')}</button>
-        <button class="ib" data-act="ins" data-k="${k}:ins" title="Sisip cue di bawah" aria-label="Sisip cue selepas ${i + 1}">${icon('plus')}</button>
-        <button class="ib" data-act="down" data-k="${k}:down" title="Turun" aria-label="Turunkan cue ${i + 1}">${icon('down')}</button>
-        <button class="ib" data-act="dup" data-k="${k}:dup" title="Pendua" aria-label="Pendua cue ${i + 1}">${icon('dup')}</button>
-        <button class="ib del" data-act="del" data-k="${k}:del" title="Padam" aria-label="Padam cue ${i + 1}">${icon('trash')}</button>
-      </div>`}
-    </td>
-    <td class="c-seg">
-      <textarea class="seg" data-f="seg" data-k="${k}:seg" rows="1" placeholder="Nama segmen" aria-label="Segmen cue ${i + 1}"${RO}>${esc(c.seg)}</textarea>
-      <div class="seg-meta">
-        <select class="kind-sel" data-f="kind" data-k="${k}:kind" aria-label="Jenis segmen"${DIS}>${KINDS.map(x => `<option value="${x.id}"${x.id === c.kind ? ' selected' : ''}>${x.label}</option>`).join('')}</select>
-        <input class="mc" data-f="mc" data-k="${k}:mc" list="mcList" placeholder="MC" aria-label="Pengacara" value="${esc(c.mc)}"${RO}>
-        <input class="dur" data-f="dur" data-k="${k}:dur" type="number" min="0" step="0.5" inputmode="decimal" placeholder="min" aria-label="Anggaran minit" value="${c.dur == null ? '' : c.dur}"${RO}>
-      </div>
-      <textarea class="cue" data-f="cue" data-k="${k}:cue" rows="1" placeholder="Isyarat MC (ayat cue)…" aria-label="Isyarat MC"${RO}>${esc(c.cue)}</textarea>
-      ${(() => { const cl = callInto(S.ev, i); return `<div class="call-row" title="Panggilan director untuk masuk ke cue ini. Kosongkan untuk guna ayat automatik.">
-        <span class="call-l">Standby</span><input class="call-in" data-f="sb" data-k="${k}:sb" placeholder="${esc(cl.autoSb)}" value="${esc(c.sb)}" aria-label="Ayat standby cue ${i + 1}"${RO}>
-        <span class="call-l">${esc(cl.count)} 3·2·1</span><input class="call-in" data-f="go" data-k="${k}:go" placeholder="${esc(cl.autoGo)}" value="${esc(c.go)}" aria-label="Ayat masuk cue ${i + 1}"${RO}>
-      </div>`; })()}
-    </td>
-    <td class="c-pgm"><div class="c-pgm-in">
-      <select class="pgm-sel" data-f="pgm" data-k="${k}:pgm" aria-label="Sumber PGM cue ${i + 1}"${DIS}><option value="">—</option>${S.ev.sources.map(s => `<option value="${esc(s.id)}"${s.id === c.pgm ? ' selected' : ''}>${esc(s.code)}</option>`).join('')}</select>
-      ${pg ? `<div class="pgm-name">${esc(pg.name)}</div>` : ''}
-    </div></td>
-    ${vis.map(s => `<td class="c-src${s.id === c.pgm ? ' is-pgm' : ''}"><textarea data-src="${esc(s.id)}" data-k="${k}:t:${esc(s.id)}" rows="1" aria-label="${esc(s.name)}, cue ${i + 1}" placeholder="${ro ? '' : '—'}"${RO}>${esc(c.tasks[s.id] || '')}</textarea></td>`).join('')}
-    <td class="c-note"><textarea data-f="note" data-k="${k}:note" rows="1" placeholder="${ro ? '' : 'Catatan'}" aria-label="Catatan cue ${i + 1}"${RO}>${esc(c.note)}</textarea></td>
-  </tr>`;
+function rowHtml(c, i, vis, t) {
+  const k = esc(c.id); const pg = srcById(c.pgm); const cl = callInto(S.ev, i);
+  return `<div class="cue-row${S.panelId === c.id ? ' sel' : ''}" role="listitem" data-id="${k}" tabindex="0" aria-label="Cue ${i + 1}: ${esc(c.seg || 'untitled')}" style="--k:${kindColor(kindOf(c.kind))}">
+    <div class="r-num">${pad(i + 1)}${t ? `<span class="time">${t}</span>` : ''}</div>
+    <div class="r-seg"><div class="r-title clamp1">${c.seg ? esc(c.seg) : '<span class="muted">(untitled)</span>'}</div>${c.mc || c.cue ? `<div class="r-mc clamp1">${c.mc ? `<b>${esc(c.mc)}</b>${c.cue ? ': ' : ''}` : ''}${c.cue ? `<i>${esc(c.cue)}</i>` : ''}</div>` : ''}</div>
+    <div class="r-call"><div class="sb clamp1">${esc(cl.sb)}</div><div class="go clamp1">${esc(cl.count)} 3·2·1 → ${esc(cl.go)}</div></div>
+    <div class="r-pgm">${pg ? `<span class="code onair" style="${srcStyle(pg)}" title="${esc(pg.name)} on air">${esc(pg.code)}</span>` : '<span class="muted">—</span>'}</div>
+    ${vis.map(s => `<div class="r-task${s.id === c.pgm ? ' is-pgm' : ''}"><span class="clamp2">${c.tasks[s.id] ? esc(c.tasks[s.id]) : '<span class="none">—</span>'}</span></div>`).join('')}
+    <div class="r-note">${c.note ? `<span class="clamp2">${esc(c.note)}</span>` : ''}</div>
+  </div>`;
 }
+let listT = 0;
+function refreshList() { clearTimeout(listT); listT = setTimeout(() => { if (S.view === 'rundown' && S.ev) { const y = window.scrollY; renderRundown(); window.scrollTo(0, y); } }, 160); }
 function applyFilter() {
   const q = S.filter.trim().toLowerCase();
-  $$('#view-rundown tr[data-id]').forEach(tr => { const c = cueById(tr.dataset.id); tr.hidden = !!(q && c && !rowText(c).includes(q)); });
+  $$('#view-rundown .cue-row[data-id]').forEach(r => { const c = cueById(r.dataset.id); r.hidden = !!(q && c && !rowText(c).includes(q)); });
 }
-function updateTimes() {
-  const times = cueTimes(S.ev);
-  $$('#view-rundown tr[data-id]').forEach(tr => {
-    const i = S.ev.cues.findIndex(c => c.id === tr.dataset.id); const td = tr.querySelector('.c-num'); let t = td.querySelector('.time');
-    if (times[i]) { if (!t) { t = document.createElement('div'); t.className = 'time'; td.querySelector('.num').after(t); } t.textContent = times[i]; }
-    else if (t) t.remove();
-  });
-  renderHead();
+
+/* ---------- edit panel: everything about one cue ---------- */
+function openPanel(id, focusSeg) {
+  if (!S.ev || !cueById(id)) return;
+  S.panelId = id; renderPanel();
+  $$('#view-rundown .cue-row[data-id]').forEach(r => r.classList.toggle('sel', r.dataset.id === id));
+  const row = $$('#view-rundown .cue-row[data-id]').find(r => r.dataset.id === id); if (row) row.scrollIntoView({ block: 'nearest' });
+  const f = focusSeg ? $('#cuePanel [data-pf="seg"]') : $('#cuePanel [data-act="p-close"]'); if (f) f.focus({ preventScroll: true });
+}
+function closePanel() {
+  const p = $('#cuePanel'); if (!p) return;
+  const was = S.panelId; S.panelId = null; p.hidden = true; p.innerHTML = ''; document.body.classList.remove('panel-open');
+  $$('#view-rundown .cue-row.sel').forEach(r => r.classList.remove('sel'));
+  if (was) { const row = $$('#view-rundown .cue-row[data-id]').find(r => r.dataset.id === was); if (row && document.activeElement === document.body) row.focus({ preventScroll: true }); }
+}
+function renderPanel() {
+  const p = $('#cuePanel'); if (!p) return;
+  const c = S.panelId && S.ev && S.view === 'rundown' ? cueById(S.panelId) : null;
+  if (!c) { if (!p.hidden) closePanel(); return; }
+  const ev = S.ev; const i = ev.cues.indexOf(c); const ro = !S.canWrite; const RO = ro ? ' readonly' : ''; const DIS = ro ? ' disabled' : '';
+  const k = 'p:' + esc(c.id); const cl = callInto(ev, i); const t = cueTimes(ev)[i];
+  p.hidden = false; document.body.classList.add('panel-open');
+  placePanel(); // below the sticky top bar, so the save status stays in view
+  p.innerHTML = `
+    <div class="pn-head">
+      <h2>Cue ${pad(i + 1)}<small>of ${ev.cues.length}${t ? ' · ' + t : ''}</small></h2>
+      <button class="btn icon" data-act="p-prev" data-k="${k}:prev" title="Previous cue" aria-label="Previous cue"${i ? '' : ' disabled'}>${icon('up')}</button>
+      <button class="btn icon" data-act="p-next" data-k="${k}:next" title="Next cue" aria-label="Next cue"${i < ev.cues.length - 1 ? '' : ' disabled'}>${icon('down')}</button>
+      <button class="btn icon" data-act="p-close" data-k="${k}:close" title="Close (Esc)" aria-label="Close">${icon('x')}</button>
+    </div>
+    <div class="pn-body">
+      <label class="fld"><span>Segment</span><input type="text" data-pf="seg" data-k="${k}:seg" value="${esc(c.seg)}" placeholder="Segment name"${RO}></label>
+      <div class="row3">
+        <label class="fld"><span>Type</span><select data-pf="kind" data-k="${k}:kind"${DIS}>${KINDS.map(x => `<option value="${x.id}"${x.id === c.kind ? ' selected' : ''}>${x.label}</option>`).join('')}</select></label>
+        <label class="fld"><span>MC</span><input type="text" data-pf="mc" data-k="${k}:mc" list="mcList" value="${esc(c.mc)}" placeholder="Who speaks"${RO}></label>
+        <label class="fld"><span>Minutes</span><input type="number" data-pf="dur" data-k="${k}:dur" min="0" step="0.5" inputmode="decimal" value="${c.dur == null ? '' : c.dur}" placeholder="min"${RO}></label>
+      </div>
+      <datalist id="mcList">${mcList(ev).map(m => `<option value="${esc(m)}"></option>`).join('')}</datalist>
+      <label class="fld"><span>MC line (your cue to call)</span><textarea data-pf="cue" data-k="${k}:cue" rows="3" placeholder="The words the MC says just before this cue"${RO}>${esc(c.cue)}</textarea></label>
+      <label class="fld pgm"><span>On air (PGM)</span><select data-pf="pgm" data-k="${k}:pgm"${DIS}><option value="">—</option>${ev.sources.map(s => `<option value="${esc(s.id)}"${s.id === c.pgm ? ' selected' : ''}>${esc(s.code)} · ${esc(s.name)}</option>`).join('')}</select></label>
+      <div class="pn-sec">Your call</div>
+      <label class="fld"><span>Standby</span><input type="text" data-pf="sb" data-k="${k}:sb" value="${esc(c.sb)}" placeholder="${esc(cl.autoSb)}"${RO}></label>
+      <label class="fld"><span>After “${esc(cl.count)} 3, 2, 1”</span><input type="text" data-pf="go" data-k="${k}:go" value="${esc(c.go)}" placeholder="${esc(cl.autoGo)}"${RO}></label>
+      ${ro ? '' : '<p class="hintline">Leave empty to use the automatic call shown in grey.</p>'}
+      <div class="pn-sec">Crew tasks</div>
+      ${ev.sources.map(s => `<label class="fld"><span><span class="code${s.id === c.pgm ? ' onair' : ''}" style="${srcStyle(s)}">${esc(s.code)}</span>${esc(s.name)}${s.crew ? ' · ' + esc(s.crew) : ''}</span><textarea data-pt="${esc(s.id)}" data-k="${k}:t:${esc(s.id)}" rows="1" placeholder="${ro ? '' : '—'}"${RO}>${esc(c.tasks[s.id] || '')}</textarea></label>`).join('')}
+      <label class="fld"><span>Note for everyone</span><textarea data-pf="note" data-k="${k}:note" rows="2" placeholder="${ro ? '' : 'e.g. lights down, hold the shot'}"${RO}>${esc(c.note)}</textarea></label>
+    </div>
+    ${ro ? '' : `<div class="pn-foot">
+      <button class="btn" data-act="p-up" data-k="${k}:up"${i ? '' : ' disabled'}>${icon('up')} Move up</button>
+      <button class="btn" data-act="p-down" data-k="${k}:down"${i < ev.cues.length - 1 ? '' : ' disabled'}>${icon('down')} Move down</button>
+      <button class="btn" data-act="p-ins" data-k="${k}:ins">${icon('plus')} Add after</button>
+      <button class="btn" data-act="p-dup" data-k="${k}:dup">${icon('dup')} Duplicate</button>
+      <button class="btn danger" data-act="p-del" data-k="${k}:del">${icon('trash')} Delete</button>
+    </div>`}`;
+  autosize(p);
 }
 
 /* ---------- render: live ---------- */
 function renderLive() {
   const el = $('#view-live'); const ev = S.ev;
   if (!ev) { el.innerHTML = emptyHtml(); return; }
-  if (!ev.cues.length) { el.innerHTML = `<div class="empty"><h2>Tiada cue</h2><p>Tambah cue dalam Rundown dahulu.</p></div>`; return; }
+  if (!ev.cues.length) { el.innerHTML = `<div class="empty"><h2>No cues</h2><p>Add cues in the Rundown first.</p></div>`; return; }
   S.liveIdx = Math.max(0, Math.min(S.liveIdx, ev.cues.length - 1));
   const i = S.liveIdx, c = ev.cues[i], n = ev.cues[i + 1] || null;
   const pg = srcById(c.pgm), npg = n ? srcById(n.pgm) : null; const k = kindOf(c.kind);
   el.innerHTML = `
     <div class="live-bar">
       <div class="live-ctl">
-        <button class="btn" data-act="prev"${i ? '' : ' disabled'}>${icon('left')} Sebelum</button>
-        <label class="sr" for="liveJump">Lompat ke cue</label>
-        <select id="liveJump">${ev.cues.map((x, j) => `<option value="${j}"${j === i ? ' selected' : ''}>${pad(j + 1)} · ${esc(trunc(x.seg || '(tanpa nama)', 42))}</option>`).join('')}</select>
-        <button class="btn primary big" data-act="next"${n ? '' : ' disabled'}>Seterusnya ${icon('right')}</button>
+        <button class="btn" data-act="prev"${i ? '' : ' disabled'}>${icon('left')} Previous</button>
+        <label class="sr" for="liveJump">Jump to cue</label>
+        <select id="liveJump">${ev.cues.map((x, j) => `<option value="${j}"${j === i ? ' selected' : ''}>${pad(j + 1)} · ${esc(trunc(x.seg || '(untitled)', 42))}</option>`).join('')}</select>
+        <button class="btn primary big" data-act="next"${n ? '' : ' disabled'}>Next ${icon('right')}</button>
       </div>
       <div class="live-clock">
-        <span><span class="l">Jam</span> <b id="lvClock">--:--:--</b></span>
-        <span><span class="l">Cue berjalan</span> <b id="lvElapsed">00:00</b>${c.dur != null ? ` <span class="muted">/ ${c.dur} min</span>` : ''}</span>
-        <button class="btn" data-act="fs">${icon('expand')} Skrin penuh</button>
+        <span><span class="l">Clock</span> <b id="lvClock">--:--:--</b></span>
+        <span><span class="l">This cue</span> <b id="lvElapsed">00:00</b>${c.dur != null ? ` <span class="muted">/ ${c.dur} min</span>` : ''}</span>
+        <button class="btn" data-act="fs">${icon('expand')} Full screen</button>
       </div>
     </div>
     ${n ? `<div class="call-bar">
-      <button class="btn call-btn sb" data-act="standby" title="Papan kekunci: S">STANDBY</button>
-      <button class="btn call-btn go" data-act="go" title="Papan kekunci: Space">GO · ${esc(callInto(ev, i + 1).count)} 3 2 1</button>
-      <button class="btn" data-act="call-cancel"${S.call ? '' : ' disabled'} title="Papan kekunci: Esc">Batal</button>
-      <button class="btn" data-act="mute" aria-pressed="${S.mute ? 'true' : 'false'}">${S.mute ? 'Bunyi: tutup' : 'Bunyi: buka'}</button>
+      <button class="btn call-btn sb" data-act="standby" title="Keyboard: S">STANDBY</button>
+      <button class="btn call-btn go" data-act="go" title="Keyboard: Space">GO · ${esc(callInto(ev, i + 1).count)} 3 2 1</button>
+      <button class="btn" data-act="call-cancel"${S.call ? '' : ' disabled'} title="Keyboard: Esc">Cancel</button>
+      <button class="btn" data-act="mute" aria-pressed="${S.mute ? 'true' : 'false'}">${S.mute ? 'Sound: off' : 'Sound: on'}</button>
     </div>` : ''}
     <div id="callPanel" class="call-panel" aria-live="assertive"></div>
     <div class="live-now" style="--k:${kindColor(k)}">
       <div class="live-num"><span class="l">Cue</span>${pad(i + 1)}<span class="of">/${pad(ev.cues.length)}</span></div>
       <div style="min-width:0">
-        <div class="live-kind">${esc(k.label)}${c.mc ? ` · MC <b>${esc(c.mc)}</b>` : ''}${cueTimes(ev)[i] ? ` · ${cueTimes(ev)[i]}` : ''}</div>
-        <h2 class="live-seg">${esc(c.seg || '(tanpa nama)')}</h2>
+        <div class="live-kind">${esc(k.label)}${c.mc ? ` · <b>${esc(c.mc)}</b>` : ''}${cueTimes(ev)[i] ? ` · ${cueTimes(ev)[i]}` : ''}</div>
+        <h2 class="live-seg">${esc(c.seg || '(untitled)')}</h2>
         ${c.cue ? `<blockquote class="live-cue">${esc(c.cue)}</blockquote>` : ''}
         ${c.note ? `<div class="live-note">${icon('alert')}<span>${esc(c.note)}</span></div>` : ''}
       </div>
     </div>
     <div class="tally-row">
-      <div class="tally on"><span class="tl">ON AIR</span><span class="tv">${pg ? esc(pg.code + ' · ' + pg.name) : 'PGM belum ditetapkan'}</span></div>
-      <div class="tally pvw"><span class="tl">NEXT</span><span class="tv">${n ? (npg ? esc(npg.code + ' · ' + npg.name) : '—') : 'Tamat'}</span></div>
+      <div class="tally on"><span class="tl">ON AIR</span><span class="tv">${pg ? esc(pg.code + ' · ' + pg.name) : 'No PGM set'}</span></div>
+      <div class="tally pvw"><span class="tl">NEXT</span><span class="tv">${n ? (npg ? esc(npg.code + ' · ' + npg.name) : '—') : 'End'}</span></div>
     </div>
     <div class="live-grid">${ev.sources.map(s => liveCard(s, c, n)).join('')}</div>
-    ${n ? `<div class="live-next"><span class="l">Seterusnya</span> <b>${pad(i + 2)}</b> ${esc(n.seg || '(tanpa nama)')}${n.mc ? ` · MC ${esc(n.mc)}` : ''}${n.cue ? `<div class="nq">${esc(n.cue)}</div>` : ''}</div>` : `<div class="live-next">Ini cue terakhir.</div>`}
-    <p class="hint">Papan kekunci: <b>S</b> standby · <b>Space</b> GO (in 3 2 1) · <b>Esc</b> batal · anak panah kanan / kiri untuk pindah cue tanpa panggilan.</p>`;
+    ${n ? `<div class="live-next"><span class="l">Up next</span> <b>${pad(i + 2)}</b> ${esc(n.seg || '(untitled)')}${n.mc ? ` · MC ${esc(n.mc)}` : ''}${n.cue ? `<div class="nq">${esc(n.cue)}</div>` : ''}</div>` : `<div class="live-next">This is the last cue.</div>`}
+    <p class="hint">Keyboard: <b>S</b> standby · <b>Space</b> GO (in 3 2 1) · <b>Esc</b> cancel · right / left arrow to move cues without a call.</p>`;
   tickLive(); drawCall();
 }
 
@@ -928,8 +1001,8 @@ function liveCard(s, c, n) {
   return `<div class="lcard${on ? ' on' : ''}${pv && !on ? ' pvw' : ''}${now ? '' : ' idle'}" style="${srcStyle(s)}">
     <div class="lc-h"><span class="code">${esc(s.code)}</span><span class="lc-n">${esc(s.name)}</span>${on ? '<span class="badge on">ON AIR</span>' : (pv ? '<span class="badge pvw">NEXT</span>' : '')}</div>
     ${s.crew ? `<div class="lc-crew">${esc(s.crew)}</div>` : ''}
-    <div class="now">${now ? esc(now) : 'Tiada tugasan'}</div>
-    ${n ? `<div class="nxt"><span class="l">Seterusnya</span> ${nx ? esc(nx) : '—'}</div>` : ''}
+    <div class="now">${now ? esc(now) : 'No task'}</div>
+    ${n ? `<div class="nxt"><span class="l">Next</span> ${nx ? esc(nx) : '—'}</div>` : ''}
   </div>`;
 }
 function setLive(i) {
@@ -953,53 +1026,54 @@ async function wakeLock(on) {
 /* ---------- render: crew ---------- */
 function crewRows(s, all) { return S.ev.cues.map((c, i) => ({ c, i, t: (c.tasks[s.id] || '').trim(), on: c.pgm === s.id })).filter(r => all || r.t || r.on); }
 function renderKru() {
-  const el = $('#view-kru'); const ev = S.ev;
+  const el = $('#view-crew'); const ev = S.ev;
   if (!ev) { el.innerHTML = emptyHtml(); return; }
-  if (!ev.sources.length) { el.innerHTML = `<div class="empty"><h2>Tiada sumber</h2><p>Tambah sumber (kamera, laptop, audio) dalam Tetapan dahulu.</p></div>`; return; }
+  if (!ev.sources.length) { el.innerHTML = `<div class="empty"><h2>No sources</h2><p>Add sources (cameras, laptop, audio) in Settings first.</p></div>`; return; }
   const s = srcById(S.kruSrc) || ev.sources[0]; S.kruSrc = s.id;
   const rows = crewRows(s, S.kruAll); const times = cueTimes(ev);
   el.innerHTML = `
-    <div class="kru-pick" role="group" aria-label="Pilih kru">${ev.sources.map(x => { const cnt = crewRows(x, false).length; return `<button class="sw${x.id === s.id ? ' sel' : ''}" data-act="kru" data-src="${esc(x.id)}" style="${srcStyle(x)}" aria-pressed="${x.id === s.id}"><span class="code">${esc(x.code)}</span><span class="sw-n">${esc(x.name)}</span><span class="sw-c">${cnt} cue</span></button>`; }).join('')}</div>
+    ${S.gas && S.gas.role === 'crew' ? '' : `<div><a class="btn" href="#rundown">${icon('left')} Back to rundown</a></div>`}
+    <div class="kru-pick" role="group" aria-label="Choose crew">${ev.sources.map(x => { const cnt = crewRows(x, false).length; return `<button class="sw${x.id === s.id ? ' sel' : ''}" data-act="kru" data-src="${esc(x.id)}" style="${srcStyle(x)}" aria-pressed="${x.id === s.id}"><span class="code">${esc(x.code)}</span><span class="sw-n">${esc(x.name)}</span><span class="sw-c">${cnt} cues</span></button>`; }).join('')}</div>
     <div class="kru-card" style="${srcStyle(s)}">
       <div class="kru-h">
-        <div style="min-width:0"><div class="eyebrow">Helaian kru · ${esc(ev.name)}</div><h2>${esc(s.name)}</h2><div class="kru-sub">${esc(s.desc)}${s.desc && s.crew ? ' · ' : ''}${s.crew ? `Kru: <b>${esc(s.crew)}</b>` : ''}</div></div>
+        <div style="min-width:0"><div class="eyebrow">Crew sheet · ${esc(ev.name)}</div><h2>${esc(s.name)}</h2><div class="kru-sub">${esc(s.desc)}${s.desc && s.crew ? ' · ' : ''}${s.crew ? `Crew: <b>${esc(s.crew)}</b>` : ''}</div></div>
         <div class="kru-actions">
-          <label class="chk"><input type="checkbox" id="kruAll"${S.kruAll ? ' checked' : ''}> Tunjuk semua cue</label>
-          <button class="btn" data-act="copy-kru">${icon('chat')} Salin untuk WhatsApp</button>
-          <button class="btn" data-act="pdf-kru">${icon('file')} PDF kru ini</button>
-          <button class="btn" data-act="pdf-allkru">${icon('files')} PDF semua kru</button>
+          <label class="chk"><input type="checkbox" id="kruAll"${S.kruAll ? ' checked' : ''}> Show all cues</label>
+          <button class="btn" data-act="copy-kru">${icon('chat')} Copy for WhatsApp</button>
+          <button class="btn" data-act="pdf-kru">${icon('file')} PDF for this crew</button>
+          <button class="btn" data-act="pdf-allkru">${icon('files')} PDF all crew</button>
         </div>
       </div>
-      ${ev.notes ? `<div class="kru-notes"><span class="l">Nota umum</span> ${esc(ev.notes)}</div>` : ''}
+      ${ev.notes ? `<div class="kru-notes"><span class="l">General note</span> ${esc(ev.notes)}</div>` : ''}
       <ol class="kru-list">${rows.map(r => `<li class="${r.on ? 'on' : ''}">
         <div class="kl-num">${pad(r.i + 1)}${times[r.i] ? `<span class="time">${times[r.i]}</span>` : ''}</div>
         <div class="kl-main">
-          <div class="kl-seg">${esc(r.c.seg || '(tanpa nama)')} ${r.on ? '<span class="badge on">ON AIR</span>' : ''}</div>
+          <div class="kl-seg">${esc(r.c.seg || '(untitled)')} ${r.on ? '<span class="badge on">ON AIR</span>' : ''}</div>
           ${r.c.cue ? `<div class="kl-cue">${r.c.mc ? `<b>${esc(r.c.mc)}:</b> ` : ''}${esc(r.c.cue)}</div>` : ''}
-          <div class="kl-task">${r.t ? esc(r.t) : '<span class="muted">Tiada tugasan khusus</span>'}</div>
+          <div class="kl-task">${r.t ? esc(r.t) : '<span class="muted">No special task</span>'}</div>
           ${r.c.note ? `<div class="kl-note">${esc(r.c.note)}</div>` : ''}
         </div></li>`).join('')}</ol>
-      ${rows.length ? '' : `<p class="empty-row" style="padding:16px 18px">Belum ada tugasan untuk ${esc(s.name)}. Isi lajur ${esc(s.code)} dalam Rundown.</p>`}
+      ${rows.length ? '' : `<p class="empty-row" style="padding:16px 18px">No tasks for ${esc(s.name)} yet. Add them in the Rundown (click a cue).</p>`}
     </div>`;
 }
 function crewText(s) {
   const ev = S.ev; const times = cueTimes(ev); const L = [];
   L.push(`*CUE SHEET · ${s.name.toUpperCase()} (${s.code})*`);
-  L.push([ev.name, fmtDate(ev.date), ev.start ? 'Mula ' + ev.start : '', ev.venue].filter(Boolean).join(' · '));
-  if (s.crew) L.push('Kru: ' + s.crew);
-  if (ev.notes) L.push('_Nota: ' + ev.notes + '_');
+  L.push([ev.name, fmtDate(ev.date), ev.start ? 'Start ' + ev.start : '', ev.venue].filter(Boolean).join(' · '));
+  if (s.crew) L.push('Crew: ' + s.crew);
+  if (ev.notes) L.push('_Note: ' + ev.notes + '_');
   L.push('');
   crewRows(s, false).forEach(r => {
-    L.push(`*${pad(r.i + 1)}. ${r.c.seg || '(tanpa nama)'}*${r.on ? '  🔴 ON AIR' : ''}${times[r.i] ? '  [' + times[r.i] + ']' : ''}`);
-    if (r.c.cue) L.push(`Isyarat${r.c.mc ? ' (' + r.c.mc + ')' : ''}: _${r.c.cue}_`);
-    L.push('➜ ' + (r.t || 'Kekal ON AIR'));
-    if (r.c.note) L.push('Nota: ' + r.c.note);
+    L.push(`*${pad(r.i + 1)}. ${r.c.seg || '(untitled)'}*${r.on ? '  🔴 ON AIR' : ''}${times[r.i] ? '  [' + times[r.i] + ']' : ''}`);
+    if (r.c.cue) L.push(`MC line${r.c.mc ? ' (' + r.c.mc + ')' : ''}: _${r.c.cue}_`);
+    L.push('➜ ' + (r.t || 'Stay ON AIR'));
+    if (r.c.note) L.push('Note: ' + r.c.note);
     L.push('');
   });
   return L.join('\n').trim();
 }
 async function copyText(txt) {
-  try { if (!navigator.clipboard) throw new Error('x'); await navigator.clipboard.writeText(txt); toast('Disalin. Tampal terus dalam WhatsApp.'); }
+  try { if (!navigator.clipboard) throw new Error('x'); await navigator.clipboard.writeText(txt); toast('Copied. Paste it straight into WhatsApp.'); }
   catch (e) { const d = $('#copyDlg'); $('#copyTa').value = txt; try { d.showModal(); } catch (x) { d.setAttribute('open', ''); } $('#copyTa').focus(); $('#copyTa').select(); }
 }
 
@@ -1008,90 +1082,89 @@ function fld(key, label, val, type, RO) { return `<label class="fld"><span>${lab
 function srcRow(s, i, n, ro) {
   const RO = ro ? ' readonly' : ''; const DIS = ro ? ' disabled' : ''; const k = 'src:' + esc(s.id);
   return `<div class="sr-row" data-sid="${esc(s.id)}" style="${srcStyle(s)}">
-    <input type="color" data-sf="color" data-k="${k}:color" value="${esc(s.color)}" aria-label="Warna ${esc(s.name)}"${DIS}>
-    <input type="text" class="sf-code" data-sf="code" data-k="${k}:code" value="${esc(s.code)}" maxlength="8" placeholder="KOD" aria-label="Kod pendek"${RO}>
-    <input type="text" class="sf-name" data-sf="name" data-k="${k}:name" value="${esc(s.name)}" placeholder="Nama sumber" aria-label="Nama sumber"${RO}>
-    <input type="text" class="sf-desc" data-sf="desc" data-k="${k}:desc" value="${esc(s.desc)}" placeholder="Penerangan (cth. kamera pentas)" aria-label="Penerangan"${RO}>
-    <input type="text" class="sf-crew" data-sf="crew" data-k="${k}:crew" value="${esc(s.crew)}" placeholder="Nama kru / operator" aria-label="Nama kru"${RO}>
+    <input type="color" data-sf="color" data-k="${k}:color" value="${esc(s.color)}" aria-label="Colour of ${esc(s.name)}"${DIS}>
+    <input type="text" class="sf-code" data-sf="code" data-k="${k}:code" value="${esc(s.code)}" maxlength="8" placeholder="CODE" aria-label="Short code"${RO}>
+    <input type="text" class="sf-name" data-sf="name" data-k="${k}:name" value="${esc(s.name)}" placeholder="Source name" aria-label="Source name"${RO}>
+    <input type="text" class="sf-desc" data-sf="desc" data-k="${k}:desc" value="${esc(s.desc)}" placeholder="Description (e.g. stage camera)" aria-label="Description"${RO}>
+    <input type="text" class="sf-crew" data-sf="crew" data-k="${k}:crew" value="${esc(s.crew)}" placeholder="Crew / operator name" aria-label="Crew name"${RO}>
     ${ro ? '<span></span>' : `<div class="sr-tools">
-      <button class="ib" data-act="src-up" data-k="${k}:up" aria-label="Naikkan ${esc(s.name)}"${i ? '' : ' disabled'}>${icon('up')}</button>
-      <button class="ib" data-act="src-down" data-k="${k}:down" aria-label="Turunkan ${esc(s.name)}"${i < n - 1 ? '' : ' disabled'}>${icon('down')}</button>
-      <button class="ib del" data-act="src-del" data-k="${k}:del" aria-label="Padam ${esc(s.name)}">${icon('trash')}</button>
+      <button class="ib" data-act="src-up" data-k="${k}:up" aria-label="Move ${esc(s.name)} up"${i ? '' : ' disabled'}>${icon('up')}</button>
+      <button class="ib" data-act="src-down" data-k="${k}:down" aria-label="Move ${esc(s.name)} down"${i < n - 1 ? '' : ' disabled'}>${icon('down')}</button>
+      <button class="ib del" data-act="src-del" data-k="${k}:del" aria-label="Delete ${esc(s.name)}">${icon('trash')}</button>
     </div>`}
   </div>`;
 }
 function renderTetapan() {
-  const el = $('#view-tetapan'); const ev = S.ev;
+  const el = $('#view-settings'); const ev = S.ev;
   if (!ev) { el.innerHTML = emptyHtml(); return; }
   const ro = !S.canWrite; const RO = ro ? ' readonly' : '';
   el.innerHTML = `<div class="set-grid">
     <section class="panel">
-      <h2 class="ph">Maklumat majlis</h2>
+      <h2 class="ph">Event details</h2>
       <div class="form">
-        ${fld('name', 'Nama majlis', ev.name, 'text', RO)}
-        ${fld('theme', 'Tema', ev.theme, 'text', RO)}
-        <div class="row2">${fld('date', 'Tarikh', ev.date, 'date', RO)}${fld('start', 'Masa mula', ev.start, 'time', RO)}</div>
-        ${fld('venue', 'Lokasi', ev.venue, 'text', RO)}
-        ${fld('mcs', 'Pengacara', ev.mcs, 'text', RO)}
-        ${fld('director', 'Pengarah / penerbit', ev.director, 'text', RO)}
-        <label class="fld"><span>Nota umum untuk semua kru</span><textarea data-meta="notes" data-k="meta:notes" rows="4"${RO}>${esc(ev.notes)}</textarea></label>
+        ${fld('name', 'Event name', ev.name, 'text', RO)}
+        ${fld('theme', 'Theme', ev.theme, 'text', RO)}
+        <div class="row2">${fld('date', 'Date', ev.date, 'date', RO)}${fld('start', 'Start time', ev.start, 'time', RO)}</div>
+        ${fld('venue', 'Venue', ev.venue, 'text', RO)}
+        ${fld('mcs', 'MC', ev.mcs, 'text', RO)}
+        ${fld('director', 'Director / producer', ev.director, 'text', RO)}
+        <label class="fld"><span>General note for all crew</span><textarea data-meta="notes" data-k="meta:notes" rows="4"${RO}>${esc(ev.notes)}</textarea></label>
       </div>
     </section>
     <section class="panel">
-      <h2 class="ph">Sumber &amp; kru</h2>
-      <p class="pd">Setiap sumber jadi satu lajur dalam rundown dan satu helaian kru. Kod pendek dipapar pada butang dan PDF. Isi nama kru supaya setiap orang tahu lajur mereka.</p>
-      <div class="sr-head" aria-hidden="true"><span>Warna</span><span>Kod</span><span>Nama</span><span>Penerangan</span><span>Kru</span><span></span></div>
+      <h2 class="ph">Sources &amp; crew</h2>
+      <p class="pd">Each source (camera, LT, laptop, audio) gets its own task box in every cue and its own crew sheet. The short code shows on buttons and PDFs.</p>
+      <div class="sr-head" aria-hidden="true"><span></span><span>Code</span><span>Name</span><span>Description</span><span>Crew</span><span></span></div>
       <div class="src-ed">${ev.sources.map((s, i) => srcRow(s, i, ev.sources.length, ro)).join('')}</div>
-      ${ro ? '' : `<div><button class="btn" data-act="src-add">${icon('plus')} Tambah sumber</button></div>`}
+      ${ro ? '' : `<div><button class="btn" data-act="src-add">${icon('plus')} Add source</button></div>`}
     </section>
     <section class="panel wide">
-      <h2 class="ph">Istilah panggilan director</h2>
-      <p class="pd">Ayat yang keluar dalam Mod Live semasa STANDBY dan GO. <b>{src}</b> akan diganti dengan kod sumber, contohnya CAM1. Kosongkan kotak untuk guna ayat asal.</p>
+      <h2 class="ph">Director call words</h2>
+      <p class="pd">What Live shows when you press STANDBY and GO. <b>{src}</b> becomes the source code, e.g. CAM1. Clear a box to go back to the original words.</p>
       <div class="words-grid">${WORD_LABELS.map(([key, label, def]) => `<label class="fld"><span>${label}</span><input type="text" data-word="${key}" data-k="word:${key}" value="${esc(ev.words[key])}" placeholder="${esc(def)}"${RO}></label>`).join('')}</div>
     </section>
     ${S.gas && !ro ? `<details class="panel wide adv" id="sharePanel">
-      <summary class="ph">Pilihan lanjutan: kongsi dengan orang lain</summary>
-      <p class="pd">Tidak perlu jika anda seorang sahaja yang guna. Setiap link ada kunci rahsia sendiri. Sesiapa yang ada link boleh buka tanpa login, jadi hantar kepada orang yang betul sahaja. Kalau link tersebar, tekan “Tukar”: link lama terus mati.</p>
+      <summary class="ph">Advanced: share with others</summary>
+      <p class="pd">Not needed if only you use the app. Each link has its own secret key. Anyone with a link can open it without logging in, so only send it to the right people. If a link leaks, press “Change”: the old link stops working at once.</p>
       <div class="data-acts">
-        <button class="btn primary" data-act="link-crew">${icon('chat')} Salin link kru majlis ini</button>
-        <button class="btn" data-act="rot-crew">Tukar link kru</button>
-        ${S.gas.role === 'owner' ? `<button class="btn" data-act="link-editor">${icon('chat')} Salin link editor</button><button class="btn" data-act="rot-editor">Tukar link editor</button>` : ''}
+        <button class="btn primary" data-act="link-crew">${icon('chat')} Copy crew link for this event</button>
+        <button class="btn" data-act="rot-crew">Change crew link</button>
+        ${S.gas.role === 'owner' ? `<button class="btn" data-act="link-editor">${icon('chat')} Copy editor link</button><button class="btn" data-act="rot-editor">Change editor link</button>` : ''}
       </div>
-      <p class="pd" style="margin-top:10px"><b>Link kru:</b> baca sahaja, untuk majlis ini sahaja. <b>Link editor:</b> boleh ubah semua majlis (untuk director / penolong).</p>
+      <p class="pd" style="margin-top:10px"><b>Crew link:</b> view only, this event only. <b>Editor link:</b> can change every event (for a director or assistant).</p>
     </details>` : ''}
     <section class="panel wide">
-      <h2 class="ph">Simpan &amp; guna semula</h2>
-      <p class="pd">Untuk majlis lain, cipta “Majlis baru” dan pilih Salin sumber atau Salin semua. Muat turun JSON sebagai salinan; fail itu boleh diimport semula bila-bila masa.</p>
-      <p class="pd">Saiz data majlis ini: <b>${kb(docSize(ev))}</b> daripada had 250 KB.</p>
+      <h2 class="ph">Backup &amp; reuse</h2>
+      <p class="pd">For another event, press “New event” and choose Copy sources or Copy everything. Download a backup (JSON file) to keep a copy; you can import it again any time.</p>
+      <p class="pd">This event's size: <b>${kb(docSize(ev))}</b> of the 250 KB limit.</p>
       <div class="data-acts">
-        <button class="btn" data-act="export-json">${icon('file')} Muat turun JSON</button>
-        ${S.gas ? `<button class="btn" data-act="forget-link" title="Peranti ini tidak lagi ingat link anda">Keluar dari peranti ini</button>` : ''}
-        ${ro ? '' : `<label class="btn file">Import JSON<input type="file" class="importFile sr" accept=".json,application/json"></label>
-        <button class="btn" data-act="dup-event">${icon('dup')} Pendua majlis ini</button>
-        <button class="btn danger" data-act="del-event">${icon('trash')} Padam majlis ini</button>`}
+        <button class="btn" data-act="export-json">${icon('file')} Download backup</button>
+        ${S.gas ? `<button class="btn" data-act="forget-link" title="This device will forget your link">Sign out on this device</button>` : ''}
+        ${ro ? '' : `<label class="btn file">Import backup<input type="file" class="importFile sr" accept=".json,application/json"></label>
+        <button class="btn" data-act="dup-event">${icon('dup')} Duplicate this event</button>
+        <button class="btn danger" data-act="del-event">${icon('trash')} Delete this event</button>`}
       </div>
-      <details class="howto"${S.events && Object.keys(S.events).length > 1 ? '' : ' open'}><summary>Cara guna dengan team</summary><ol>
-        <li><b>Tetapan:</b> semak sumber (kamera, LT, laptop, audio) dan isi nama kru untuk setiap satu.</li>
-        <li><b>Rundown:</b> setiap baris ialah satu cue ikut teks MC. Pilih sumber PGM (yang ke udara) dan tulis tugasan setiap kru dalam lajurnya.</li>
-        <li><b>Ikut Kru:</b> pilih kru, kemudian “Salin untuk WhatsApp” atau “PDF kru ini” untuk hantar senarai tugasan mereka sahaja.</li>
-        <li><b>PDF rundown:</b> cetak jadual penuh untuk meja switcher / director. Pilih A3 jika lajur terlalu padat.</li>
-        <li><b>Mod Live:</b> semasa majlis, tekan Seterusnya ikut MC. Kad merah = ON AIR, kad hijau = sumber untuk cue berikutnya.</li>
+      <details class="howto"${S.events && Object.keys(S.events).length > 1 ? '' : ' open'}><summary>How to use</summary><ol>
+        <li><b>Settings:</b> check your sources (cameras, LT, laptop, audio) and the crew name for each.</li>
+        <li><b>Rundown:</b> one line per cue, following the MC script. Click a cue to edit it: on-air source, your call, and each crew task.</li>
+        <li><b>Print:</b> Director sheet is your own A4 printout. Full rundown has every crew column (choose A3 if it is crowded). Crew sheets give each person only their tasks.</li>
+        <li><b>Live:</b> during the event, press <b>STANDBY</b> (S), then <b>GO</b> (Space) when the MC is about to finish: in 3, 2, 1, then the next cue.</li>
       </ol></details>
     </section>
   </div>`;
 }
 
 /* ---------- PDF ---------- */
-function loadScript(src) { return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => rej(new Error('Pustaka PDF tidak dapat dimuatkan')); document.head.appendChild(s); }); }
+function loadScript(src) { return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => rej(new Error('Could not load the PDF tool')); document.head.appendChild(s); }); }
 async function getJsPDF() {
   if (!(window.jspdf && window.jspdf.jsPDF)) await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
-  const J = window.jspdf && window.jspdf.jsPDF; if (!J) throw new Error('Pustaka PDF tidak dapat dimuatkan');
+  const J = window.jspdf && window.jspdf.jsPDF; if (!J) throw new Error('Could not load the PDF tool');
   if (typeof J.API.autoTable !== 'function') {
     await loadScript('https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js');
     const m = window.jspdf_autotable;
     if (typeof J.API.autoTable !== 'function' && m && typeof m.applyPlugin === 'function') m.applyPlugin(J);
   }
-  if (typeof J.API.autoTable !== 'function') throw new Error('Pemalam jadual PDF tidak dapat dimuatkan');
+  if (typeof J.API.autoTable !== 'function') throw new Error('Could not load the PDF table tool');
   return J;
 }
 const P = s => str(s).replace(/[→⟶➜]/g, '->').replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/…/g, '...').replace(/[–—]/g, '-').replace(/[^\x09\x0A\x0D\x20-\x7E\xA0-\xFF]/g, '');
@@ -1102,7 +1175,7 @@ function pdfHeader(doc, ev, label) {
   doc.setFont('helvetica', 'bold'); doc.setFontSize(13); doc.setTextColor(18, 24, 32);
   doc.text(P(ev.name), 15, 13.2);
   doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(90, 101, 115);
-  doc.text(P([fmtDate(ev.date), ev.start ? 'Mula ' + ev.start : '', ev.venue, ev.mcs ? 'MC: ' + ev.mcs : ''].filter(Boolean).join('   |   ')), 15, 18.6, { maxWidth: W - 80 });
+  doc.text(P([fmtDate(ev.date), ev.start ? 'Start ' + ev.start : '', ev.venue, ev.mcs ? 'MC: ' + ev.mcs : ''].filter(Boolean).join('   |   ')), 15, 18.6, { maxWidth: W - 80 });
   doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(215, 38, 61);
   doc.text(P(label), W - 10, 13.2, { align: 'right' });
 }
@@ -1112,14 +1185,14 @@ function pdfFooters(doc) {
   for (let i = 1; i <= n; i++) {
     doc.setPage(i); const W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight();
     doc.setFont('helvetica', 'normal'); doc.setFontSize(7); doc.setTextColor(120, 128, 140);
-    doc.text('Dijana ' + stamp + '  -  Cue Sheet Multimedia', 10, H - 6);
-    doc.text(`Halaman ${i}/${n}`, W - 10, H - 6, { align: 'right' });
+    doc.text('Made ' + stamp + '  -  Cue Sheet', 10, H - 6);
+    doc.text(`Page ${i}/${n}`, W - 10, H - 6, { align: 'right' });
   }
 }
 async function pdfRundown(btn) {
   const ev = S.ev; if (!ev) return;
-  if (!ev.cues.length) { toast('Tiada cue untuk dicetak.', 'warn'); return; }
-  const lbl = btn ? btn.innerHTML : ''; if (btn) { btn.disabled = true; btn.textContent = 'Menjana PDF…'; }
+  if (!ev.cues.length) { toast('No cues to print.', 'warn'); return; }
+  const lbl = btn ? btn.innerHTML : ''; if (btn) { btn.disabled = true; btn.textContent = 'Making PDF…'; }
   try {
     const J = await getJsPDF();
     const doc = new J({ orientation: 'landscape', unit: 'mm', format: S.paper });
@@ -1130,7 +1203,7 @@ async function pdfRundown(btn) {
     const colStyles = { 0: { cellWidth: wNum, halign: 'center', fontStyle: 'bold' }, 1: { cellWidth: wSeg }, 2: { cellWidth: wPgm, halign: 'center', fontStyle: 'bold' } };
     srcs.forEach((s, j) => { colStyles[3 + j] = { cellWidth: wSrc }; });
     colStyles[3 + srcs.length] = { cellWidth: wNote };
-    const head = [['#', 'Segmen / isyarat MC', 'PGM', ...srcs.map(s => P(s.code + '\n' + s.name)), 'Catatan']];
+    const head = [['#', 'Segment / MC line', 'PGM', ...srcs.map(s => P(s.code + '\n' + s.name)), 'Note']];
     const body = ev.cues.map((c, i) => [
       pad(i + 1) + (times[i] ? '\n' + times[i] : ''),
       P(c.seg + '\n' + [kindOf(c.kind).label, c.mc ? 'MC: ' + c.mc : '', c.dur != null ? c.dur + ' min' : ''].filter(Boolean).join(' | ') + (c.cue ? '\n"' + c.cue + '"' : '')),
@@ -1156,18 +1229,18 @@ async function pdfRundown(btn) {
       didDrawCell: d => {
         if (d.section === 'body' && d.column.index === 0 && ev.cues[d.row.index]) { const k = kindOf(ev.cues[d.row.index].kind); const rgb = hslToRgb(k.h, 0.52, 0.5); doc.setFillColor(rgb[0], rgb[1], rgb[2]); doc.rect(d.cell.x, d.cell.y, 1.2, d.cell.height, 'F'); }
       },
-      didDrawPage: () => pdfHeader(doc, ev, 'RUNDOWN PRODUKSI')
+      didDrawPage: () => pdfHeader(doc, ev, 'PRODUCTION RUNDOWN')
     });
     pdfFooters(doc);
     await offerFile(slug(ev.name) + '-rundown.pdf', doc.output('blob'));
-  } catch (e) { toast('PDF gagal: ' + (e && e.message || e), 'warn'); }
+  } catch (e) { toast('PDF failed: ' + (e && e.message || e), 'warn'); }
   finally { if (btn) { btn.disabled = false; btn.innerHTML = lbl; } }
 }
 /** Director's own print: A4 portrait, big type, one row per cue: when to call (MC line), what to call, tick box, room to write. */
 async function pdfDirector(btn) {
   const ev = S.ev; if (!ev) return;
-  if (!ev.cues.length) { toast('Tiada cue untuk dicetak.', 'warn'); return; }
-  const lbl = btn ? btn.innerHTML : ''; if (btn) { btn.disabled = true; btn.textContent = 'Menjana PDF…'; }
+  if (!ev.cues.length) { toast('No cues to print.', 'warn'); return; }
+  const lbl = btn ? btn.innerHTML : ''; if (btn) { btn.disabled = true; btn.textContent = 'Making PDF…'; }
   try {
     const J = await getJsPDF();
     const doc = new J({ orientation: 'portrait', unit: 'mm', format: 'a4' });
@@ -1176,65 +1249,65 @@ async function pdfDirector(btn) {
       const cl = callInto(ev, i); const pg = srcById(c.pgm);
       return [
         '', pad(i + 1) + (times[i] ? '\n' + times[i] : ''),
-        P((c.seg || '(tanpa nama)') + (c.mc ? '\nMC: ' + c.mc : '') + (c.cue ? '\n"' + c.cue + '"' : '')),
+        P((c.seg || '(untitled)') + (c.mc ? '\nMC: ' + c.mc : '') + (c.cue ? '\n"' + c.cue + '"' : '')),
         P('SB: ' + cl.sb + '\n' + cl.count + ' 3, 2, 1\n> ' + cl.go),
         P(pg ? pg.code : '-'),
         P(c.note)
       ];
     });
     doc.autoTable({
-      head: [['OK', '#', 'Segmen / bila (ayat MC)', 'Panggilan', 'PGM', 'Catatan']], body, startY: 25, theme: 'grid',
+      head: [['OK', '#', 'Segment / when (MC line)', 'Call', 'PGM', 'Note']], body, startY: 25, theme: 'grid',
       margin: { left: 8, right: 8, top: 25, bottom: 12 },
       styles: { font: 'helvetica', fontSize: 9.4, cellPadding: 2, overflow: 'linebreak', valign: 'top', lineColor: [190, 196, 204], lineWidth: 0.2, textColor: [18, 24, 32], minCellHeight: 16 },
       headStyles: { fillColor: [30, 36, 44], textColor: [255, 255, 255], fontStyle: 'bold', fontSize: 9 },
       columnStyles: { 0: { cellWidth: 9 }, 1: { cellWidth: 13, halign: 'center', fontStyle: 'bold' }, 2: { cellWidth: 64 }, 3: { cellWidth: 52, fontStyle: 'bold' }, 4: { cellWidth: 15, halign: 'center', fontStyle: 'bold', fontSize: 11 }, 5: { cellWidth: 'auto', textColor: [90, 101, 115], fontSize: 8.4 } },
       didParseCell: d => { if (d.section === 'body' && d.column.index === 4 && d.cell.raw && d.cell.raw !== '-') { d.cell.styles.fillColor = [251, 226, 230]; d.cell.styles.textColor = [176, 22, 44]; } },
       didDrawCell: d => { if (d.section === 'body' && d.column.index === 0) { doc.setDrawColor(60, 66, 74); doc.setLineWidth(0.35); doc.rect(d.cell.x + 2, d.cell.y + 2.2, 4.6, 4.6); } },
-      didDrawPage: () => pdfHeader(doc, ev, 'HELAIAN DIRECTOR')
+      didDrawPage: () => pdfHeader(doc, ev, 'DIRECTOR SHEET')
     });
     pdfFooters(doc);
     await offerFile(slug(ev.name) + '-director.pdf', doc.output('blob'));
-  } catch (e) { toast('PDF gagal: ' + (e && e.message || e), 'warn'); }
+  } catch (e) { toast('PDF failed: ' + (e && e.message || e), 'warn'); }
   finally { if (btn) { btn.disabled = false; btn.innerHTML = lbl; } }
 }
 function hslToRgb(h, s, l) { const a = s * Math.min(l, 1 - l); const f = n => { const k = (n + h / 30) % 12; return Math.round(255 * (l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)))); }; return [f(0), f(8), f(4)]; }
 async function pdfKru(list, btn) {
   const ev = S.ev; if (!ev || !list.length) return;
-  const lbl = btn ? btn.innerHTML : ''; if (btn) { btn.disabled = true; btn.textContent = 'Menjana PDF…'; }
+  const lbl = btn ? btn.innerHTML : ''; if (btn) { btn.disabled = true; btn.textContent = 'Making PDF…'; }
   try {
     const J = await getJsPDF();
     const doc = new J({ orientation: 'portrait', unit: 'mm', format: 'a4' });
     const W = doc.internal.pageSize.getWidth(); const times = cueTimes(ev);
     list.forEach((s, si) => {
       if (si > 0) doc.addPage();
-      pdfHeader(doc, ev, 'HELAIAN KRU');
+      pdfHeader(doc, ev, 'CREW SHEET');
       const rgb = hexRgb(s.color); const ink = inkFor(s.color) === '#FFFFFF' ? [255, 255, 255] : [17, 20, 24];
       doc.setFillColor(rgb[0], rgb[1], rgb[2]); doc.roundedRect(10, 24, W - 20, 15, 2, 2, 'F');
       doc.setTextColor(ink[0], ink[1], ink[2]); doc.setFont('helvetica', 'bold'); doc.setFontSize(15);
       doc.text(P(s.name), 14, 31.4);
       doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5);
-      doc.text(P([s.code, s.desc, s.crew ? 'Kru: ' + s.crew : 'Kru: ________________'].filter(Boolean).join('   |   ')), 14, 36);
+      doc.text(P([s.code, s.desc, s.crew ? 'Crew: ' + s.crew : 'Crew: ________________'].filter(Boolean).join('   |   ')), 14, 36);
       let y = 44;
       if (ev.notes) {
         doc.setTextColor(90, 101, 115); doc.setFontSize(8); doc.setFont('helvetica', 'italic');
-        const lines = doc.splitTextToSize(P('Nota: ' + ev.notes), W - 20); doc.text(lines, 10, y); y += lines.length * 3.6 + 2;
+        const lines = doc.splitTextToSize(P('Note: ' + ev.notes), W - 20); doc.text(lines, 10, y); y += lines.length * 3.6 + 2;
       }
       const rows = crewRows(s, false);
       doc.autoTable({
         startY: y, theme: 'grid', margin: { left: 10, right: 10, top: 25, bottom: 12 },
-        head: [['#', 'Segmen', 'Isyarat MC', 'Tugasan anda', 'Status']],
-        body: rows.length ? rows.map(r => [pad(r.i + 1) + (times[r.i] ? '\n' + times[r.i] : ''), P(r.c.seg) + (r.c.note ? '\n' + P('Nota: ' + r.c.note) : ''), P((r.c.mc ? r.c.mc + ': ' : '') + r.c.cue), P(r.t || 'Kekal ON AIR'), r.on ? 'ON AIR' : '']) : [['-', 'Tiada tugasan', '', '', '']],
+        head: [['#', 'Segment', 'MC line', 'Your task', 'Status']],
+        body: rows.length ? rows.map(r => [pad(r.i + 1) + (times[r.i] ? '\n' + times[r.i] : ''), P(r.c.seg) + (r.c.note ? '\n' + P('Note: ' + r.c.note) : ''), P((r.c.mc ? r.c.mc + ': ' : '') + r.c.cue), P(r.t || 'Stay ON AIR'), r.on ? 'ON AIR' : '']) : [['-', 'No tasks', '', '', '']],
         styles: { font: 'helvetica', fontSize: 8.6, cellPadding: 2, overflow: 'linebreak', valign: 'top', lineColor: [205, 210, 217], lineWidth: 0.15, textColor: [18, 24, 32] },
         headStyles: { fillColor: [30, 36, 44], textColor: [255, 255, 255], fontStyle: 'bold' },
         columnStyles: { 0: { cellWidth: 11, halign: 'center', fontStyle: 'bold' }, 1: { cellWidth: 44 }, 2: { cellWidth: 50, fontStyle: 'italic', textColor: [90, 101, 115] }, 3: { fontStyle: 'bold' }, 4: { cellWidth: 17, halign: 'center' } },
         didParseCell: d => { if (d.section === 'body' && rows[d.row.index] && rows[d.row.index].on) { if (d.column.index === 4) { d.cell.styles.fillColor = [215, 38, 61]; d.cell.styles.textColor = [255, 255, 255]; d.cell.styles.fontStyle = 'bold'; } else d.cell.styles.fillColor = [253, 238, 240]; } },
-        didDrawPage: () => pdfHeader(doc, ev, 'HELAIAN KRU - ' + s.code)
+        didDrawPage: () => pdfHeader(doc, ev, 'CREW SHEET - ' + s.code)
       });
     });
     pdfFooters(doc);
-    const name = list.length === 1 ? `${slug(ev.name)}-kru-${slug(list[0].code)}.pdf` : `${slug(ev.name)}-semua-kru.pdf`;
+    const name = list.length === 1 ? `${slug(ev.name)}-crew-${slug(list[0].code)}.pdf` : `${slug(ev.name)}-all-crew.pdf`;
     await offerFile(name, doc.output('blob'));
-  } catch (e) { toast('PDF gagal: ' + (e && e.message || e), 'warn'); }
+  } catch (e) { toast('PDF failed: ' + (e && e.message || e), 'warn'); }
   finally { if (btn) { btn.disabled = false; btn.innerHTML = lbl; } }
 }
 
@@ -1254,79 +1327,111 @@ async function createEvent(data) {
   const id = slug(data.name) + '-' + rid(4);
   const ev = normEvent(data); ev.createdAt = Date.now(); ev.updatedAt = Date.now();
   try { await writeEvent(id, ev); }
-  catch (e) { toast(e && e.code === 'too_large' ? e.message : 'Tidak dapat cipta majlis' + (e && e.code === 'quota_exceeded' ? ': storan penuh.' : '.'), 'warn'); if (e && e.code === 'invalid_argument') { S.canWrite = false; renderAll(); } return null; }
+  catch (e) { toast(e && e.code === 'too_large' ? e.message : 'Could not create the event' + (e && e.code === 'quota_exceeded' ? ': storage is full.' : '.'), 'warn'); if (e && e.code === 'invalid_argument') { S.canWrite = false; renderAll(); } return null; }
   await selectEvent(id);
-  setStatus(S.mode === 'local' ? 'Disimpan (pelayar ini)' : 'Disimpan', 'ok');
+  setStatus(S.mode === 'local' ? 'Saved (this browser)' : 'Saved', 'ok');
   return id;
 }
 async function importFile(file) {
   if (!file) return;
-  if (file.size > 5 * 1024 * 1024) { toast('Import gagal: fail terlalu besar (lebih 5 MB).', 'warn'); return; }
+  if (file.size > 5 * 1024 * 1024) { toast('Import failed: the file is too big (over 5 MB).', 'warn'); return; }
   try {
     const txt = await file.text(); const j = JSON.parse(txt);
     const raw = j && j.event ? j.event : j;
-    if (!raw || typeof raw !== 'object' || !Array.isArray(raw.cues)) throw new Error('Fail ini bukan cue sheet yang sah.');
+    if (!raw || typeof raw !== 'object' || !Array.isArray(raw.cues)) throw new Error('This file is not a valid cue sheet.');
     const id = await createEvent(raw);
-    if (id) toast('Diimport: ' + S.ev.name);
-  } catch (e) { toast('Import gagal: ' + (e && e.message || e), 'warn'); }
+    if (id) toast('Imported: ' + S.ev.name);
+  } catch (e) { toast('Import failed: ' + (e && e.message || e), 'warn'); }
 }
 
 /* ---------- events ---------- */
+function closeMenus(except) { $$('details.menu[open]').forEach(m => { if (m !== except) m.open = false; }); }
 document.addEventListener('click', e => {
+  const inMenu = e.target.closest('details.menu'); closeMenus(inMenu);
   const b = e.target.closest('[data-act]'); if (!b) return;
   const act = b.dataset.act;
+  if (inMenu && b.classList.contains('mi')) inMenu.open = false; // a menu choice closes the menu
   if (act === 'new-event') { if (S.canWrite) openNewDialog(); return; }
+  if (act === 'theme') { toggleTheme(); return; }
   if (act === 'reload') { location.reload(); return; }
-  if (act === 'forget-link') { if (!arm(b, 'forget', 'Tekan lagi untuk keluar')) return; forgetLink(); location.hash = ''; location.reload(); return; }
+  if (act === 'forget-link') { if (!arm(b, 'forget', 'Press again to sign out')) return; forgetLink(); location.hash = ''; location.reload(); return; }
 });
-$('#eventSel').addEventListener('change', e => { if (e.target.value) selectEvent(e.target.value); });
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if ($$('details.menu[open]').length) { closeMenus(); return; }
+  if (S.panelId && S.view === 'rundown' && !$('#newDlg').open && !$('#copyDlg').open) { e.preventDefault(); closePanel(); }
+});
+$('#eventSel').addEventListener('change', e => { if (e.target.value) { closePanel(); selectEvent(e.target.value); } });
 window.addEventListener('hashchange', () => { readHash(); renderAll(); });
-function readHash() { const h = location.hash.replace(/^#/, ''); S.view = VIEWS.includes(h) ? h : 'rundown'; }
+function placePanel() { const p = $('#cuePanel'), tb = $('.topbar'); if (p && tb) p.style.top = Math.round(tb.offsetHeight + (parseFloat(getComputedStyle(tb).top) || 0)) + 'px'; }
+window.addEventListener('resize', () => { if (!$('#cuePanel').hidden) placePanel(); });
+function readHash() { const h = location.hash.replace(/^#/, ''); S.view = VIEWS.includes(h) ? h : (OLD_VIEWS[h] || 'rundown'); }
+function goView(v) { S.view = v; try { history.pushState(null, '', '#' + v); } catch (x) {} renderAll(); window.scrollTo(0, 0); }
 
-/* rundown */
+/* rundown list */
 const rd = $('#view-rundown');
-rd.addEventListener('input', e => {
-  const t = e.target;
-  if (t.id === 'rdFilter') { S.filter = t.value; applyFilter(); return; }
-  if (!S.ev || !S.canWrite) return;
-  const tr = t.closest('tr[data-id]'); if (!tr || t.tagName === 'SELECT') return;
-  const c = cueById(tr.dataset.id); if (!c) return;
-  if (S.undoKey !== t.dataset.k) { pushUndo(); S.undoKey = t.dataset.k; }
-  if (t.dataset.src) { if (t.value.trim()) c.tasks[t.dataset.src] = t.value; else delete c.tasks[t.dataset.src]; }
-  else if (t.dataset.f === 'dur') { c.dur = num(t.value); updateTimes(); }
-  else if (t.dataset.f) c[t.dataset.f] = t.value;
-  if (t.tagName === 'TEXTAREA') autosizeOne(t);
-  touch();
-});
-rd.addEventListener('focusout', () => { S.undoKey = null; });
-rd.addEventListener('change', e => {
-  const t = e.target;
-  if (t.id === 'paperSel') { S.paper = t.value; LS.set('cs.paper', S.paper); return; }
-  if (!S.ev || !S.canWrite || t.tagName !== 'SELECT') return;
-  const tr = t.closest('tr[data-id]'); if (!tr) return; const c = cueById(tr.dataset.id); if (!c) return;
-  pushUndo(); c[t.dataset.f] = t.value; touch();
-  const f = captureFocus(); renderRundown(); restoreFocus(f);
-});
+rd.addEventListener('input', e => { if (e.target.id === 'rdFilter') { S.filter = e.target.value; applyFilter(); } });
+rd.addEventListener('change', e => { if (e.target.id === 'paperSel') { S.paper = e.target.value; LS.set('cs.paper', S.paper); } });
 rd.addEventListener('click', e => {
-  const b = e.target.closest('[data-act]'); if (!b || !S.ev) return; const act = b.dataset.act;
+  if (!S.ev) return;
+  const b = e.target.closest('[data-act]');
+  if (!b) { const row = e.target.closest('.cue-row[data-id]'); if (row) openPanel(row.dataset.id); return; }
+  const act = b.dataset.act;
   if (act === 'vis') { const id = b.dataset.src; if (S.hidden[id]) delete S.hidden[id]; else S.hidden[id] = true; LS.set('cs.hidden', S.hidden); renderRundown(); return; }
+  if (act === 'crew-cols') { S.crewCols = !S.crewCols; LS.set('cs.crewcols', S.crewCols); renderRundown(); return; }
   if (act === 'pdf-rundown') { pdfRundown(b); return; }
   if (act === 'pdf-director') { pdfDirector(b); return; }
+  if (act === 'pdf-allkru') { pdfKru(S.ev.sources.slice(), b); return; }
+  if (act === 'open-crew') { goView('crew'); return; }
   if (!S.canWrite) return;
   if (act === 'undo') { doUndo(); return; }
-  if (act === 'add-end') { pushUndo(); const c = newCue(); S.ev.cues.push(c); touch(); renderAll(); focusSeg(c.id); return; }
-  const tr = b.closest('tr[data-id]'); if (!tr) return;
-  const cues = S.ev.cues; const i = cues.findIndex(c => c.id === tr.dataset.id); if (i < 0) return;
-  if (act === 'del') { if (!arm(b, 'del:' + cues[i].id)) return; pushUndo(); cues.splice(i, 1); touch(); renderAll(); toast('Cue dipadam. Tekan “Buat asal” untuk pulihkan.'); return; }
-  pushUndo();
-  if (act === 'up' && i > 0) [cues[i - 1], cues[i]] = [cues[i], cues[i - 1]];
-  else if (act === 'down' && i < cues.length - 1) [cues[i + 1], cues[i]] = [cues[i], cues[i + 1]];
-  else if (act === 'ins') { const c = newCue(); c.mc = cues[i].mc; cues.splice(i + 1, 0, c); touch(); renderAll(); focusSeg(c.id); return; }
-  else if (act === 'dup') { const c = clone(cues[i]); c.id = 'c' + rid(7); c.seg = c.seg ? c.seg + ' (salinan)' : ''; cues.splice(i + 1, 0, c); touch(); renderAll(); focusSeg(c.id); return; }
-  else { S.undo.pop(); return; }
-  touch(); renderAll();
+  if (act === 'add-end') { pushUndo(); const c = newCue(); S.ev.cues.push(c); touch(); renderRundown(); openPanel(c.id, true); }
 });
-function focusSeg(id) { const el = $$('[data-k]').find(x => x.dataset.k === id + ':seg'); if (el) { el.focus(); el.scrollIntoView({ block: 'nearest' }); } }
+rd.addEventListener('keydown', e => {
+  const row = e.target.closest && e.target.closest('.cue-row[data-id]');
+  if (row && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openPanel(row.dataset.id); }
+});
+
+/* edit panel */
+const pn = $('#cuePanel');
+function panelCue() { return S.ev && S.panelId ? cueById(S.panelId) : null; }
+pn.addEventListener('input', e => {
+  const t = e.target; const c = panelCue(); if (!c || !S.canWrite || t.tagName === 'SELECT') return;
+  if (!t.dataset.pf && !t.dataset.pt) return;
+  if (S.undoKey !== t.dataset.k) { pushUndo(); S.undoKey = t.dataset.k; }
+  if (t.dataset.pt) { if (t.value.trim()) c.tasks[t.dataset.pt] = t.value; else delete c.tasks[t.dataset.pt]; }
+  else if (t.dataset.pf === 'dur') { c.dur = num(t.value); renderHead(); }
+  else c[t.dataset.pf] = t.value;
+  if (t.tagName === 'TEXTAREA') autosizeOne(t);
+  touch(); refreshList();
+});
+pn.addEventListener('change', e => {
+  const t = e.target; const c = panelCue(); if (!c || !S.canWrite || t.tagName !== 'SELECT' || !t.dataset.pf) return;
+  pushUndo(); c[t.dataset.pf] = t.value; touch();
+  const f = captureFocus(); renderPanel(); restoreFocus(f); refreshList();
+});
+pn.addEventListener('focusout', () => { S.undoKey = null; });
+pn.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]'); if (!b || !S.ev) return; const act = b.dataset.act;
+  const cues = S.ev.cues; const i = cues.findIndex(c => c.id === S.panelId);
+  if (act === 'p-close') { closePanel(); return; }
+  if (act === 'p-prev' && i > 0) { openPanel(cues[i - 1].id); return; }
+  if (act === 'p-next' && i >= 0 && i < cues.length - 1) { openPanel(cues[i + 1].id); return; }
+  if (!S.canWrite || i < 0) return;
+  if (act === 'p-del') {
+    if (!arm(b, 'pdel:' + cues[i].id, 'Press again to delete')) return;
+    pushUndo(); cues.splice(i, 1); touch(); renderRundown();
+    if (cues.length) openPanel(cues[Math.min(i, cues.length - 1)].id); else closePanel();
+    toast('Cue deleted. Press Undo to bring it back.'); return;
+  }
+  if (act === 'p-up' && i > 0) { pushUndo(); [cues[i - 1], cues[i]] = [cues[i], cues[i - 1]]; }
+  else if (act === 'p-down' && i < cues.length - 1) { pushUndo(); [cues[i + 1], cues[i]] = [cues[i], cues[i + 1]]; }
+  else if (act === 'p-ins') { pushUndo(); const c = newCue(); c.mc = cues[i].mc; cues.splice(i + 1, 0, c); touch(); renderRundown(); openPanel(c.id, true); return; }
+  else if (act === 'p-dup') { pushUndo(); const c = clone(cues[i]); c.id = 'c' + rid(7); c.seg = c.seg ? c.seg + ' (copy)' : ''; cues.splice(i + 1, 0, c); touch(); renderRundown(); openPanel(c.id, true); return; }
+  else return;
+  touch(); renderRundown(); const f = captureFocus(); renderPanel(); restoreFocus(f);
+  const row = $$('#view-rundown .cue-row[data-id]').find(r => r.dataset.id === S.panelId); if (row) row.scrollIntoView({ block: 'nearest' });
+});
 
 /* live */
 const lv = $('#view-live');
@@ -1337,8 +1442,8 @@ lv.addEventListener('click', e => {
   else if (act === 'standby') callStandby();
   else if (act === 'go') callGo();
   else if (act === 'call-cancel') callCancel();
-  else if (act === 'mute') { S.mute = !S.mute; LS.set('cs.mute', S.mute); b.setAttribute('aria-pressed', String(S.mute)); b.textContent = S.mute ? 'Bunyi: tutup' : 'Bunyi: buka'; if (!S.mute) beep(false); }
-  else if (act === 'fs') { const el = document.documentElement; try { if (document.fullscreenElement) document.exitFullscreen(); else if (el.requestFullscreen) el.requestFullscreen().catch(() => toast('Skrin penuh tidak tersedia di sini.')); else toast('Skrin penuh tidak tersedia di sini.'); } catch (x) { toast('Skrin penuh tidak tersedia di sini.'); } }
+  else if (act === 'mute') { S.mute = !S.mute; LS.set('cs.mute', S.mute); b.setAttribute('aria-pressed', String(S.mute)); b.textContent = S.mute ? 'Sound: off' : 'Sound: on'; if (!S.mute) beep(false); }
+  else if (act === 'fs') { const el = document.documentElement; try { if (document.fullscreenElement) document.exitFullscreen(); else if (el.requestFullscreen) el.requestFullscreen().catch(() => toast('Full screen is not available here.')); else toast('Full screen is not available here.'); } catch (x) { toast('Full screen is not available here.'); } }
 });
 lv.addEventListener('change', e => { if (e.target.id === 'liveJump') setLive(Number(e.target.value)); });
 document.addEventListener('keydown', e => {
@@ -1356,7 +1461,7 @@ setInterval(() => { if (S.view === 'live') tickLive(); }, 1000);
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && S.view === 'live') wakeLock(true); });
 
 /* crew */
-const kr = $('#view-kru');
+const kr = $('#view-crew');
 kr.addEventListener('click', e => {
   const b = e.target.closest('[data-act]'); if (!b || !S.ev) return; const act = b.dataset.act;
   if (act === 'kru') { S.kruSrc = b.dataset.src; LS.set('cs.kru', S.kruSrc); renderKru(); return; }
@@ -1368,7 +1473,7 @@ kr.addEventListener('click', e => {
 kr.addEventListener('change', e => { if (e.target.id === 'kruAll') { S.kruAll = e.target.checked; renderKru(); } });
 
 /* settings */
-const st = $('#view-tetapan');
+const st = $('#view-settings');
 st.addEventListener('input', e => {
   const t = e.target; if (!S.ev || !S.canWrite) return;
   if (t.dataset.word) {
@@ -1394,7 +1499,7 @@ st.addEventListener('click', e => {
   if (!S.canWrite) return;
   if (S.gas && /^(link|rot)-(crew|editor)$/.test(act)) { shareAction(act, b); return; }
   const srcs = S.ev.sources;
-  if (act === 'src-add') { pushUndo(); const used = new Set(srcs.map(s => s.color)); const color = NEW_COLORS.find(c => !used.has(c)) || NEW_COLORS[srcs.length % NEW_COLORS.length]; const s = { id: 's' + rid(5), code: 'CAM' + (srcs.length + 1), name: 'Sumber baru', desc: '', crew: '', color }; srcs.push(s); touch(); renderAll(); const el = $$('[data-k]').find(x => x.dataset.k === 'src:' + s.id + ':name'); if (el) { el.focus(); el.select(); } return; }
+  if (act === 'src-add') { pushUndo(); const used = new Set(srcs.map(s => s.color)); const color = NEW_COLORS.find(c => !used.has(c)) || NEW_COLORS[srcs.length % NEW_COLORS.length]; const s = { id: 's' + rid(5), code: 'CAM' + (srcs.length + 1), name: 'New source', desc: '', crew: '', color }; srcs.push(s); touch(); renderAll(); const el = $$('[data-k]').find(x => x.dataset.k === 'src:' + s.id + ':name'); if (el) { el.focus(); el.select(); } return; }
   const row = b.closest('[data-sid]'); const i = row ? srcs.findIndex(s => s.id === row.dataset.sid) : -1;
   if (act === 'src-up' && i > 0) { pushUndo(); [srcs[i - 1], srcs[i]] = [srcs[i], srcs[i - 1]]; touch(); renderAll(); return; }
   if (act === 'src-down' && i >= 0 && i < srcs.length - 1) { pushUndo(); [srcs[i + 1], srcs[i]] = [srcs[i], srcs[i + 1]]; touch(); renderAll(); return; }
@@ -1402,15 +1507,15 @@ st.addEventListener('click', e => {
     if (!arm(b, 'sdel:' + srcs[i].id)) return;
     pushUndo(); const id = srcs[i].id; srcs.splice(i, 1);
     S.ev.cues.forEach(c => { delete c.tasks[id]; if (c.pgm === id) c.pgm = ''; });
-    touch(); renderAll(); toast('Sumber dipadam. Buat asal ada dalam Rundown.'); return;
+    touch(); renderAll(); toast('Source deleted. Undo is in the Rundown.'); return;
   }
-  if (act === 'dup-event') { openNewDialog({ name: S.ev.name + ' (salinan)', date: S.ev.date, start: S.ev.start, from: 'all' }); return; }
+  if (act === 'dup-event') { openNewDialog({ name: S.ev.name + ' (copy)', date: S.ev.date, start: S.ev.start, from: 'all' }); return; }
   if (act === 'del-event') {
-    if (!arm(b, 'edel:' + S.curId, 'Tekan lagi untuk padam terus')) return;
+    if (!arm(b, 'edel:' + S.curId, 'Press again to delete for good')) return;
     const id = S.curId; const name = S.ev.name;
     clearTimeout(S.saveT); S.dirty = false;
-    removeEvent(id).then(() => { S.curId = null; S.ev = null; LS.set('cs.cur', null); onEventsChanged(); toast('Dipadam: ' + name); })
-      .catch(err => toast('Tidak dapat padam' + (err && err.message ? ': ' + err.message : '.'), 'warn'));
+    removeEvent(id).then(() => { S.curId = null; S.ev = null; LS.set('cs.cur', null); onEventsChanged(); toast('Deleted: ' + name); })
+      .catch(err => toast('Could not delete' + (err && err.message ? ': ' + err.message : '.'), 'warn'));
   }
 });
 document.addEventListener('change', e => { if (e.target.classList && e.target.classList.contains('importFile')) { importFile(e.target.files && e.target.files[0]); e.target.value = ''; } });
@@ -1420,7 +1525,7 @@ $('#nfCancel').addEventListener('click', () => $('#newDlg').close());
 $('#copyClose').addEventListener('click', () => $('#copyDlg').close());
 $('#newForm').addEventListener('submit', async e => {
   e.preventDefault();
-  const name = $('#nfName').value.trim(); if (!name) { $('#nfErr').textContent = 'Isi nama majlis dahulu.'; $('#nfName').focus(); return; }
+  const name = $('#nfName').value.trim(); if (!name) { $('#nfErr').textContent = 'Type the event name first.'; $('#nfName').focus(); return; }
   const from = ($$('input[name="nfFrom"]').find(r => r.checked) || {}).value || 'blank';
   const base = { name, date: $('#nfDate').value, start: $('#nfStart').value };
   let data;
@@ -1429,30 +1534,30 @@ $('#newForm').addEventListener('submit', async e => {
   else data = Object.assign({}, base, { sources: clone(DEFAULT_SOURCES), cues: [] });
   $('#newDlg').close();
   const id = await createEvent(data);
-  if (id) { toast('Majlis dicipta: ' + name); if (S.view === 'live') location.hash = '#rundown'; }
+  if (id) { toast('Event created: ' + name); if (S.view !== 'rundown') goView('rundown'); }
 });
 
 /* ---------- boot ---------- */
 function loadLocal() {
   const raw = LS.get('cs.events', {}); S.events = {};
   if (raw && typeof raw === 'object') Object.keys(raw).forEach(id => { S.events[id] = normEvent(raw[id]); });
-  S.loaded = true; setStatus('Pelayar ini sahaja', 'busy'); onEventsChanged();
+  S.loaded = true; setStatus('This browser only', 'busy'); onEventsChanged();
 }
 function startDb() {
-  setStatus('Menyambung…', 'busy');
+  setStatus('Connecting…', 'busy');
   let definitive = false;
-  const timer = setTimeout(() => { if (!definitive) { setStatus('Data belum dapat dicapai', 'warn'); if (!S.loaded) { S.loaded = true; renderAll(); } } }, 10000);
+  const timer = setTimeout(() => { if (!definitive) { setStatus('Cannot reach data yet', 'warn'); if (!S.loaded) { S.loaded = true; renderAll(); } } }, 10000);
   S.db.collection('events').onSnapshot(snap => {
-    if (!snap.metadata.fromCache && (!definitive || S.gas)) { definitive = true; clearTimeout(timer); if (!S.dirty && !S.saving && S.canWrite) setStatus('Disimpan', 'ok'); }
+    if (!snap.metadata.fromCache && (!definitive || S.gas)) { definitive = true; clearTimeout(timer); if (!S.dirty && !S.saving && S.canWrite) setStatus('Saved', 'ok'); }
     const map = {}; snap.docs.forEach(d => { if (d.exists) map[d.id] = d.data(); });
     /* a snapshot already in flight may predate an event we just created: keep it briefly */
     Object.keys(S.justWrote).forEach(id => { if (map[id] || Date.now() - S.justWrote[id] > 15000) delete S.justWrote[id]; else if (S.events[id]) map[id] = S.events[id]; });
     S.events = map; S.loaded = true; onEventsChanged();
   }, err => {
     clearTimeout(timer); definitive = true; S.loaded = true;
-    if (err && (err.code === 'revoked' || err.code === 'permission_denied')) { S.canWrite = false; S.roReason = 'Link ini sudah ditukar. Minta link terkini daripada pemilik.'; setStatus('Akses ditarik', 'warn'); }
-    else if (S.gas && definitive && S.ev) { setStatus('Tiada sambungan, cuba lagi…', 'warn'); return; } // keep showing the last data
-    else setStatus('Data tidak dapat dicapai', 'warn');
+    if (err && (err.code === 'revoked' || err.code === 'permission_denied')) { S.canWrite = false; S.roReason = 'This link was changed. Ask the owner for the latest link.'; setStatus('Access removed', 'warn'); }
+    else if (S.gas && definitive && S.ev) { setStatus('No connection, retrying…', 'warn'); return; } // keep showing the last data
+    else setStatus('Cannot reach data', 'warn');
     renderAll();
   });
 }
@@ -1463,15 +1568,15 @@ function loadSnapshot() {
   S.events = {}; Object.keys(raw).forEach(id => { S.events[id] = normEvent(raw[id]); });
   S.canWrite = false;
   const at = Number(snap && snap.at) || 0; const d = new Date(at);
-  const when = at ? `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}, ${pad(d.getHours())}:${pad(d.getMinutes())}` : '';
-  S.roReason = `Paparan baca sahaja${when ? ' · salinan dikemaskini ' + when : ''}. Log masuk ke Claude untuk lihat versi terkini.`;
-  S.loaded = true; setStatus('Salinan baca sahaja', ''); onEventsChanged();
+  const when = at ? `${d.getDate()} ${MONTHS[d.getMonth()].slice(0, 3)} ${d.getFullYear()}, ${pad(d.getHours())}:${pad(d.getMinutes())}` : '';
+  S.roReason = `Read-only view${when ? ' · copy updated ' + when : ''}. Sign in to Claude to see the latest version.`;
+  S.loaded = true; setStatus('Read-only copy', ''); onEventsChanged();
 }
 async function checkWrite() {
   try {
     const u = await getCap('user'); if (!u) return;
     const can = await u.can('data.write');
-    if (can === false) { S.canWrite = false; S.roReason = 'Anda boleh lihat dan muat turun sahaja. Hanya pemilik dan editor boleh ubah cue sheet ini.'; renderAll(); }
+    if (can === false) { S.canWrite = false; S.roReason = 'You can view and download only. Only the owner and editors can change this cue sheet.'; renderAll(); }
   } catch (e) {}
 }
 /* ---------- own web app: page on GitHub Pages, data in Google Sheet ----------
@@ -1492,8 +1597,8 @@ async function webRun(fn, ...args) {
       j = await res.json();
     } catch (e) { j = null; }
   }
-  if (!j) throw { code: 'unavailable', message: 'Tiada sambungan ke server' };
-  if (!j.ok) throw { code: j.code || 'unavailable', message: j.message || 'Ralat server' };
+  if (!j) throw { code: 'unavailable', message: 'No connection to the server' };
+  if (!j.ok) throw { code: j.code || 'unavailable', message: j.message || 'Server error' };
   return j.result;
 }
 /** The key from the link. A link opened once is remembered on this device, and the key is
@@ -1504,7 +1609,7 @@ function takeLink() {
   if (/(^|&)k=/.test(h)) {
     const p = new URLSearchParams(h); const link = { k: p.get('k') || '', e: p.get('e') || '' };
     LS.set('cs.link', link);
-    try { history.replaceState(null, '', location.pathname + location.search + '#' + (link.e ? 'kru' : 'rundown')); } catch (e) {}
+    try { history.replaceState(null, '', location.pathname + location.search + '#' + (link.e ? 'crew' : 'rundown')); } catch (e) {}
     return link;
   }
   const s = LS.get('cs.link', null);
@@ -1548,37 +1653,37 @@ function gasDb(boot, run) {
 }
 async function shareAction(act, btn) {
   const [kind, who] = act.split('-');
-  if (kind === 'rot' && !arm(btn, act + ':' + S.curId, 'Tekan lagi: link lama akan mati')) return;
+  if (kind === 'rot' && !arm(btn, act + ':' + S.curId, 'Press again: the old link will stop working')) return;
   const lbl = btn.innerHTML; btn.disabled = true;
   try {
     if (S.dirty || S.saving) await flush();
     const r = kind === 'rot' ? await S.db.run('rotate', S.gas.key, who, S.curId) : await S.db.run('links', S.gas.key, who === 'crew' ? S.curId : '');
-    const link = r[who]; if (!link) throw { message: 'Link tidak tersedia' };
+    const link = r[who]; if (!link) throw { message: 'Link not available' };
     const msg = who === 'crew'
-      ? `Link cue sheet kru · ${S.ev.name}\n(baca sahaja, tak perlu login)\n${link}`
-      : `Link EDITOR cue sheet (boleh ubah data, jangan sebar)\n${link}`;
+      ? `Crew cue sheet link · ${S.ev.name}\n(view only, no login needed)\n${link}`
+      : `EDITOR link for the cue sheet (can change data, do not share)\n${link}`;
     await copyText(msg);
-    if (kind === 'rot') toast((who === 'crew' ? 'Link kru' : 'Link editor') + ' baru disalin. Link lama sudah mati.');
-  } catch (e) { toast('Tidak dapat dapatkan link' + (e && e.message ? ': ' + e.message : '.'), 'warn'); }
+    if (kind === 'rot') toast('New ' + (who === 'crew' ? 'crew' : 'editor') + ' link copied. The old link no longer works.');
+  } catch (e) { toast('Could not get the link' + (e && e.message ? ': ' + e.message : '.'), 'warn'); }
   finally { btn.disabled = false; btn.innerHTML = lbl; btn.classList.remove('armed'); }
 }
 function startGas(boot, run) {
   S.mode = 'db'; S.gas = boot; S.db = gasDb(boot, run);
-  if (boot.role === 'crew') { S.canWrite = false; S.roReason = 'Paparan kru: baca sahaja. Cue sheet ini dikemaskini sendiri apabila pengarah membuat perubahan.'; }
+  if (boot.role === 'crew') { S.canWrite = false; S.roReason = 'Crew view: read-only. This cue sheet updates by itself when the director makes changes.'; }
   startDb();
 }
 async function startWeb(link) {
   S.canWrite = false;
-  if (!link) { S.mode = 'nolink'; S.loaded = true; setStatus('Perlukan link', 'warn'); renderAll(); return; }
-  setStatus('Menyambung…', 'busy');
+  if (!link) { S.mode = 'nolink'; S.loaded = true; setStatus('Needs a link', 'warn'); renderAll(); return; }
+  setStatus('Connecting…', 'busy');
   try {
     const who = await webRun('whoami', link.k, link.e);
     S.canWrite = who.role !== 'crew';
     startGas({ role: who.role, key: link.k, event: who.role === 'crew' ? link.e : '' }, webRun);
   } catch (e) {
     S.loaded = true;
-    if (e && e.code === 'permission_denied') { forgetLink(); S.mode = 'nolink'; S.linkBad = true; setStatus('Link tidak sah', 'warn'); }
-    else { S.mode = 'offline'; setStatus('Tiada sambungan', 'warn'); }
+    if (e && e.code === 'permission_denied') { forgetLink(); S.mode = 'nolink'; S.linkBad = true; setStatus('Link not valid', 'warn'); }
+    else { S.mode = 'offline'; setStatus('No connection', 'warn'); }
     renderAll();
   }
 }
@@ -1594,6 +1699,6 @@ async function init() {
 }
 init();
 /* test hook: only the local test runner (tests/run.html) defines __CS_TEST__ */
-if (typeof window.__CS_TEST__ === 'function') window.__CS_TEST__({ S, esc, normEvent, cueTimes, slug, stable, crewText, importFile, createEvent, selectEvent, renderAll, touch, flush, pdfRundown, pdfKru, pdfDirector, callInto, setLive });
+if (typeof window.__CS_TEST__ === 'function') window.__CS_TEST__({ S, esc, normEvent, cueTimes, slug, stable, crewText, importFile, createEvent, selectEvent, renderAll, touch, flush, pdfRundown, pdfKru, pdfDirector, callInto, setLive, openPanel, closePanel });
 })();
 </script>

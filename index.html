@@ -4,6 +4,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
 <script>window.CS_API = "https://script.google.com/macros/s/AKfycbzeDB5je7xASwU04c8nF7oQYLzj7O_AnXQOs0n3rs-uJBYy0mGUoL9jn5dTG0DSZ8lghQ/exec";</script>
+<meta charset="utf-8">
 <title>Cue Sheet Multimedia</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -181,6 +182,25 @@ tr:hover .rtools,tr:focus-within .rtools{opacity:1}
 .live-cue{margin:10px 0 0;padding:10px 14px;border-left:3px solid var(--line-strong);background:var(--surface-2);border-radius:0 8px 8px 0;font:italic 400 15px/1.45 var(--f-body)}
 .live-note{display:flex;gap:8px;align-items:flex-start;margin-top:10px;color:var(--warn);font-weight:500}
 .live-note svg{margin-top:2px}
+.call-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.call-btn{font:700 18px/1 var(--f-display);letter-spacing:.06em;padding:14px 22px;min-height:52px}
+.call-btn.sb{background:var(--warn-soft);color:var(--warn);border-color:color-mix(in srgb,var(--warn) 45%,transparent)}
+.call-btn.go{background:var(--tally);color:var(--tally-ink);border-color:var(--tally);flex:1 1 220px}
+.call-panel:empty{display:none}
+.call-panel{border-radius:12px;padding:16px 20px;text-align:center;display:grid;gap:6px}
+.call-panel.standby{background:var(--warn-soft);color:var(--ink);border:2px solid var(--warn)}
+.call-panel.count{background:var(--ink);color:var(--bg)}
+.call-panel.go{background:var(--tally);color:var(--tally-ink)}
+.cp-l{font:600 13px/1.2 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;opacity:.85}
+.cp-big{font:700 clamp(28px,5vw,56px)/1.05 var(--f-display);text-wrap:balance}
+.cp-sub{font-size:15px;opacity:.85}
+.cp-count{font:700 clamp(90px,18vw,200px)/.9 var(--f-mono);font-variant-numeric:tabular-nums}
+.cp-in{font-size:.35em;vertical-align:middle;opacity:.8}
+.call-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 8px;align-items:center;padding:2px 10px 8px}
+.call-l{font:600 9.5px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.rd .call-in{border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-size:12px;background:var(--surface);color:var(--ink);min-width:0;width:100%}
+.words-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+details.adv summary{cursor:pointer;list-style:revert}
 .tally-row{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:10px}
 .tally{display:flex;align-items:center;gap:14px;border-radius:10px;padding:12px 16px;min-width:0}
 .tally .tl{font:600 12px/1 var(--f-mono);letter-spacing:.14em;padding:6px 8px;border-radius:5px;flex:none}
@@ -443,6 +463,7 @@ const S = {
   dirty: false, saving: false, pending: false, retried: false, saveT: 0,
   view: 'rundown', filter: '', undo: [], undoKey: null, armed: null,
   liveIdx: 0, liveSince: Date.now(), wake: null,
+  call: null, callT: 0, callTick: 1000, beeps: 0, mute: LS.get('cs.mute', false),
   kruSrc: LS.get('cs.kru', null), kruAll: false,
   hidden: LS.get('cs.hidden', {}), paper: LS.get('cs.paper', 'a4')
 };
@@ -490,13 +511,39 @@ function normEvent(e) {
   });
   const cues = (Array.isArray(e.cues) ? e.cues : []).filter(c => c && typeof c === 'object').map(c => {
     let id = str(c.id).replace(/[^\w-]/g, '') || 'c' + rid(7); while (seenC.has(id)) id = 'c' + rid(7); seenC.add(id);
-    return { id, seg: str(c.seg), kind: KIND_IDS.includes(c.kind) ? c.kind : 'lain', mc: str(c.mc), cue: str(c.cue), pgm: str(c.pgm), dur: num(c.dur), note: str(c.note), tasks: objStr(c.tasks) };
+    return { id, seg: str(c.seg), kind: KIND_IDS.includes(c.kind) ? c.kind : 'lain', mc: str(c.mc), cue: str(c.cue), pgm: str(c.pgm), dur: num(c.dur), note: str(c.note), tasks: objStr(c.tasks), sb: str(c.sb), go: str(c.go) };
   });
   return {
     name: str(e.name) || 'Majlis tanpa nama', theme: str(e.theme), date: str(e.date), start: str(e.start), venue: str(e.venue),
     mcs: str(e.mcs), director: str(e.director), notes: str(e.notes), sources, cues,
+    words: normWords(e.words),
     createdAt: Number(e.createdAt) || Date.now(), updatedAt: Number(e.updatedAt) || Date.now()
   };
+}
+
+/* ---------- director calls ("Okay camera CAM1 standby" … "in 3, 2, 1" … "CAM1 masuk") ---------- */
+const DEFAULT_WORDS = { standby: 'Okay camera {src} standby', standbyOther: 'Okay {src} standby', go: '{src} masuk', back: 'back to {src}', ltStandby: 'LT standby', lt: 'LT in', count: 'in' };
+const WORD_LABELS = [
+  ['standby', 'Standby kamera', 'Okay camera {src} standby'], ['standbyOther', 'Standby bukan kamera (laptop, video)', 'Okay {src} standby'], ['go', 'Masuk ke sumber', '{src} masuk'],
+  ['back', 'Balik ke kamera utama', 'back to {src}'], ['ltStandby', 'LT bersedia', 'LT standby'],
+  ['lt', 'LT masuk', 'LT in'], ['count', 'Sebelum kiraan 3 2 1', 'in']
+];
+function normWords(w) { const o = {}; Object.keys(DEFAULT_WORDS).forEach(k => { const v = w && typeof w === 'object' ? str(w[k]).trim() : ''; o[k] = v || DEFAULT_WORDS[k]; }); return o; }
+const isLtSource = s => /^LT\b/i.test(s.code) || /lower\s*third|^LT\b/i.test(s.name);
+const isCamera = (s, ev) => (ev.sources[0] && ev.sources[0].id === s.id) || /cam|kamera|camera|ptz|fly|roving|gimbal|jib|drone/i.test([s.code, s.name, s.desc].join(' '));
+/** What the director says to go INTO cue i (from cue i-1). The first source is the main camera. */
+function callInto(ev, i) {
+  const c = ev.cues[i]; if (!c) return null;
+  const prev = ev.cues[i - 1] || null; const W = normWords(ev.words);
+  const src = ev.sources.find(s => s.id === c.pgm) || null; const code = src ? src.code : '';
+  const lt = ev.sources.some(s => isLtSource(s) && str(c.tasks[s.id]).trim());
+  const switching = !!src && (!prev || prev.pgm !== c.pgm);
+  const isMain = !!src && ev.sources[0] && ev.sources[0].id === src.id && !!prev;
+  const fill = t => t.replace(/\{src\}/g, code);
+  let sb = [switching ? fill(isCamera(src, ev) ? W.standby : W.standbyOther) : '', lt ? W.ltStandby : ''].filter(Boolean).join(' · ');
+  let go = [switching ? fill(isMain ? W.back : W.go) : '', lt ? W.lt : ''].filter(Boolean).join(' · ');
+  if (!sb) sb = 'Standby cue seterusnya'; if (!go) go = 'Seterusnya';
+  return { sb: str(c.sb).trim() || sb, go: str(c.go).trim() || go, autoSb: sb, autoGo: go, src, lt, count: W.count };
 }
 
 /* ---------- icons ---------- */
@@ -718,6 +765,7 @@ function renderRundown() {
       <div class="colvis" role="group" aria-label="Tunjuk atau sorok lajur sumber">${ev.sources.map(s => `<button class="vis-chip${S.hidden[s.id] ? ' off' : ''}" data-act="vis" data-src="${esc(s.id)}" style="${srcStyle(s)}" aria-pressed="${!S.hidden[s.id]}" title="${esc(s.name)}">${esc(s.code)}</button>`).join('')}</div>
       <label class="sr" for="paperSel">Saiz kertas PDF</label>
       <select id="paperSel"><option value="a4"${S.paper === 'a4' ? ' selected' : ''}>A4</option><option value="a3"${S.paper === 'a3' ? ' selected' : ''}>A3</option></select>
+      <button class="btn primary" data-act="pdf-director" title="Untuk cetak: bila panggil, apa nak panggil, kotak tanda">${icon('file')} PDF director</button>
       <button class="btn" data-act="pdf-rundown">${icon('file')} PDF rundown</button>
     </div>
   </div>
@@ -758,6 +806,10 @@ function rowHtml(c, i, vis, time, ro, q) {
         <input class="dur" data-f="dur" data-k="${k}:dur" type="number" min="0" step="0.5" inputmode="decimal" placeholder="min" aria-label="Anggaran minit" value="${c.dur == null ? '' : c.dur}"${RO}>
       </div>
       <textarea class="cue" data-f="cue" data-k="${k}:cue" rows="1" placeholder="Isyarat MC (ayat cue)…" aria-label="Isyarat MC"${RO}>${esc(c.cue)}</textarea>
+      ${(() => { const cl = callInto(S.ev, i); return `<div class="call-row" title="Panggilan director untuk masuk ke cue ini. Kosongkan untuk guna ayat automatik.">
+        <span class="call-l">Standby</span><input class="call-in" data-f="sb" data-k="${k}:sb" placeholder="${esc(cl.autoSb)}" value="${esc(c.sb)}" aria-label="Ayat standby cue ${i + 1}"${RO}>
+        <span class="call-l">${esc(cl.count)} 3·2·1</span><input class="call-in" data-f="go" data-k="${k}:go" placeholder="${esc(cl.autoGo)}" value="${esc(c.go)}" aria-label="Ayat masuk cue ${i + 1}"${RO}>
+      </div>`; })()}
     </td>
     <td class="c-pgm"><div class="c-pgm-in">
       <select class="pgm-sel" data-f="pgm" data-k="${k}:pgm" aria-label="Sumber PGM cue ${i + 1}"${DIS}><option value="">—</option>${S.ev.sources.map(s => `<option value="${esc(s.id)}"${s.id === c.pgm ? ' selected' : ''}>${esc(s.code)}</option>`).join('')}</select>
@@ -803,6 +855,13 @@ function renderLive() {
         <button class="btn" data-act="fs">${icon('expand')} Skrin penuh</button>
       </div>
     </div>
+    ${n ? `<div class="call-bar">
+      <button class="btn call-btn sb" data-act="standby" title="Papan kekunci: S">STANDBY</button>
+      <button class="btn call-btn go" data-act="go" title="Papan kekunci: Space">GO · ${esc(callInto(ev, i + 1).count)} 3 2 1</button>
+      <button class="btn" data-act="call-cancel"${S.call ? '' : ' disabled'} title="Papan kekunci: Esc">Batal</button>
+      <button class="btn" data-act="mute" aria-pressed="${S.mute ? 'true' : 'false'}">${S.mute ? 'Bunyi: tutup' : 'Bunyi: buka'}</button>
+    </div>` : ''}
+    <div id="callPanel" class="call-panel" aria-live="assertive"></div>
     <div class="live-now" style="--k:${kindColor(k)}">
       <div class="live-num"><span class="l">Cue</span>${pad(i + 1)}<span class="of">/${pad(ev.cues.length)}</span></div>
       <div style="min-width:0">
@@ -818,9 +877,50 @@ function renderLive() {
     </div>
     <div class="live-grid">${ev.sources.map(s => liveCard(s, c, n)).join('')}</div>
     ${n ? `<div class="live-next"><span class="l">Seterusnya</span> <b>${pad(i + 2)}</b> ${esc(n.seg || '(tanpa nama)')}${n.mc ? ` · MC ${esc(n.mc)}` : ''}${n.cue ? `<div class="nq">${esc(n.cue)}</div>` : ''}</div>` : `<div class="live-next">Ini cue terakhir.</div>`}
-    <p class="hint">Papan kekunci: anak panah kanan atau Space untuk cue seterusnya, anak panah kiri untuk sebelum.</p>`;
-  tickLive();
+    <p class="hint">Papan kekunci: <b>S</b> standby · <b>Space</b> GO (in 3 2 1) · <b>Esc</b> batal · anak panah kanan / kiri untuk pindah cue tanpa panggilan.</p>`;
+  tickLive(); drawCall();
 }
+
+/* ----- call flow: STANDBY → GO → "in" 3 · 2 · 1 → "CAM1 masuk" → next cue ----- */
+function drawCall() {
+  const el = $('#callPanel'); if (!el) return;
+  const c = S.call; el.className = 'call-panel' + (c ? ' ' + c.stage : '');
+  const cancel = $('[data-act="call-cancel"]'); if (cancel) cancel.disabled = !c;
+  if (!c) { el.innerHTML = ''; return; }
+  const cl = callInto(S.ev, c.to); if (!cl) { el.innerHTML = ''; return; }
+  const nx = S.ev.cues[c.to];
+  if (c.stage === 'standby') el.innerHTML = `<div class="cp-l">STANDBY · cue ${pad(c.to + 1)} ${esc(nx.seg || '')}</div><div class="cp-big">${esc(cl.sb)}</div>${cl.src && nx.tasks[cl.src.id] ? `<div class="cp-sub">${esc(cl.src.code)}: ${esc(nx.tasks[cl.src.id])}</div>` : ''}`;
+  else if (c.stage === 'count') el.innerHTML = `<div class="cp-l">${esc(cl.go)}</div><div class="cp-count">${c.n === 3 ? `<span class="cp-in">${esc(cl.count)}</span> ` : ''}${c.n}</div>`;
+  else el.innerHTML = `<div class="cp-l">ON AIR · cue ${pad(c.to + 1)}</div><div class="cp-big">${esc(cl.go)}</div>`;
+}
+let audioCtx = null;
+function beep(long) {
+  S.beeps++; if (S.mute) { S.beeps--; return; }
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain(), t = audioCtx.currentTime, d = long ? 0.45 : 0.14;
+    o.frequency.value = long ? 1320 : 880; o.type = 'sine';
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.4, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+    o.connect(g).connect(audioCtx.destination); o.start(t); o.stop(t + d + 0.02);
+  } catch (e) {}
+}
+function callStandby() {
+  if (!S.ev || !S.ev.cues[S.liveIdx + 1]) return;
+  clearTimeout(S.callT); S.call = { stage: 'standby', to: S.liveIdx + 1 }; drawCall();
+}
+function callGo() {
+  if (!S.ev || !S.ev.cues[S.liveIdx + 1]) return;
+  if (S.call && S.call.stage !== 'standby') return; // already counting
+  clearTimeout(S.callT); const to = S.liveIdx + 1;
+  const step = n => {
+    if (n > 0) { S.call = { stage: 'count', to, n }; drawCall(); beep(false); S.callT = setTimeout(() => step(n - 1), S.callTick); return; }
+    S.call = { stage: 'go', to }; beep(true); drawCall();
+    S.callT = setTimeout(() => { S.call = null; setLive(to); }, Math.max(300, S.callTick * 1.2));
+  };
+  step(3);
+}
+function callCancel() { clearTimeout(S.callT); S.call = null; drawCall(); }
 function liveCard(s, c, n) {
   const now = (c.tasks[s.id] || '').trim(), nx = n ? (n.tasks[s.id] || '').trim() : '';
   const on = c.pgm === s.id, pv = !!(n && n.pgm === s.id);
@@ -834,6 +934,7 @@ function liveCard(s, c, n) {
 function setLive(i) {
   if (!S.ev) return; const max = S.ev.cues.length - 1; i = Math.max(0, Math.min(i, max));
   if (i === S.liveIdx) return;
+  if (S.call && S.call.stage !== 'go') callCancel(); // moving by hand cancels a pending call
   S.liveIdx = i; S.liveSince = Date.now(); LS.set('cs.live.' + S.curId, i); renderLive();
 }
 function tickLive() {
@@ -942,16 +1043,21 @@ function renderTetapan() {
       <div class="src-ed">${ev.sources.map((s, i) => srcRow(s, i, ev.sources.length, ro)).join('')}</div>
       ${ro ? '' : `<div><button class="btn" data-act="src-add">${icon('plus')} Tambah sumber</button></div>`}
     </section>
-    ${S.gas && !ro ? `<section class="panel wide" id="sharePanel">
-      <h2 class="ph">Kongsi dengan team</h2>
-      <p class="pd">Setiap link ada kunci rahsia sendiri. Sesiapa yang ada link boleh buka tanpa login, jadi hantar kepada orang yang betul sahaja. Kalau link tersebar, tekan “Tukar”: link lama terus mati.</p>
+    <section class="panel wide">
+      <h2 class="ph">Istilah panggilan director</h2>
+      <p class="pd">Ayat yang keluar dalam Mod Live semasa STANDBY dan GO. <b>{src}</b> akan diganti dengan kod sumber, contohnya CAM1. Kosongkan kotak untuk guna ayat asal.</p>
+      <div class="words-grid">${WORD_LABELS.map(([key, label, def]) => `<label class="fld"><span>${label}</span><input type="text" data-word="${key}" data-k="word:${key}" value="${esc(ev.words[key])}" placeholder="${esc(def)}"${RO}></label>`).join('')}</div>
+    </section>
+    ${S.gas && !ro ? `<details class="panel wide adv" id="sharePanel">
+      <summary class="ph">Pilihan lanjutan: kongsi dengan orang lain</summary>
+      <p class="pd">Tidak perlu jika anda seorang sahaja yang guna. Setiap link ada kunci rahsia sendiri. Sesiapa yang ada link boleh buka tanpa login, jadi hantar kepada orang yang betul sahaja. Kalau link tersebar, tekan “Tukar”: link lama terus mati.</p>
       <div class="data-acts">
         <button class="btn primary" data-act="link-crew">${icon('chat')} Salin link kru majlis ini</button>
         <button class="btn" data-act="rot-crew">Tukar link kru</button>
         ${S.gas.role === 'owner' ? `<button class="btn" data-act="link-editor">${icon('chat')} Salin link editor</button><button class="btn" data-act="rot-editor">Tukar link editor</button>` : ''}
       </div>
       <p class="pd" style="margin-top:10px"><b>Link kru:</b> baca sahaja, untuk majlis ini sahaja. <b>Link editor:</b> boleh ubah semua majlis (untuk director / penolong).</p>
-    </section>` : ''}
+    </details>` : ''}
     <section class="panel wide">
       <h2 class="ph">Simpan &amp; guna semula</h2>
       <p class="pd">Untuk majlis lain, cipta “Majlis baru” dan pilih Salin sumber atau Salin semua. Muat turun JSON sebagai salinan; fail itu boleh diimport semula bila-bila masa.</p>
@@ -1053,6 +1159,40 @@ async function pdfRundown(btn) {
     });
     pdfFooters(doc);
     await offerFile(slug(ev.name) + '-rundown.pdf', doc.output('blob'));
+  } catch (e) { toast('PDF gagal: ' + (e && e.message || e), 'warn'); }
+  finally { if (btn) { btn.disabled = false; btn.innerHTML = lbl; } }
+}
+/** Director's own print: A4 portrait, big type, one row per cue: when to call (MC line), what to call, tick box, room to write. */
+async function pdfDirector(btn) {
+  const ev = S.ev; if (!ev) return;
+  if (!ev.cues.length) { toast('Tiada cue untuk dicetak.', 'warn'); return; }
+  const lbl = btn ? btn.innerHTML : ''; if (btn) { btn.disabled = true; btn.textContent = 'Menjana PDF…'; }
+  try {
+    const J = await getJsPDF();
+    const doc = new J({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const times = cueTimes(ev);
+    const body = ev.cues.map((c, i) => {
+      const cl = callInto(ev, i); const pg = srcById(c.pgm);
+      return [
+        '', pad(i + 1) + (times[i] ? '\n' + times[i] : ''),
+        P((c.seg || '(tanpa nama)') + (c.mc ? '\nMC: ' + c.mc : '') + (c.cue ? '\n"' + c.cue + '"' : '')),
+        P('SB: ' + cl.sb + '\n' + cl.count + ' 3, 2, 1\n> ' + cl.go),
+        P(pg ? pg.code : '-'),
+        P(c.note)
+      ];
+    });
+    doc.autoTable({
+      head: [['OK', '#', 'Segmen / bila (ayat MC)', 'Panggilan', 'PGM', 'Catatan']], body, startY: 25, theme: 'grid',
+      margin: { left: 8, right: 8, top: 25, bottom: 12 },
+      styles: { font: 'helvetica', fontSize: 9.4, cellPadding: 2, overflow: 'linebreak', valign: 'top', lineColor: [190, 196, 204], lineWidth: 0.2, textColor: [18, 24, 32], minCellHeight: 16 },
+      headStyles: { fillColor: [30, 36, 44], textColor: [255, 255, 255], fontStyle: 'bold', fontSize: 9 },
+      columnStyles: { 0: { cellWidth: 9 }, 1: { cellWidth: 13, halign: 'center', fontStyle: 'bold' }, 2: { cellWidth: 64 }, 3: { cellWidth: 52, fontStyle: 'bold' }, 4: { cellWidth: 15, halign: 'center', fontStyle: 'bold', fontSize: 11 }, 5: { cellWidth: 'auto', textColor: [90, 101, 115], fontSize: 8.4 } },
+      didParseCell: d => { if (d.section === 'body' && d.column.index === 4 && d.cell.raw && d.cell.raw !== '-') { d.cell.styles.fillColor = [251, 226, 230]; d.cell.styles.textColor = [176, 22, 44]; } },
+      didDrawCell: d => { if (d.section === 'body' && d.column.index === 0) { doc.setDrawColor(60, 66, 74); doc.setLineWidth(0.35); doc.rect(d.cell.x + 2, d.cell.y + 2.2, 4.6, 4.6); } },
+      didDrawPage: () => pdfHeader(doc, ev, 'HELAIAN DIRECTOR')
+    });
+    pdfFooters(doc);
+    await offerFile(slug(ev.name) + '-director.pdf', doc.output('blob'));
   } catch (e) { toast('PDF gagal: ' + (e && e.message || e), 'warn'); }
   finally { if (btn) { btn.disabled = false; btn.innerHTML = lbl; } }
 }
@@ -1170,6 +1310,7 @@ rd.addEventListener('click', e => {
   const b = e.target.closest('[data-act]'); if (!b || !S.ev) return; const act = b.dataset.act;
   if (act === 'vis') { const id = b.dataset.src; if (S.hidden[id]) delete S.hidden[id]; else S.hidden[id] = true; LS.set('cs.hidden', S.hidden); renderRundown(); return; }
   if (act === 'pdf-rundown') { pdfRundown(b); return; }
+  if (act === 'pdf-director') { pdfDirector(b); return; }
   if (!S.canWrite) return;
   if (act === 'undo') { doUndo(); return; }
   if (act === 'add-end') { pushUndo(); const c = newCue(); S.ev.cues.push(c); touch(); renderAll(); focusSeg(c.id); return; }
@@ -1192,6 +1333,10 @@ lv.addEventListener('click', e => {
   const b = e.target.closest('[data-act]'); if (!b) return; const act = b.dataset.act;
   if (act === 'next') setLive(S.liveIdx + 1);
   else if (act === 'prev') setLive(S.liveIdx - 1);
+  else if (act === 'standby') callStandby();
+  else if (act === 'go') callGo();
+  else if (act === 'call-cancel') callCancel();
+  else if (act === 'mute') { S.mute = !S.mute; LS.set('cs.mute', S.mute); b.setAttribute('aria-pressed', String(S.mute)); b.textContent = S.mute ? 'Bunyi: tutup' : 'Bunyi: buka'; if (!S.mute) beep(false); }
   else if (act === 'fs') { const el = document.documentElement; try { if (document.fullscreenElement) document.exitFullscreen(); else if (el.requestFullscreen) el.requestFullscreen().catch(() => toast('Skrin penuh tidak tersedia di sini.')); else toast('Skrin penuh tidak tersedia di sini.'); } catch (x) { toast('Skrin penuh tidak tersedia di sini.'); } }
 });
 lv.addEventListener('change', e => { if (e.target.id === 'liveJump') setLive(Number(e.target.value)); });
@@ -1199,7 +1344,11 @@ document.addEventListener('keydown', e => {
   if (S.view !== 'live' || !S.ev) return;
   const tg = e.target && e.target.tagName; if (tg === 'INPUT' || tg === 'TEXTAREA' || tg === 'SELECT' || (e.target && e.target.isContentEditable)) return;
   if ($('#newDlg').open || $('#copyDlg').open) return;
-  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); setLive(S.liveIdx + 1); }
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key === ' ') { e.preventDefault(); callGo(); }
+  else if (e.key === 's' || e.key === 'S') { e.preventDefault(); callStandby(); }
+  else if (e.key === 'Escape') { if (S.call) { e.preventDefault(); callCancel(); } }
+  else if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); setLive(S.liveIdx + 1); }
   else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); setLive(S.liveIdx - 1); }
 });
 setInterval(() => { if (S.view === 'live') tickLive(); }, 1000);
@@ -1221,6 +1370,10 @@ kr.addEventListener('change', e => { if (e.target.id === 'kruAll') { S.kruAll = 
 const st = $('#view-tetapan');
 st.addEventListener('input', e => {
   const t = e.target; if (!S.ev || !S.canWrite) return;
+  if (t.dataset.word) {
+    if (S.undoKey !== t.dataset.k) { pushUndo(); S.undoKey = t.dataset.k; }
+    S.ev.words = Object.assign({}, S.ev.words, { [t.dataset.word]: t.value }); touch(); return;
+  }
   if (t.dataset.meta) {
     if (S.undoKey !== t.dataset.k) { pushUndo(); S.undoKey = t.dataset.k; }
     S.ev[t.dataset.meta] = t.value; touch(); renderTop(); renderHead(); return;
@@ -1440,6 +1593,6 @@ async function init() {
 }
 init();
 /* test hook: only the local test runner (tests/run.html) defines __CS_TEST__ */
-if (typeof window.__CS_TEST__ === 'function') window.__CS_TEST__({ S, esc, normEvent, cueTimes, slug, stable, crewText, importFile, createEvent, selectEvent, renderAll, touch, flush, pdfRundown, pdfKru });
+if (typeof window.__CS_TEST__ === 'function') window.__CS_TEST__({ S, esc, normEvent, cueTimes, slug, stable, crewText, importFile, createEvent, selectEvent, renderAll, touch, flush, pdfRundown, pdfKru, pdfDirector, callInto, setLive });
 })();
 </script>

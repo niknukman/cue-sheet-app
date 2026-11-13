@@ -296,6 +296,13 @@ details.adv summary{cursor:pointer;list-style:revert}
 .tally.on .tl{background:color-mix(in srgb,#000 22%,var(--tally))}
 .tally.pvw{background:var(--preview-soft);color:var(--ink);border:1px solid color-mix(in srgb,var(--preview) 50%,transparent)}
 .tally.pvw .tl{background:var(--preview);color:#fff}
+.tally-row:has(.tally.lt){grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) minmax(0,1.4fr)}
+.tally.lt{background:color-mix(in srgb,#8B5CF6 12%,var(--surface,transparent));color:var(--ink);border:1px solid color-mix(in srgb,#8B5CF6 45%,transparent)}
+.tally.lt .tl{background:#8B5CF6;color:#fff}
+.tally.lt.soon{border:2px solid #8B5CF6}
+.tally.lt .tv{font-size:17px;display:flex;flex-direction:column;gap:3px}
+.tally.lt .lt-now{color:#8B5CF6}
+.tally.lt small{font:500 12px/1 var(--f-mono);color:var(--muted)}
 .live-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:10px}
 .lcard{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--c);border-radius:10px;padding:12px 13px;display:flex;flex-direction:column;gap:8px;min-width:0}
 .lcard.on{outline:3px solid var(--tally);outline-offset:-1px;background:color-mix(in srgb,var(--tally) 6%,var(--surface))}
@@ -407,7 +414,7 @@ dialog::backdrop{background:rgba(8,12,16,.5)}
 .toast[data-tone="warn"]{background:var(--warn);color:#fff}
 
 @media (max-width:640px){
-  .tally-row{grid-template-columns:minmax(0,1fr)}
+  .tally-row,.tally-row:has(.tally.lt){grid-template-columns:minmax(0,1fr)}
   .live-now{grid-template-columns:minmax(0,1fr);padding:16px}
   .live-num{font-size:52px}
   .row2{grid-template-columns:1fr}
@@ -638,14 +645,26 @@ function normScript(x) {
 }
 
 /* ---------- director calls ("Okay camera CAM1 standby" … "in 3, 2, 1" … "CAM1 masuk") ---------- */
-const DEFAULT_WORDS = { standby: 'Okay camera {src} standby', standbyOther: 'Okay {src} standby', go: '{src} masuk', back: 'back to {src}', ltStandby: 'LT standby', lt: 'LT in', count: 'in' };
+const DEFAULT_WORDS = { standby: 'Okay camera {src} standby', standbyOther: 'Okay {src} standby', go: '{src} masuk', back: 'back to {src}', ltStandby: 'LT {lt} standby', lt: 'LT {lt} in', count: 'in' };
 const WORD_LABELS = [
   ['standby', 'Camera standby', 'Okay camera {src} standby'], ['standbyOther', 'Standby, not a camera (laptop, video)', 'Okay {src} standby'], ['go', 'Cut to a source', '{src} masuk'],
-  ['back', 'Back to the main camera', 'back to {src}'], ['ltStandby', 'LT ready', 'LT standby'],
-  ['lt', 'LT on screen', 'LT in'], ['count', 'Said before 3 2 1', 'in']
+  ['back', 'Back to the main camera', 'back to {src}'], ['ltStandby', 'LT ready ({lt} = which LT)', 'LT {lt} standby'],
+  ['lt', 'LT on screen ({lt} = which LT)', 'LT {lt} in'], ['count', 'Said before 3 2 1', 'in']
 ];
 function normWords(w) { const o = {}; Object.keys(DEFAULT_WORDS).forEach(k => { const v = w && typeof w === 'object' ? str(w[k]).trim() : ''; o[k] = v || DEFAULT_WORDS[k]; }); return o; }
 const isLtSource = s => /^LT\b/i.test(s.code) || /lower\s*third|^LT\b/i.test(s.name);
+/** Which LT this cue puts on screen ("PELAJAR", "Nama penceramah"); '' when none or just "ON". */
+function ltOf(ev, c) {
+  if (!c) return '';
+  return ev.sources.filter(isLtSource).map(s => str(c.tasks[s.id]).trim()).filter(t => t && !/^ON$/i.test(t))
+    .map(t => trunc(t.split(/\.(?=[\s,;]|$)/)[0].trim(), 40)).join(' + ');
+}
+/** The next cue after i that has an LT: { i, name } or null. */
+function nextLt(ev, i) {
+  for (let j = i + 1; j < ev.cues.length; j++) if (ev.sources.some(s => isLtSource(s) && str(ev.cues[j].tasks[s.id]).trim())) return { i: j, name: ltOf(ev, ev.cues[j]) };
+  return null;
+}
+const fillLt = (t, name) => (t.includes('{lt}') ? t.replace(/\{lt\}/g, name) : !name ? t : /\bLT\b/.test(t) ? t.replace(/\bLT\b/, 'LT ' + name) : t + ' (' + name + ')').replace(/\s+/g, ' ').trim();
 const isCamera = (s, ev) => (ev.sources[0] && ev.sources[0].id === s.id) || /cam|kamera|camera|ptz|fly|roving|gimbal|jib|drone/i.test([s.code, s.name, s.desc].join(' '));
 /** What the director says to go INTO cue i (from cue i-1). The first source is the main camera. */
 function callInto(ev, i) {
@@ -655,11 +674,11 @@ function callInto(ev, i) {
   const lt = ev.sources.some(s => isLtSource(s) && str(c.tasks[s.id]).trim());
   const switching = !!src && (!prev || prev.pgm !== c.pgm);
   const isMain = !!src && ev.sources[0] && ev.sources[0].id === src.id && !!prev;
-  const fill = t => t.replace(/\{src\}/g, code);
-  let sb = [switching ? fill(isCamera(src, ev) ? W.standby : W.standbyOther) : '', lt ? W.ltStandby : ''].filter(Boolean).join(' · ');
-  let go = [switching ? fill(isMain ? W.back : W.go) : '', lt ? W.lt : ''].filter(Boolean).join(' · ');
+  const fill = t => t.replace(/\{src\}/g, code); const ltName = lt ? ltOf(ev, c) : '';
+  let sb = [switching ? fill(isCamera(src, ev) ? W.standby : W.standbyOther) : '', lt ? fillLt(W.ltStandby, ltName) : ''].filter(Boolean).join(' · ');
+  let go = [switching ? fill(isMain ? W.back : W.go) : '', lt ? fillLt(W.lt, ltName) : ''].filter(Boolean).join(' · ');
   if (!sb) sb = 'Standby next cue'; if (!go) go = 'Next';
-  return { sb: str(c.sb).trim() || sb, go: str(c.go).trim() || go, autoSb: sb, autoGo: go, src, lt, count: W.count };
+  return { sb: str(c.sb).trim() || sb, go: str(c.go).trim() || go, autoSb: sb, autoGo: go, src, lt, ltName, count: W.count };
 }
 
 /* ---------- icons ---------- */
@@ -1071,6 +1090,7 @@ function renderLive() {
     <div class="tally-row">
       <div class="tally on"><span class="tl">ON AIR</span><span class="tv">${pg ? esc(pg.code + ' · ' + pg.name) : 'No PGM set'}</span></div>
       <div class="tally pvw"><span class="tl">NEXT</span><span class="tv">${n ? (npg ? esc(npg.code + ' · ' + npg.name) : '—') : 'End'}</span></div>
+      ${ltTally(ev, i)}
     </div>
     <div class="live-grid">${ev.sources.map(s => liveCard(s, c, n)).join('')}</div>
     ${n ? `<div class="live-next"><span class="l">Up next</span> <b>${pad(i + 2)}</b> ${esc(n.seg === c.seg && n.item ? n.item : segLabel(n))}${n.mc ? ` · MC ${esc(n.mc)}` : ''}${n.cue ? `<div class="nq">${esc(n.cue)}</div>` : ''}</div>` : `<div class="live-next">This is the last cue.</div>`}
@@ -1078,6 +1098,14 @@ function renderLive() {
   tickLive(); drawCall();
   const pr = $('#prompter'); // keep the cue on air near the top of the prompter
   if (pr) { const t = pr.querySelector('.chip.now') || pr.querySelector('.zone'); pr.scrollTop = t ? Math.max(0, t.offsetTop - 24) : 0; }
+}
+/** LT box on Live: what LT is on now, and which LT the operator readies next (and how soon). */
+function ltTally(ev, i) {
+  if (!ev.sources.some(isLtSource)) return '';
+  const now = ev.sources.some(s => isLtSource(s) && str(ev.cues[i].tasks[s.id]).trim()) ? (ltOf(ev, ev.cues[i]) || 'ON') : '';
+  const nx = nextLt(ev, i); const away = nx ? nx.i - i : 0;
+  return `<div class="tally lt${nx && away === 1 ? ' soon' : ''}"><span class="tl">LT</span><span class="tv">${now ? `<span class="lt-now">ON: ${esc(now)}</span>` : ''}
+    <span class="lt-next">${nx ? `Standby: <b>${esc(nx.name || 'LT')}</b> <small>cue ${pad(nx.i + 1)}${away === 1 ? ' · NEXT' : ' · in ' + away + ' cues'}</small>` : 'No more LT'}</span></span></div>`;
 }
 /** The raw green text that made this cue, if it came from an imported script. */
 function scriptMark(ev, id) {
@@ -1095,7 +1123,7 @@ function drawCall() {
   if (!c) { el.innerHTML = ''; return; }
   const cl = callInto(S.ev, c.to); if (!cl) { el.innerHTML = ''; return; }
   const nx = S.ev.cues[c.to];
-  if (c.stage === 'standby') el.innerHTML = `<div class="cp-l">STANDBY · cue ${pad(c.to + 1)} ${esc(segLabel(nx))}</div><div class="cp-big">${esc(cl.sb)}</div>${cl.src && nx.tasks[cl.src.id] ? `<div class="cp-sub">${esc(cl.src.code)}: ${esc(nx.tasks[cl.src.id])}</div>` : ''}`;
+  if (c.stage === 'standby') el.innerHTML = `<div class="cp-l">STANDBY · cue ${pad(c.to + 1)} ${esc(segLabel(nx))}</div><div class="cp-big">${esc(cl.sb)}</div>${cl.src && nx.tasks[cl.src.id] ? `<div class="cp-sub">${esc(cl.src.code)}: ${esc(nx.tasks[cl.src.id])}</div>` : ''}${cl.ltName ? `<div class="cp-sub">LT: ${esc(cl.ltName)}</div>` : ''}`;
   else if (c.stage === 'count') el.innerHTML = `<div class="cp-l">${esc(cl.go)}</div><div class="cp-count">${c.n === 3 ? `<span class="cp-in">${esc(cl.count)}</span> ` : ''}${c.n}</div>`;
   else el.innerHTML = `<div class="cp-l">ON AIR · cue ${pad(c.to + 1)}</div><div class="cp-big">${esc(cl.go)}</div>`;
 }
@@ -2082,6 +2110,6 @@ async function init() {
 }
 init();
 /* test hook: only the local test runner (tests/run.html) defines __CS_TEST__ */
-if (typeof window.__CS_TEST__ === 'function') window.__CS_TEST__({ S, esc, normEvent, cueTimes, slug, stable, crewText, importFile, createEvent, selectEvent, renderAll, touch, flush, pdfRundown, pdfKru, pdfDirector, callInto, setLive, openPanel, closePanel, parseScript, importScript, pdfScript });
+if (typeof window.__CS_TEST__ === 'function') window.__CS_TEST__({ S, esc, normEvent, cueTimes, slug, stable, crewText, importFile, createEvent, selectEvent, renderAll, touch, flush, pdfRundown, pdfKru, pdfDirector, callInto, ltOf, nextLt, setLive, openPanel, closePanel, parseScript, importScript, pdfScript });
 })();
 </script>

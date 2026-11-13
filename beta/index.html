@@ -3,7 +3,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
-<script>window.CS_API = "https://script.google.com/macros/s/AKfycbzeDB5je7xASwU04c8nF7oQYLzj7O_AnXQOs0n3rs-uJBYy0mGUoL9jn5dTG0DSZ8lghQ/exec";</script>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#121820">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Cue Sheet">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<script>window.CS_API = "https://script.google.com/macros/s/AKfycbzeDB5je7xASwU04c8nF7oQYLzj7O_AnXQOs0n3rs-uJBYy0mGUoL9jn5dTG0DSZ8lghQ/exec"; window.CS_BUILD = "2026-11-13 09:16 UTC · e47da6b";</script>
 <meta charset="utf-8">
 <title>Cue Sheet Multimedia</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -57,6 +66,11 @@ svg{width:16px;height:16px;flex:none}
 .brand-mark{width:34px;height:34px;border-radius:8px;background:var(--ink);display:grid;place-items:center}
 .brand-mark i{width:11px;height:11px;border-radius:50%;background:var(--tally);box-shadow:0 0 0 3px color-mix(in srgb,var(--tally) 35%,transparent)}
 .brand-k{font:700 20px/1 var(--f-display);letter-spacing:.07em;text-transform:uppercase}
+.brand-beta{font:700 11px/1 var(--f-mono);letter-spacing:.12em;padding:4px 6px;border-radius:5px;background:var(--warn);color:#fff}
+.link-form{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+.link-form input{flex:1 1 260px;max-width:420px;border:1px solid var(--line-strong);border-radius:8px;padding:10px 12px;background:var(--surface);color:var(--ink);font:inherit}
+.app-steps{margin:6px 0 0;padding-left:20px;display:grid;gap:4px}
+.app-ver{font:500 12px/1.4 var(--f-mono);color:var(--muted)}
 .theme-btn{padding:7px 9px}
 .brand-s{font:500 10.5px/1.3 var(--f-mono);color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
 .event-pick{display:flex;gap:8px;align-items:center;flex:1 1 360px;min-width:0;justify-content:flex-end}
@@ -462,6 +476,7 @@ dialog::backdrop{background:rgba(8,12,16,.5)}
     <div class="brand">
       <div class="brand-mark" aria-hidden="true"><i></i></div>
       <div class="brand-k">Cue Sheet</div>
+      <span class="brand-beta" id="betaTag" hidden title="Test version. Your normal link has no /beta/ in it.">BETA</span>
     </div>
     <div class="event-pick">
       <label for="eventSel" class="sr">Choose event</label>
@@ -911,7 +926,9 @@ function renderView() {
 function emptyHtml() {
   if (!S.loaded) return `<div class="loading"><div class="sk"></div><div class="sk"></div><div class="sk short"></div><p>Loading rundown…</p></div>`;
   if (S.mode === 'nolink') return `<div class="empty"><div class="eyebrow">Cue Sheet</div><h2>${S.linkBad ? 'Link not valid' : 'Open it with your link'}</h2>
-    <p>${S.linkBad ? 'This link is wrong or was changed by the director. Ask for the latest link (usually sent on WhatsApp).' : 'This app opens through a special link from the event director. Tap the link that was sent to you, for example on WhatsApp.'}</p></div>`;
+    <p>${S.linkBad ? 'This link is wrong or was changed by the director. Ask for the latest link (usually sent on WhatsApp).' : 'This app opens through a special link from the event director. Tap the link that was sent to you, for example on WhatsApp.'}</p>
+    <p class="pd">Opened from the home screen icon? Paste your link here once; this phone will remember it.</p>
+    <form class="link-form" data-form="paste-link"><input aria-label="Your link" type="text" inputmode="url" autocapitalize="off" spellcheck="false" autocomplete="off" placeholder="https://niknukman.github.io/cue-sheet-app/#k=…"><button class="btn primary" type="submit">Open</button></form></div>`;
   if (S.mode === 'offline') return `<div class="empty"><div class="eyebrow">No connection</div><h2>Cannot reach the server</h2>
     <p>Check your internet, then try again.</p><div class="empty-acts"><button class="btn primary" data-act="reload">Try again</button></div></div>`;
   return `<div class="empty"><div class="eyebrow">Empty cue sheet</div><h2>No events yet</h2>
@@ -1297,6 +1314,31 @@ function srcRow(s, i, n, ro) {
     </div>`}
   </div>`;
 }
+/* ---------- app on the phone (web version only) ---------- */
+const isBeta = () => /\/beta\//.test(location.pathname);
+const isInstalled = () => { try { return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch (e) { return false; } };
+const isIos = () => /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+function appPanelHtml() {
+  const main = location.origin + location.pathname.replace(/beta\/(index\.html)?$/, '');
+  return `<section class="panel wide" id="appPanel">
+      <h2 class="ph">App on this phone</h2>
+      ${isInstalled() ? `<p class="pd"><b>Installed.</b> You are using the home screen app.</p>`
+        : S.installEvt ? `<div class="data-acts"><button class="btn primary" data-act="install-app">Install Cue Sheet on this phone</button></div>`
+        : `<ol class="app-steps pd">${isIos()
+          ? '<li>Open this page in <b>Safari</b>.</li><li>Tap <b>Share</b> (square with arrow), then <b>Add to Home Screen</b>.</li><li>Open the new Cue Sheet icon and paste your link once.</li>'
+          : '<li>Open this page in <b>Chrome</b>.</li><li>Tap the <b>⋮</b> menu, then <b>Install app</b> (or <b>Add to Home screen</b>).</li><li>Open Cue Sheet from the new icon.</li>'}</ol>`}
+      ${isBeta() ? `<p class="pd" style="margin-top:8px"><b>This is the test version (BETA).</b> Your normal link: <b>${esc(main)}</b></p>` : ''}
+      <p class="app-ver">Version ${esc(window.CS_BUILD || '—')}${isBeta() ? ' · BETA' : ''}</p>
+    </section>`;
+}
+function useLink(text) {
+  const m = /[#&?]k=([^&\s#]+)/.exec(String(text || '')); if (!m) return false;
+  const e = /[#&?]e=([^&\s#]+)/.exec(text);
+  LS.set('cs.link', { k: decodeURIComponent(m[1]), e: e ? decodeURIComponent(e[1]) : '' });
+  return true;
+}
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); S.installEvt = e; if (S.view === 'settings') renderAll(); });
+window.addEventListener('appinstalled', () => { S.installEvt = null; toast('Cue Sheet is on your home screen.'); if (S.view === 'settings') renderAll(); });
 function renderTetapan() {
   const el = $('#view-settings'); const ev = S.ev;
   if (!ev) { el.innerHTML = emptyHtml(); return; }
@@ -1326,6 +1368,7 @@ function renderTetapan() {
       <p class="pd">What Live shows when you press STANDBY and GO. <b>{src}</b> becomes the source code, e.g. CAM1. Clear a box to go back to the original words.</p>
       <div class="words-grid">${WORD_LABELS.map(([key, label, def]) => `<label class="fld"><span>${label}</span><input type="text" data-word="${key}" data-k="word:${key}" value="${esc(ev.words[key])}" placeholder="${esc(def)}"${RO}></label>`).join('')}</div>
     </section>
+    ${S.gas ? appPanelHtml() : ''}
     ${S.gas && !ro ? `<details class="panel wide adv" id="sharePanel">
       <summary class="ph">Advanced: share with others</summary>
       <p class="pd">Not needed if only you use the app. Each link has its own secret key. Anyone with a link can open it without logging in, so only send it to the right people. If a link leaks, press “Change”: the old link stops working at once.</p>
@@ -1800,6 +1843,7 @@ document.addEventListener('click', e => {
   if (act === 'new-event') { if (S.canWrite) openNewDialog(); return; }
   if (act === 'theme') { toggleTheme(); return; }
   if (act === 'reload') { location.reload(); return; }
+  if (act === 'install-app') { const ev = S.installEvt; if (!ev) return; S.installEvt = null; ev.prompt(); (ev.userChoice || Promise.resolve()).finally(() => renderAll()); return; }
   if (act === 'forget-link') { if (!arm(b, 'forget', 'Press again to sign out')) return; forgetLink(); location.hash = ''; location.reload(); return; }
 });
 document.addEventListener('keydown', e => {
@@ -2142,7 +2186,15 @@ async function startWeb(link) {
     renderAll();
   }
 }
+document.addEventListener('submit', e => {
+  const f = e.target.closest('[data-form="paste-link"]'); if (!f) return;
+  e.preventDefault();
+  const v = f.querySelector('input').value;
+  if (!useLink(v)) { toast('That does not look like a Cue Sheet link. It should have #k= in it.', 'warn'); return; }
+  location.hash = 'rundown'; location.reload();
+});
 async function init() {
+  if (window.CS_API && isBeta()) { const b = document.getElementById('betaTag'); if (b) b.hidden = false; }
   const link = window.CS_API ? takeLink() : null;
   readHash(); renderTop();
   if (window.CS_API) { startWeb(link); return; }

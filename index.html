@@ -3,7 +3,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
-<script>window.CS_API = "https://script.google.com/macros/s/AKfycbzeDB5je7xASwU04c8nF7oQYLzj7O_AnXQOs0n3rs-uJBYy0mGUoL9jn5dTG0DSZ8lghQ/exec";</script>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#121820">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Cue Sheet">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<script>window.CS_API = "https://script.google.com/macros/s/AKfycbzeDB5je7xASwU04c8nF7oQYLzj7O_AnXQOs0n3rs-uJBYy0mGUoL9jn5dTG0DSZ8lghQ/exec"; window.CS_BUILD = "2026-11-13 09:16 UTC · e47da6b";</script>
 <meta charset="utf-8">
 <title>Cue Sheet Multimedia</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -57,6 +66,11 @@ svg{width:16px;height:16px;flex:none}
 .brand-mark{width:34px;height:34px;border-radius:8px;background:var(--ink);display:grid;place-items:center}
 .brand-mark i{width:11px;height:11px;border-radius:50%;background:var(--tally);box-shadow:0 0 0 3px color-mix(in srgb,var(--tally) 35%,transparent)}
 .brand-k{font:700 20px/1 var(--f-display);letter-spacing:.07em;text-transform:uppercase}
+.brand-beta{font:700 11px/1 var(--f-mono);letter-spacing:.12em;padding:4px 6px;border-radius:5px;background:var(--warn);color:#fff}
+.link-form{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+.link-form input{flex:1 1 260px;max-width:420px;border:1px solid var(--line-strong);border-radius:8px;padding:10px 12px;background:var(--surface);color:var(--ink);font:inherit}
+.app-steps{margin:6px 0 0;padding-left:20px;display:grid;gap:4px}
+.app-ver{font:500 12px/1.4 var(--f-mono);color:var(--muted)}
 .theme-btn{padding:7px 9px}
 .brand-s{font:500 10.5px/1.3 var(--f-mono);color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
 .event-pick{display:flex;gap:8px;align-items:center;flex:1 1 360px;min-width:0;justify-content:flex-end}
@@ -155,6 +169,10 @@ select,.inp{padding:7px 9px;border:1px solid var(--line-strong);border-radius:7p
 .clamp1,.clamp2{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
 .clamp1{-webkit-line-clamp:1}.clamp2{-webkit-line-clamp:2}
 .r-title{font-weight:600;font-size:14px;line-height:1.3}
+.seg-head{display:flex;align-items:baseline;gap:10px;padding:9px 10px 5px;border-bottom:1px solid var(--line);border-left:3px solid var(--k,var(--line-strong));background:var(--surface-2)}
+.seg-head .sh-n{font:700 15px/1.2 var(--f-display);letter-spacing:.04em;text-transform:uppercase}
+.seg-head .sh-m{font:500 11px/1 var(--f-mono);color:var(--muted)}
+.live-item{font:600 clamp(16px,1.8vw,22px)/1.2 var(--f-body);color:var(--muted);margin-top:4px}
 .r-mc{font-size:12.5px;line-height:1.35;color:var(--muted);margin-top:2px}
 .r-mc i{font-style:italic}
 .r-call{font-size:12.5px;line-height:1.35}
@@ -279,6 +297,13 @@ button.chip{cursor:pointer}
 .cp-sub{font-size:15px;opacity:.85}
 .cp-count{font:700 clamp(90px,18vw,200px)/.9 var(--f-mono);font-variant-numeric:tabular-nums}
 .cp-in{font-size:.35em;vertical-align:middle;opacity:.8}
+.call-panel.guide{background:var(--surface);border:1px solid var(--line);text-align:left;gap:8px}
+.g-step{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;padding:8px 12px;border-radius:9px}
+.g-step.sb{background:var(--warn-soft);border:1px solid color-mix(in srgb,var(--warn) 45%,transparent)}
+.g-step.go{background:color-mix(in srgb,var(--tally) 14%,transparent);border:1px solid color-mix(in srgb,var(--tally) 50%,transparent)}
+.g-n{font:700 14px/1 var(--f-mono);width:26px;height:26px;display:grid;place-items:center;border-radius:50%;background:var(--ink);color:var(--bg)}
+.g-say{font:700 clamp(20px,3.2vw,36px)/1.1 var(--f-display);text-wrap:balance}
+.call-panel.guide .cp-sub{font-size:14px}
 .call-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 8px;align-items:center;padding:2px 10px 8px}
 .call-l{font:600 9.5px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
 .rd .call-in{border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-size:12px;background:var(--surface);color:var(--ink);min-width:0;width:100%}
@@ -292,6 +317,13 @@ details.adv summary{cursor:pointer;list-style:revert}
 .tally.on .tl{background:color-mix(in srgb,#000 22%,var(--tally))}
 .tally.pvw{background:var(--preview-soft);color:var(--ink);border:1px solid color-mix(in srgb,var(--preview) 50%,transparent)}
 .tally.pvw .tl{background:var(--preview);color:#fff}
+.tally-row:has(.tally.lt){grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) minmax(0,1.4fr)}
+.tally.lt{background:color-mix(in srgb,#8B5CF6 12%,var(--surface,transparent));color:var(--ink);border:1px solid color-mix(in srgb,#8B5CF6 45%,transparent)}
+.tally.lt .tl{background:#8B5CF6;color:#fff}
+.tally.lt.soon{border:2px solid #8B5CF6}
+.tally.lt .tv{font-size:17px;display:flex;flex-direction:column;gap:3px}
+.tally.lt .lt-now{color:#8B5CF6}
+.tally.lt small{font:500 12px/1 var(--f-mono);color:var(--muted)}
 .live-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:10px}
 .lcard{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--c);border-radius:10px;padding:12px 13px;display:flex;flex-direction:column;gap:8px;min-width:0}
 .lcard.on{outline:3px solid var(--tally);outline-offset:-1px;background:color-mix(in srgb,var(--tally) 6%,var(--surface))}
@@ -403,12 +435,34 @@ dialog::backdrop{background:rgba(8,12,16,.5)}
 .toast[data-tone="warn"]{background:var(--warn);color:#fff}
 
 @media (max-width:640px){
-  .tally-row{grid-template-columns:minmax(0,1fr)}
+  .tally-row,.tally-row:has(.tally.lt){grid-template-columns:minmax(0,1fr)}
   .live-now{grid-template-columns:minmax(0,1fr);padding:16px}
   .live-num{font-size:52px}
   .row2{grid-template-columns:1fr}
   .kru-list li{grid-template-columns:52px minmax(0,1fr)}
   .kl-num{padding-left:12px}
+}
+/* phone or tablet on its side: what matters in one screen, no scrolling */
+@media (orientation:landscape) and (max-height:600px){
+  .live{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:8px 12px;padding-block:8px 12px;align-items:start}
+  .live>.live-bar{grid-column:1/-1}
+  .live>.live-main{grid-column:1;grid-row:2/span 3;gap:8px}
+  .live>.call-bar,.live>.call-panel,.live>.live-next{grid-column:2}
+  .live>.tally-row{grid-column:1/-1}
+  .live>.live-grid,.live>.hint{display:none}
+  .live .live-bar{flex-wrap:nowrap;gap:8px}
+  .live .live-ctl{flex-wrap:nowrap;min-width:0}.live .live-ctl select{max-width:220px;min-width:0}
+  .live .live-clock{flex-wrap:nowrap;gap:8px}.live .live-clock .l{display:none}
+  .live .live-now{grid-template-columns:auto minmax(0,1fr);padding:10px 14px;gap:4px 14px}
+  .live .live-num{font-size:40px}
+  .live .live-seg{font-size:22px}
+  .live .live-cue{font-size:13px;margin-top:6px;padding:6px 10px}
+  .live .prompter{max-height:34vh}
+  .live .call-btn{min-height:44px;padding:10px 16px;font-size:16px}
+  .live .g-say{font-size:22px}
+  .live .cp-big{font-size:26px}.live .cp-count{font-size:80px}
+  .live .tally{padding:8px 12px}.live .tally .tv{font-size:16px}
+  .live .tally-row,.live .tally-row:has(.tally.lt){grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) minmax(0,1.4fr)}
 }
 @media print{
   .topbar,.toolbar,.banner,.tabs,.cue-panel{display:none!important}
@@ -422,6 +476,7 @@ dialog::backdrop{background:rgba(8,12,16,.5)}
     <div class="brand">
       <div class="brand-mark" aria-hidden="true"><i></i></div>
       <div class="brand-k">Cue Sheet</div>
+      <span class="brand-beta" id="betaTag" hidden title="Test version. Your normal link has no /beta/ in it.">BETA</span>
     </div>
     <div class="event-pick">
       <label for="eventSel" class="sr">Choose event</label>
@@ -564,7 +619,7 @@ const S = {
   dirty: false, saving: false, pending: false, retried: false, saveT: 0,
   view: 'rundown', filter: '', undo: [], undoKey: null, armed: null,
   liveIdx: 0, liveSince: Date.now(), wake: null,
-  call: null, callT: 0, callTick: 1000, beeps: 0, mute: LS.get('cs.mute', false),
+  call: null, callT: 0, callTick: 1000, beeps: 0, mute: LS.get('cs.mute', false), count: LS.get('cs.count', true),
   kruSrc: LS.get('cs.kru', null), kruAll: false,
   hidden: LS.get('cs.hidden', {}), paper: LS.get('cs.paper', 'a4'),
   panelId: null, crewCols: LS.get('cs.crewcols', false), rdMode: LS.get('cs.rdmode', 'list'), scriptImport: null
@@ -602,7 +657,8 @@ function orderedIds() {
     return str(A.name).localeCompare(str(B.name));
   });
 }
-function newCue() { return { id: 'c' + rid(7), seg: '', kind: 'lain', mc: '', cue: '', pgm: '', dur: null, note: '', tasks: {} }; }
+const segLabel = c => (c.seg || '(untitled)') + (c.item ? ' › ' + c.item : '');
+function newCue() { return { id: 'c' + rid(7), seg: '', item: '', kind: 'lain', mc: '', cue: '', pgm: '', dur: null, note: '', tasks: {} }; }
 function objStr(o) { const r = {}; if (o && typeof o === 'object') for (const k in o) { if (o[k] != null && String(o[k]).trim() !== '') r[k] = String(o[k]); } return r; }
 function normEvent(e) {
   e = e && typeof e === 'object' ? e : {};
@@ -613,7 +669,7 @@ function normEvent(e) {
   });
   const cues = (Array.isArray(e.cues) ? e.cues : []).filter(c => c && typeof c === 'object').map(c => {
     let id = str(c.id).replace(/[^\w-]/g, '') || 'c' + rid(7); while (seenC.has(id)) id = 'c' + rid(7); seenC.add(id);
-    return { id, seg: str(c.seg), kind: KIND_IDS.includes(c.kind) ? c.kind : 'lain', mc: str(c.mc), cue: str(c.cue), pgm: str(c.pgm), dur: num(c.dur), note: str(c.note), tasks: objStr(c.tasks), sb: str(c.sb), go: str(c.go) };
+    return { id, seg: str(c.seg), item: str(c.item), kind: KIND_IDS.includes(c.kind) ? c.kind : 'lain', mc: str(c.mc), cue: str(c.cue), pgm: str(c.pgm), dur: num(c.dur), note: str(c.note), tasks: objStr(c.tasks), sb: str(c.sb), go: str(c.go) };
   });
   return {
     name: str(e.name) || 'Untitled event', theme: str(e.theme), date: str(e.date), start: str(e.start), venue: str(e.venue),
@@ -633,14 +689,26 @@ function normScript(x) {
 }
 
 /* ---------- director calls ("Okay camera CAM1 standby" … "in 3, 2, 1" … "CAM1 masuk") ---------- */
-const DEFAULT_WORDS = { standby: 'Okay camera {src} standby', standbyOther: 'Okay {src} standby', go: '{src} masuk', back: 'back to {src}', ltStandby: 'LT standby', lt: 'LT in', count: 'in' };
+const DEFAULT_WORDS = { standby: 'Okay camera {src} standby', standbyOther: 'Okay {src} standby', go: '{src} masuk', back: 'back to {src}', ltStandby: 'LT {lt} standby', lt: 'LT {lt} in', count: 'in' };
 const WORD_LABELS = [
   ['standby', 'Camera standby', 'Okay camera {src} standby'], ['standbyOther', 'Standby, not a camera (laptop, video)', 'Okay {src} standby'], ['go', 'Cut to a source', '{src} masuk'],
-  ['back', 'Back to the main camera', 'back to {src}'], ['ltStandby', 'LT ready', 'LT standby'],
-  ['lt', 'LT on screen', 'LT in'], ['count', 'Said before 3 2 1', 'in']
+  ['back', 'Back to the main camera', 'back to {src}'], ['ltStandby', 'LT ready ({lt} = which LT)', 'LT {lt} standby'],
+  ['lt', 'LT on screen ({lt} = which LT)', 'LT {lt} in'], ['count', 'Said before 3 2 1', 'in']
 ];
 function normWords(w) { const o = {}; Object.keys(DEFAULT_WORDS).forEach(k => { const v = w && typeof w === 'object' ? str(w[k]).trim() : ''; o[k] = v || DEFAULT_WORDS[k]; }); return o; }
 const isLtSource = s => /^LT\b/i.test(s.code) || /lower\s*third|^LT\b/i.test(s.name);
+/** Which LT this cue puts on screen ("PELAJAR", "Nama penceramah"); '' when none or just "ON". */
+function ltOf(ev, c) {
+  if (!c) return '';
+  return ev.sources.filter(isLtSource).map(s => str(c.tasks[s.id]).trim()).filter(t => t && !/^ON$/i.test(t))
+    .map(t => trunc(t.split(/\.(?=[\s,;]|$)/)[0].trim(), 40)).join(' + ');
+}
+/** The next cue after i that has an LT: { i, name } or null. */
+function nextLt(ev, i) {
+  for (let j = i + 1; j < ev.cues.length; j++) if (ev.sources.some(s => isLtSource(s) && str(ev.cues[j].tasks[s.id]).trim())) return { i: j, name: ltOf(ev, ev.cues[j]) };
+  return null;
+}
+const fillLt = (t, name) => (t.includes('{lt}') ? t.replace(/\{lt\}/g, name) : !name ? t : /\bLT\b/.test(t) ? t.replace(/\bLT\b/, 'LT ' + name) : t + ' (' + name + ')').replace(/\s+/g, ' ').trim();
 const isCamera = (s, ev) => (ev.sources[0] && ev.sources[0].id === s.id) || /cam|kamera|camera|ptz|fly|roving|gimbal|jib|drone/i.test([s.code, s.name, s.desc].join(' '));
 /** What the director says to go INTO cue i (from cue i-1). The first source is the main camera. */
 function callInto(ev, i) {
@@ -650,11 +718,11 @@ function callInto(ev, i) {
   const lt = ev.sources.some(s => isLtSource(s) && str(c.tasks[s.id]).trim());
   const switching = !!src && (!prev || prev.pgm !== c.pgm);
   const isMain = !!src && ev.sources[0] && ev.sources[0].id === src.id && !!prev;
-  const fill = t => t.replace(/\{src\}/g, code);
-  let sb = [switching ? fill(isCamera(src, ev) ? W.standby : W.standbyOther) : '', lt ? W.ltStandby : ''].filter(Boolean).join(' · ');
-  let go = [switching ? fill(isMain ? W.back : W.go) : '', lt ? W.lt : ''].filter(Boolean).join(' · ');
+  const fill = t => t.replace(/\{src\}/g, code); const ltName = lt ? ltOf(ev, c) : '';
+  let sb = [switching ? fill(isCamera(src, ev) ? W.standby : W.standbyOther) : '', lt ? fillLt(W.ltStandby, ltName) : ''].filter(Boolean).join(' · ');
+  let go = [switching ? fill(isMain ? W.back : W.go) : '', lt ? fillLt(W.lt, ltName) : ''].filter(Boolean).join(' · ');
   if (!sb) sb = 'Standby next cue'; if (!go) go = 'Next';
-  return { sb: str(c.sb).trim() || sb, go: str(c.go).trim() || go, autoSb: sb, autoGo: go, src, lt, count: W.count };
+  return { sb: str(c.sb).trim() || sb, go: str(c.go).trim() || go, autoSb: sb, autoGo: go, src, lt, ltName, count: W.count };
 }
 
 /* ---------- icons ---------- */
@@ -858,7 +926,9 @@ function renderView() {
 function emptyHtml() {
   if (!S.loaded) return `<div class="loading"><div class="sk"></div><div class="sk"></div><div class="sk short"></div><p>Loading rundown…</p></div>`;
   if (S.mode === 'nolink') return `<div class="empty"><div class="eyebrow">Cue Sheet</div><h2>${S.linkBad ? 'Link not valid' : 'Open it with your link'}</h2>
-    <p>${S.linkBad ? 'This link is wrong or was changed by the director. Ask for the latest link (usually sent on WhatsApp).' : 'This app opens through a special link from the event director. Tap the link that was sent to you, for example on WhatsApp.'}</p></div>`;
+    <p>${S.linkBad ? 'This link is wrong or was changed by the director. Ask for the latest link (usually sent on WhatsApp).' : 'This app opens through a special link from the event director. Tap the link that was sent to you, for example on WhatsApp.'}</p>
+    <p class="pd">Opened from the home screen icon? Paste your link here once; this phone will remember it.</p>
+    <form class="link-form" data-form="paste-link"><input aria-label="Your link" type="text" inputmode="url" autocapitalize="off" spellcheck="false" autocomplete="off" placeholder="https://niknukman.github.io/cue-sheet-app/#k=…"><button class="btn primary" type="submit">Open</button></form></div>`;
   if (S.mode === 'offline') return `<div class="empty"><div class="eyebrow">No connection</div><h2>Cannot reach the server</h2>
     <p>Check your internet, then try again.</p><div class="empty-acts"><button class="btn primary" data-act="reload">Try again</button></div></div>`;
   return `<div class="empty"><div class="eyebrow">Empty cue sheet</div><h2>No events yet</h2>
@@ -867,7 +937,7 @@ function emptyHtml() {
 }
 
 /* ---------- render: rundown ---------- */
-function rowText(c) { return [c.seg, c.mc, c.cue, c.note, kindOf(c.kind).label, ...Object.values(c.tasks)].join(' ').toLowerCase(); }
+function rowText(c) { return [c.seg, c.item, c.mc, c.cue, c.note, kindOf(c.kind).label, ...Object.values(c.tasks)].join(' ').toLowerCase(); }
 function renderRundown() {
   const el = $('#view-rundown'); const ev = S.ev;
   if (!ev) { el.innerHTML = emptyHtml(); return; }
@@ -901,7 +971,7 @@ function renderRundown() {
   ${scriptMode ? scriptViewHtml(ev, ro) : `
   <div class="list${crewOn ? ' crew-on' : ''}" style="${crewOn ? `--cols:58px 300px 230px 92px ${vis.map(() => '180px').join(' ')} 190px` : ''}"><div class="list-in" role="list" aria-label="Cues">
     <div class="cue-row head" aria-hidden="true"><div>#</div><div>Segment · MC line</div><div>Call</div><div>On air</div>${vis.map(s => `<div style="${srcStyle(s)}"><span class="code">${esc(s.code)}</span></div>`).join('')}<div>Note</div></div>
-    ${(() => { const times = cueTimes(ev); return ev.cues.map((c, i) => rowHtml(c, i, vis, times[i])).join(''); })()}
+    ${(() => { const times = cueTimes(ev); let last = null; return ev.cues.map((c, i) => { const h = c.seg !== last && ev.cues[i + 1] && ev.cues[i + 1].seg === c.seg ? segHeadHtml(ev, i) : ''; last = c.seg; return h + rowHtml(c, i, vis, times[i]); }).join(''); })()}
   </div></div>
   ${ev.cues.length ? `<p class="foot-note">Click a cue to edit it.${ro ? '' : ' Use the arrows in the edit panel to move between cues.'}</p>` : `<p class="empty-row">No cues yet.${ro ? '' : ' Press “Add cue” to start, or import an MC script (Script view).'}</p>`}`}`;
   if (!scriptMode) applyFilter();
@@ -940,18 +1010,25 @@ function rowHtml(c, i, vis, t) {
   const k = esc(c.id); const pg = srcById(c.pgm); const cl = callInto(S.ev, i);
   return `<div class="cue-row${S.panelId === c.id ? ' sel' : ''}" role="listitem" data-id="${k}" tabindex="0" aria-label="Cue ${i + 1}: ${esc(c.seg || 'untitled')}" style="--k:${kindColor(kindOf(c.kind))}">
     <div class="r-num">${pad(i + 1)}${t ? `<span class="time">${t}</span>` : ''}</div>
-    <div class="r-seg"><div class="r-title clamp1">${c.seg ? esc(c.seg) : '<span class="muted">(untitled)</span>'}</div>${c.mc || c.cue ? `<div class="r-mc clamp1">${c.mc ? `<b>${esc(c.mc)}</b>${c.cue ? ': ' : ''}` : ''}${c.cue ? `<i>${esc(c.cue)}</i>` : ''}</div>` : ''}</div>
+    <div class="r-seg"><div class="r-title clamp1">${c.item ? esc(c.item) : c.seg ? esc(c.seg) : '<span class="muted">(untitled)</span>'}</div>${c.mc || c.cue ? `<div class="r-mc clamp1">${c.mc ? `<b>${esc(c.mc)}</b>${c.cue ? ': ' : ''}` : ''}${c.cue ? `<i>${esc(c.cue)}</i>` : ''}</div>` : ''}</div>
     <div class="r-call"><div class="sb clamp1">${esc(cl.sb)}</div><div class="go clamp1">${esc(cl.count)} 3·2·1 → ${esc(cl.go)}</div></div>
     <div class="r-pgm">${pg ? `<span class="code onair" style="${srcStyle(pg)}" title="${esc(pg.name)} on air">${esc(pg.code)}</span>` : '<span class="muted">—</span>'}</div>
     ${vis.map(s => `<div class="r-task${s.id === c.pgm ? ' is-pgm' : ''}"><span class="clamp2">${c.tasks[s.id] ? esc(c.tasks[s.id]) : '<span class="none">—</span>'}</span></div>`).join('')}
     <div class="r-note">${c.note ? `<span class="clamp2">${esc(c.note)}</span>` : ''}</div>
   </div>`;
 }
+/** A band above the first cue of each segment: name, how many cues, who speaks. */
+function segHeadHtml(ev, i) {
+  const seg = ev.cues[i].seg; let n = 0; const mcs = [];
+  for (let j = i; j < ev.cues.length && ev.cues[j].seg === seg; j++) { n++; const m = ev.cues[j].mc; if (m && !mcs.includes(m)) mcs.push(m); }
+  return `<div class="seg-head" role="presentation" style="--k:${kindColor(kindOf(ev.cues[i].kind))}"><span class="sh-n">${esc(seg || '(untitled)')}</span><span class="sh-m">${n} cue${n === 1 ? '' : 's'}${mcs.length ? ' · ' + esc(mcs.join(', ')) : ''}</span></div>`;
+}
 let listT = 0;
 function refreshList() { clearTimeout(listT); listT = setTimeout(() => { if (S.view === 'rundown' && S.ev) { const y = window.scrollY; renderRundown(); window.scrollTo(0, y); } }, 160); }
 function applyFilter() {
   const q = S.filter.trim().toLowerCase();
   $$('#view-rundown .cue-row[data-id]').forEach(r => { const c = cueById(r.dataset.id); r.hidden = !!(q && c && !rowText(c).includes(q)); });
+  $$('#view-rundown .seg-head').forEach(h => { h.hidden = !!q; });
 }
 
 /* ---------- edit panel: everything about one cue ---------- */
@@ -987,6 +1064,7 @@ function renderPanel() {
     <div class="pn-body">
       ${(() => { const m = scriptMark(ev, c.id); return m ? `<p class="hintline" style="margin:0">In the script: <b>${esc(m)}</b></p>` : ''; })()}
       <label class="fld"><span>Segment</span><input type="text" data-pf="seg" data-k="${k}:seg" value="${esc(c.seg)}" placeholder="Segment name"${RO}></label>
+      <label class="fld"><span>Item (step inside the segment)</span><input type="text" data-pf="item" data-k="${k}:item" value="${esc(c.item)}" placeholder="e.g. Anugerah Proaktif (optional)"${RO}></label>
       <div class="row3">
         <label class="fld"><span>Type</span><select data-pf="kind" data-k="${k}:kind"${DIS}>${KINDS.map(x => `<option value="${x.id}"${x.id === c.kind ? ' selected' : ''}>${x.label}</option>`).join('')}</select></label>
         <label class="fld"><span>MC</span><input type="text" data-pf="mc" data-k="${k}:mc" list="mcList" value="${esc(c.mc)}" placeholder="Who speaks"${RO}></label>
@@ -1026,7 +1104,7 @@ function renderLive() {
       <div class="live-ctl">
         <button class="btn" data-act="prev"${i ? '' : ' disabled'}>${icon('left')} Previous</button>
         <label class="sr" for="liveJump">Jump to cue</label>
-        <select id="liveJump">${ev.cues.map((x, j) => `<option value="${j}"${j === i ? ' selected' : ''}>${pad(j + 1)} · ${esc(trunc(x.seg || '(untitled)', 42))}</option>`).join('')}</select>
+        <select id="liveJump">${ev.cues.map((x, j) => `<option value="${j}"${j === i ? ' selected' : ''}>${pad(j + 1)} · ${esc(trunc(segLabel(x), 60))}</option>`).join('')}</select>
         <button class="btn primary big" data-act="next"${n ? '' : ' disabled'}>Next ${icon('right')}</button>
       </div>
       <div class="live-clock">
@@ -1036,10 +1114,11 @@ function renderLive() {
       </div>
     </div>
     ${n ? `<div class="call-bar">
-      <button class="btn call-btn sb" data-act="standby" title="Keyboard: S">STANDBY</button>
-      <button class="btn call-btn go" data-act="go" title="Keyboard: Space">GO · ${esc(callInto(ev, i + 1).count)} 3 2 1</button>
-      <button class="btn" data-act="call-cancel"${S.call ? '' : ' disabled'} title="Keyboard: Esc">Cancel</button>
-      <button class="btn" data-act="mute" aria-pressed="${S.mute ? 'true' : 'false'}">${S.mute ? 'Sound: off' : 'Sound: on'}</button>
+      ${S.count ? `<button class="btn call-btn sb" data-act="standby" title="Keyboard: S">STANDBY</button>` : ''}
+      <button class="btn call-btn go" data-act="go" title="Keyboard: Space">${S.count ? `GO · ${esc(callInto(ev, i + 1).count)} 3 2 1` : `GO ${icon('right')} cue ${pad(i + 2)}`}</button>
+      ${S.count ? `<button class="btn" data-act="call-cancel"${S.call ? '' : ' disabled'} title="Keyboard: Esc">Cancel</button>
+      <button class="btn" data-act="mute" aria-pressed="${S.mute ? 'true' : 'false'}">${S.mute ? 'Sound: off' : 'Sound: on'}</button>` : ''}
+      <button class="btn" data-act="count" aria-pressed="${S.count ? 'true' : 'false'}" title="Off: no countdown, the calls show as a guide for you to say">${S.count ? 'Countdown: on' : 'Countdown: off (guide)'}</button>
     </div>` : ''}
     <div id="callPanel" class="call-panel" aria-live="assertive"></div>
     <div class="live-main${ev.script ? ' has-script' : ''}">
@@ -1047,7 +1126,7 @@ function renderLive() {
       <div class="live-num"><span class="l">Cue</span>${pad(i + 1)}<span class="of">/${pad(ev.cues.length)}</span></div>
       <div style="min-width:0">
         <div class="live-kind">${esc(k.label)}${c.mc ? ` · <b>${esc(c.mc)}</b>` : ''}${cueTimes(ev)[i] ? ` · ${cueTimes(ev)[i]}` : ''}</div>
-        <h2 class="live-seg">${esc(c.seg || '(untitled)')}</h2>
+        <h2 class="live-seg">${esc(c.seg || '(untitled)')}</h2>${c.item ? `<div class="live-item">${esc(c.item)}</div>` : ''}
         ${c.cue ? `<blockquote class="live-cue">${esc(c.cue)}</blockquote>` : ''}
         ${c.note ? `<div class="live-note">${icon('alert')}<span>${esc(c.note)}</span></div>` : ''}
       </div>
@@ -1058,13 +1137,22 @@ function renderLive() {
     <div class="tally-row">
       <div class="tally on"><span class="tl">ON AIR</span><span class="tv">${pg ? esc(pg.code + ' · ' + pg.name) : 'No PGM set'}</span></div>
       <div class="tally pvw"><span class="tl">NEXT</span><span class="tv">${n ? (npg ? esc(npg.code + ' · ' + npg.name) : '—') : 'End'}</span></div>
+      ${ltTally(ev, i)}
     </div>
     <div class="live-grid">${ev.sources.map(s => liveCard(s, c, n)).join('')}</div>
-    ${n ? `<div class="live-next"><span class="l">Up next</span> <b>${pad(i + 2)}</b> ${esc(n.seg || '(untitled)')}${n.mc ? ` · MC ${esc(n.mc)}` : ''}${n.cue ? `<div class="nq">${esc(n.cue)}</div>` : ''}</div>` : `<div class="live-next">This is the last cue.</div>`}
-    <p class="hint">Keyboard: <b>S</b> standby · <b>Space</b> GO (in 3 2 1) · <b>Esc</b> cancel · right / left arrow to move cues without a call.</p>`;
+    ${n ? `<div class="live-next"><span class="l">Up next</span> <b>${pad(i + 2)}</b> ${esc(n.seg === c.seg && n.item ? n.item : segLabel(n))}${n.mc ? ` · MC ${esc(n.mc)}` : ''}${n.cue ? `<div class="nq">${esc(n.cue)}</div>` : ''}</div>` : `<div class="live-next">This is the last cue.</div>`}
+    <p class="hint">${S.count ? 'Keyboard: <b>S</b> standby · <b>Space</b> GO (in 3 2 1) · <b>Esc</b> cancel · right / left arrow to move cues without a call.' : 'Guide mode: say the calls in your own time. <b>Space</b> or GO moves to the next cue · left arrow goes back.'}</p>`;
   tickLive(); drawCall();
   const pr = $('#prompter'); // keep the cue on air near the top of the prompter
   if (pr) { const t = pr.querySelector('.chip.now') || pr.querySelector('.zone'); pr.scrollTop = t ? Math.max(0, t.offsetTop - 24) : 0; }
+}
+/** LT box on Live: what LT is on now, and which LT the operator readies next (and how soon). */
+function ltTally(ev, i) {
+  if (!ev.sources.some(isLtSource)) return '';
+  const now = ev.sources.some(s => isLtSource(s) && str(ev.cues[i].tasks[s.id]).trim()) ? (ltOf(ev, ev.cues[i]) || 'ON') : '';
+  const nx = nextLt(ev, i); const away = nx ? nx.i - i : 0;
+  return `<div class="tally lt${nx && away === 1 ? ' soon' : ''}"><span class="tl">LT</span><span class="tv">${now ? `<span class="lt-now">ON: ${esc(now)}</span>` : ''}
+    <span class="lt-next">${nx ? `Standby: <b>${esc(nx.name || 'LT')}</b> <small>cue ${pad(nx.i + 1)}${away === 1 ? ' · NEXT' : ' · in ' + away + ' cues'}</small>` : 'No more LT'}</span></span></div>`;
 }
 /** The raw green text that made this cue, if it came from an imported script. */
 function scriptMark(ev, id) {
@@ -1079,12 +1167,24 @@ function drawCall() {
   const c = S.call; el.className = 'call-panel' + (c ? ' ' + c.stage : '');
   const nxChip = $('#prompter .chip.next'); if (nxChip) nxChip.classList.toggle('sb', !!c);
   const cancel = $('[data-act="call-cancel"]'); if (cancel) cancel.disabled = !c;
+  if (!c && !S.count) { drawGuide(el); return; }
   if (!c) { el.innerHTML = ''; return; }
   const cl = callInto(S.ev, c.to); if (!cl) { el.innerHTML = ''; return; }
   const nx = S.ev.cues[c.to];
-  if (c.stage === 'standby') el.innerHTML = `<div class="cp-l">STANDBY · cue ${pad(c.to + 1)} ${esc(nx.seg || '')}</div><div class="cp-big">${esc(cl.sb)}</div>${cl.src && nx.tasks[cl.src.id] ? `<div class="cp-sub">${esc(cl.src.code)}: ${esc(nx.tasks[cl.src.id])}</div>` : ''}`;
+  if (c.stage === 'standby') el.innerHTML = `<div class="cp-l">STANDBY · cue ${pad(c.to + 1)} ${esc(segLabel(nx))}</div><div class="cp-big">${esc(cl.sb)}</div>${cl.src && nx.tasks[cl.src.id] ? `<div class="cp-sub">${esc(cl.src.code)}: ${esc(nx.tasks[cl.src.id])}</div>` : ''}${cl.ltName ? `<div class="cp-sub">LT: ${esc(cl.ltName)}</div>` : ''}`;
   else if (c.stage === 'count') el.innerHTML = `<div class="cp-l">${esc(cl.go)}</div><div class="cp-count">${c.n === 3 ? `<span class="cp-in">${esc(cl.count)}</span> ` : ''}${c.n}</div>`;
   else el.innerHTML = `<div class="cp-l">ON AIR · cue ${pad(c.to + 1)}</div><div class="cp-big">${esc(cl.go)}</div>`;
+}
+/** Countdown off: the next calls stay on screen as a guide (standby, then the cue in), no timer, no beeps. */
+function drawGuide(el) {
+  const to = S.liveIdx + 1, nx = S.ev.cues[to], cl = callInto(S.ev, to);
+  if (!nx || !cl) { el.className = 'call-panel'; el.innerHTML = ''; return; }
+  const task = cl.src && nx.tasks[cl.src.id] ? `${esc(cl.src.code)}: ${esc(nx.tasks[cl.src.id])}` : '';
+  el.className = 'call-panel guide';
+  el.innerHTML = `<div class="cp-l">Next · cue ${pad(to + 1)} ${esc(segLabel(nx))}</div>
+    <div class="g-step sb"><span class="g-n">1</span><span class="g-say">${esc(cl.sb)}</span></div>
+    <div class="g-step go"><span class="g-n">2</span><span class="g-say">${esc(cl.go)}</span></div>
+    ${nx.cue ? `<div class="cp-sub">On: <i>${esc(nx.cue)}</i></div>` : ''}${task || cl.ltName ? `<div class="cp-sub">${[task, cl.ltName ? 'LT: ' + esc(cl.ltName) : ''].filter(Boolean).join(' · ')}</div>` : ''}`;
 }
 let audioCtx = null;
 function beep(long) {
@@ -1104,6 +1204,7 @@ function callStandby() {
 }
 function callGo() {
   if (!S.ev || !S.ev.cues[S.liveIdx + 1]) return;
+  if (!S.count) { clearTimeout(S.callT); S.call = null; setLive(S.liveIdx + 1); return; } // guide mode: straight on
   if (S.call && S.call.stage !== 'standby') return; // already counting
   clearTimeout(S.callT); const to = S.liveIdx + 1;
   const step = n => {
@@ -1167,7 +1268,7 @@ function renderKru() {
       <ol class="kru-list">${rows.map(r => `<li class="${r.on ? 'on' : ''}">
         <div class="kl-num">${pad(r.i + 1)}${times[r.i] ? `<span class="time">${times[r.i]}</span>` : ''}</div>
         <div class="kl-main">
-          <div class="kl-seg">${esc(r.c.seg || '(untitled)')} ${r.on ? '<span class="badge on">ON AIR</span>' : ''}</div>
+          <div class="kl-seg">${esc(segLabel(r.c))} ${r.on ? '<span class="badge on">ON AIR</span>' : ''}</div>
           ${r.c.cue ? `<div class="kl-cue">${r.c.mc ? `<b>${esc(r.c.mc)}:</b> ` : ''}${esc(r.c.cue)}</div>` : ''}
           <div class="kl-task">${r.t ? esc(r.t) : '<span class="muted">No special task</span>'}</div>
           ${r.c.note ? `<div class="kl-note">${esc(r.c.note)}</div>` : ''}
@@ -1183,7 +1284,7 @@ function crewText(s) {
   if (ev.notes) L.push('_Note: ' + ev.notes + '_');
   L.push('');
   crewRows(s, false).forEach(r => {
-    L.push(`*${pad(r.i + 1)}. ${r.c.seg || '(untitled)'}*${r.on ? '  🔴 ON AIR' : ''}${times[r.i] ? '  [' + times[r.i] + ']' : ''}`);
+    L.push(`*${pad(r.i + 1)}. ${segLabel(r.c)}*${r.on ? '  🔴 ON AIR' : ''}${times[r.i] ? '  [' + times[r.i] + ']' : ''}`);
     if (r.c.cue) L.push(`MC line${r.c.mc ? ' (' + r.c.mc + ')' : ''}: _${r.c.cue}_`);
     L.push('➜ ' + (r.t || 'Stay ON AIR'));
     if (r.c.note) L.push('Note: ' + r.c.note);
@@ -1213,6 +1314,31 @@ function srcRow(s, i, n, ro) {
     </div>`}
   </div>`;
 }
+/* ---------- app on the phone (web version only) ---------- */
+const isBeta = () => /\/beta\//.test(location.pathname);
+const isInstalled = () => { try { return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch (e) { return false; } };
+const isIos = () => /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+function appPanelHtml() {
+  const main = location.origin + location.pathname.replace(/beta\/(index\.html)?$/, '');
+  return `<section class="panel wide" id="appPanel">
+      <h2 class="ph">App on this phone</h2>
+      ${isInstalled() ? `<p class="pd"><b>Installed.</b> You are using the home screen app.</p>`
+        : S.installEvt ? `<div class="data-acts"><button class="btn primary" data-act="install-app">Install Cue Sheet on this phone</button></div>`
+        : `<ol class="app-steps pd">${isIos()
+          ? '<li>Open this page in <b>Safari</b>.</li><li>Tap <b>Share</b> (square with arrow), then <b>Add to Home Screen</b>.</li><li>Open the new Cue Sheet icon and paste your link once.</li>'
+          : '<li>Open this page in <b>Chrome</b>.</li><li>Tap the <b>⋮</b> menu, then <b>Install app</b> (or <b>Add to Home screen</b>).</li><li>Open Cue Sheet from the new icon.</li>'}</ol>`}
+      ${isBeta() ? `<p class="pd" style="margin-top:8px"><b>This is the test version (BETA).</b> Your normal link: <b>${esc(main)}</b></p>` : ''}
+      <p class="app-ver">Version ${esc(window.CS_BUILD || '—')}${isBeta() ? ' · BETA' : ''}</p>
+    </section>`;
+}
+function useLink(text) {
+  const m = /[#&?]k=([^&\s#]+)/.exec(String(text || '')); if (!m) return false;
+  const e = /[#&?]e=([^&\s#]+)/.exec(text);
+  LS.set('cs.link', { k: decodeURIComponent(m[1]), e: e ? decodeURIComponent(e[1]) : '' });
+  return true;
+}
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); S.installEvt = e; if (S.view === 'settings') renderAll(); });
+window.addEventListener('appinstalled', () => { S.installEvt = null; toast('Cue Sheet is on your home screen.'); if (S.view === 'settings') renderAll(); });
 function renderTetapan() {
   const el = $('#view-settings'); const ev = S.ev;
   if (!ev) { el.innerHTML = emptyHtml(); return; }
@@ -1242,6 +1368,7 @@ function renderTetapan() {
       <p class="pd">What Live shows when you press STANDBY and GO. <b>{src}</b> becomes the source code, e.g. CAM1. Clear a box to go back to the original words.</p>
       <div class="words-grid">${WORD_LABELS.map(([key, label, def]) => `<label class="fld"><span>${label}</span><input type="text" data-word="${key}" data-k="word:${key}" value="${esc(ev.words[key])}" placeholder="${esc(def)}"${RO}></label>`).join('')}</div>
     </section>
+    ${S.gas ? appPanelHtml() : ''}
     ${S.gas && !ro ? `<details class="panel wide adv" id="sharePanel">
       <summary class="ph">Advanced: share with others</summary>
       <p class="pd">Not needed if only you use the app. Each link has its own secret key. Anyone with a link can open it without logging in, so only send it to the right people. If a link leaks, press “Change”: the old link stops working at once.</p>
@@ -1326,7 +1453,7 @@ async function pdfRundown(btn) {
     const head = [['#', 'Segment / MC line', 'PGM', ...srcs.map(s => P(s.code + '\n' + s.name)), 'Note']];
     const body = ev.cues.map((c, i) => [
       pad(i + 1) + (times[i] ? '\n' + times[i] : ''),
-      P(c.seg + '\n' + [kindOf(c.kind).label, c.mc ? 'MC: ' + c.mc : '', c.dur != null ? c.dur + ' min' : ''].filter(Boolean).join(' | ') + (c.cue ? '\n"' + c.cue + '"' : '')),
+      P(segLabel(c) + '\n' + [kindOf(c.kind).label, c.mc ? 'MC: ' + c.mc : '', c.dur != null ? c.dur + ' min' : ''].filter(Boolean).join(' | ') + (c.cue ? '\n"' + c.cue + '"' : '')),
       P((srcById(c.pgm) || {}).code || '-'),
       ...srcs.map(s => P(c.tasks[s.id] || '')),
       P(c.note)
@@ -1369,7 +1496,7 @@ async function pdfDirector(btn) {
       const cl = callInto(ev, i); const pg = srcById(c.pgm);
       return [
         '', pad(i + 1) + (times[i] ? '\n' + times[i] : ''),
-        P((c.seg || '(untitled)') + (c.mc ? '\nMC: ' + c.mc : '') + (c.cue ? '\n"' + c.cue + '"' : '')),
+        P(segLabel(c) + (c.mc ? '\nMC: ' + c.mc : '') + (c.cue ? '\n"' + c.cue + '"' : '')),
         P('SB: ' + cl.sb + '\n' + cl.count + ' 3, 2, 1\n> ' + cl.go),
         P(pg ? pg.code : '-'),
         P(c.note)
@@ -1456,7 +1583,7 @@ async function pdfKru(list, btn) {
       doc.autoTable({
         startY: y, theme: 'grid', margin: { left: 10, right: 10, top: 25, bottom: 12 },
         head: [['#', 'Segment', 'MC line', 'Your task', 'Status']],
-        body: rows.length ? rows.map(r => [pad(r.i + 1) + (times[r.i] ? '\n' + times[r.i] : ''), P(r.c.seg) + (r.c.note ? '\n' + P('Note: ' + r.c.note) : ''), P((r.c.mc ? r.c.mc + ': ' : '') + r.c.cue), P(r.t || 'Stay ON AIR'), r.on ? 'ON AIR' : '']) : [['-', 'No tasks', '', '', '']],
+        body: rows.length ? rows.map(r => [pad(r.i + 1) + (times[r.i] ? '\n' + times[r.i] : ''), P(segLabel(r.c)) + (r.c.note ? '\n' + P('Note: ' + r.c.note) : ''), P((r.c.mc ? r.c.mc + ': ' : '') + r.c.cue), P(r.t || 'Stay ON AIR'), r.on ? 'ON AIR' : '']) : [['-', 'No tasks', '', '', '']],
         styles: { font: 'helvetica', fontSize: 8.6, cellPadding: 2, overflow: 'linebreak', valign: 'top', lineColor: [205, 210, 217], lineWidth: 0.15, textColor: [18, 24, 32] },
         headStyles: { fillColor: [30, 36, 44], textColor: [255, 255, 255], fontStyle: 'bold' },
         columnStyles: { 0: { cellWidth: 11, halign: 'center', fontStyle: 'bold' }, 1: { cellWidth: 44 }, 2: { cellWidth: 50, fontStyle: 'italic', textColor: [90, 101, 115] }, 3: { fontStyle: 'bold' }, 4: { cellWidth: 17, halign: 'center' } },
@@ -1542,8 +1669,41 @@ const tcase = s => s.toLowerCase().replace(/(^|[\s(/-])(\p{L})/gu, (m, a, b) => 
 const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 function kindFromSection(s) {
   const u = s.toUpperCase();
-  return /PERARAKAN|PROCESSION/.test(u) ? 'perarakan' : /SIJIL|ANUGERAH|HADIAH|AWARD/.test(u) ? 'anugerah' : /TARANNUM|KHATAM|DOA|ISBAT|QURAN|TILAWAH/.test(u) ? 'quran'
-    : /UCAPAN|SPEECH/.test(u) ? 'ucapan' : /MONTAJ|TAYANGAN|VIDEO/.test(u) ? 'multimedia' : /NASYID|PERSEMBAHAN|PERFORM/.test(u) ? 'persembahan' : /PENUTUP|CLOSING/.test(u) ? 'penutup' : 'mc';
+  return /PERARAKAN|PROCESSION/.test(u) ? 'perarakan' : /SIJIL|ANUGERAH|HADIAH|CENDERA|AWARD/.test(u) ? 'anugerah' : /TARANNUM|KHATAM|DOA|ISBAT|QURAN|TILAWAH/.test(u) ? 'quran'
+    : /UCAPAN|SPEECH/.test(u) ? 'ucapan' : /MONTAJ|TAYANGAN|VIDEO|ASMA|LAGU/.test(u) ? 'multimedia' : /NASYID|PERSEMBAHAN|PERFORM/.test(u) ? 'persembahan' : /PENUTUP|CLOSING/.test(u) ? 'penutup' : 'mc';
+}
+/* Segment & item names from what the MC says. A segment is a big part of the event (Perarakan Masuk,
+   Penyampaian Anugerah); an item is one step inside it (Barisan Guru, Anugerah Proaktif). */
+const GREETING = /^(HADIRIN|WARGA DEWAN|SIDANG HADIRIN|TUAN-TUAN|ASSALAMUALAIKUM)/i;
+const SMALLW = new Set(['DAN', 'KE', 'DI', 'DARI', 'DARIPADA', 'UNTUK', 'OLEH', 'SERTA', 'BIN', 'BINTI', 'KEPADA', 'PADA', 'ATAU']);
+function niceName(s) {
+  const w = str(s).replace(/\s+TAHUN\s+\d{4}/gi, '').replace(/\s+DAN\s+PENGANUGERAHAN\s+/gi, ' & ').replace(/[\s,.:;]+$/, '').replace(/\s+/g, ' ').trim().split(' ');
+  return tcase(w.slice(0, 9).join(' ')).split(' ').map((x, i) => (i && SMALLW.has(x.toUpperCase()) ? x.toLowerCase() : x)).join(' ') + (w.length > 9 ? '…' : '');
+}
+const AWARD_STOP = /^(DIKURNIAKAN|DIANUGERAHKAN|DINOBATKAN|DIBERIKAN|AKAN|PULA|TAHUN|UNTUK|KEPADA|SEBENTAR|YANG|IALAH|INI|INILAH)$/;
+/** Upper-case MC words → { seg, item } it announces, or null. */
+function topicOf(u) {
+  let seg = '', item = '', m;
+  if ((m = /PERARAKAN MASUK (.+?)(?= KE DALAM| YANG|[.,()]|$)/.exec(u))) { seg = 'Perarakan Masuk'; item = m[1]; }
+  else if (/ASMA\s*-?\s*UL[\s-]*HUSNA|LAGU RASMI|LAGU NEGARAKU/.test(u)) seg = 'Asmaul Husna & Lagu Rasmi';
+  else if (/^BISMILLAH/.test(u)) seg = 'Alu-aluan & Pembukaan';
+  else if ((m = /DITERUSKAN(?: LAGI)? DENGAN (.+?)(?= YANG | KEPADA | DARIPADA | OLEH | UNTUK | BAGI |[.,]|$)/.exec(u))) seg = m[1];
+  else if ((m = /UNTUK MENYAMPAIKAN (CENDERA\w+|PLAK)/.exec(u))) seg = 'Penyampaian ' + m[1];
+  if (!item && (m = /MEMPERSILAKAN (.+?) UNTUK TAMPIL/.exec(u))) item = m[1];
+  if (!item && (m = /MEMIMPIN BACAAN (DOA[^.,]*)/.exec(u))) item = m[1];
+  if (!item) for (const a of u.matchAll(/(?:^|[^A-Z])ANUGERAH ([^.,()]+)/g)) {
+    const w = []; for (const x of a[1].trim().split(/\s+/)) { if (AWARD_STOP.test(x)) break; w.push(x); }
+    if (w.length && !/^(TERAKHIR|KITA|TERSEBUT|BAGI)$/.test(w[0])) { item = 'Anugerah ' + w.join(' '); break; }
+  }
+  if (!item && (m = /UNTUK (SIJIL [^,.()]+?)(?: PULA)?(?=[,.(]|$)/.exec(u))) item = m[1];
+  if (!item && (m = /MEMPERSILAKAN (SAUDARA|SAUDARI) ([^,.()]+)/.exec(u))) item = m[2];
+  if (!item && /TEMA YANG DIANGKAT/.test(u)) item = 'Tema majlis';
+  if (!item && /^YANG (BERUSAHA|BERBAHAGIA|DIHORMATI|AMAT)/.test(u)) item = 'Sapaan hadirin';
+  if (!item && /^SAYA, /.test(u)) item = 'Perkenalan pengacara';
+  if (!item && /MERAKAMKAN .*PENGHARGAAN/.test(u)) item = 'Penghargaan';
+  if (!item && /GRADUAN UNTUK BERDIRI|TUNDUK HORMAT/.test(u)) item = 'Tunduk hormat';
+  if (!item && /KEMAAFAN|WABILLAHI/.test(u)) item = 'Salam penutup';
+  return seg || item ? { seg, item } : null;
 }
 /** .docx bytes → { cues, script, mcs, sections, checks }. Source names come from the event's sources. */
 async function parseScript(buf, sources) {
@@ -1577,11 +1737,14 @@ async function parseScript(buf, sources) {
   const lineSrc = l => { for (const a of alias) { const m = a.start.exec(l); if (m) return { src: a.s, rest: l.slice(m[0].length).trim() }; } return null; };
   const unknownish = l => l.replace(/\([^)]*\)/g, ' ').trim().split(/\s+/).filter(Boolean).length <= 3;
   /* 4. walk the script */
-  const cues = [], out = [], checks = []; let section = '', speaker = '', said = '', pending = [], lastPgm = '';
+  const cues = [], out = [], checks = []; let section = '', item = '', segCues = 0, fresh = false, speaker = '', said = '', pending = [], lastPgm = '';
   const sectionsSeen = new Set(), mcs = [];
+  const setSection = (s, head) => { section = s; item = ''; segCues = 0; fresh = !!head; sectionsSeen.add(s.toUpperCase()); };
   const sayText = t => t.replace(/\(\s*([\p{L}]+)\s*\)/gu, (m, w) => (speakers.has(w.toUpperCase()) ? ' ' : m));
   const seeSpeaker = t => { for (const m of t.matchAll(/\(\s*([\p{L}]+)\s*\)/gu)) if (speakers.has(m[1].toUpperCase())) { speaker = tcase(m[1]); if (!mcs.includes(speaker)) mcs.push(speaker); } };
-  paras.forEach(ps => {
+  /* the MC's words in each paragraph (no calls, no MC names): used to find segments and items */
+  const texts = paras.map(ps => sayText(ps.filter(x => x.k !== 'c').map(x => x.t).join(' ')).replace(/\s+/g, ' ').trim());
+  paras.forEach((ps, pi) => {
     const op = [];
     const allRed = ps.every(x => x.k === 'r' || !x.t.trim());
     let heading = false;
@@ -1590,9 +1753,20 @@ async function parseScript(buf, sources) {
       const inner = Array.from(t.matchAll(/\(([^)]*)\)/g)).map(m => m[1].trim()).filter(x => x && !speakers.has(x.toUpperCase()) && !NOTE_MC.test(x));
       const hasWho = Array.from(t.matchAll(/\(\s*([\p{L}]+)\s*\)/gu)).some(m => speakers.has(m[1].toUpperCase()));
       const outside = t.replace(/\([^)]*\)/g, ' ').replace(/\s+/g, ' ').trim();
-      if (inner.length && !outside) { section = inner[0]; heading = true; }
-      else if (hasWho && outside && !/[()]/.test(outside) && outside.split(' ').length <= 5) { section = outside; heading = true; }
-      if (heading) sectionsSeen.add(section.toUpperCase());
+      if (inner.length && !outside) { setSection(inner[0], true); heading = true; }
+      else if (hasWho && outside && !/[()]/.test(outside) && outside.split(' ').length <= 5 && !GREETING.test(outside)) { setSection(outside, true); heading = true; }
+    }
+    if (!heading) { // what the MC announces opens a segment or an item; a paragraph of calls only takes it from the words right after
+      let t = texts[pi];
+      for (let j = pi + 1; !t && j < paras.length && texts[j] && !/^\(/.test(texts[j]); j++) if (!(GREETING.test(texts[j]) && texts[j].split(' ').length <= 6)) { t = texts[j]; break; }
+      const tp = t ? topicOf(t.toUpperCase()) : null;
+      if (tp && tp.seg) {
+        const U = tp.seg.toUpperCase(), S0 = section.toUpperCase();
+        if (S0 !== U && S0.startsWith(U) && !segCues) { sectionsSeen.delete(S0); sectionsSeen.add(U); section = tp.seg; } // "(PERARAKAN MASUK GRADUAN…)" → Perarakan Masuk
+        else if (S0 !== U && fresh && segCues <= 2) fresh = false; // the MC announcing the red heading just above: same segment
+        else if (S0 !== U && (segCues || !section)) setSection(tp.seg);
+      }
+      if (tp && tp.item) item = tp.item;
     }
     ps.forEach(x => {
       if (x.k !== 'c') { seeSpeaker(x.t); if (!heading) said += sayText(x.t); op.push({ k: x.k, t: x.t }); return; }
@@ -1617,7 +1791,8 @@ async function parseScript(buf, sources) {
         if (task) c.tasks[s.id] = c.tasks[s.id] ? c.tasks[s.id] + ' / ' + task : task;
       });
       const words = said.replace(/\s+/g, ' ').trim().split(' ').filter(Boolean);
-      Object.assign(c, { seg: section ? tcase(section) : 'MC script', kind: kindFromSection(section), mc: speaker, pgm: pgm || lastPgm, cue: words.length > 14 ? '…' + words.slice(-14).join(' ') : words.join(' '), note: note.join(' · ') });
+      segCues++;
+      Object.assign(c, { seg: section ? niceName(section) : 'Pra-majlis', item: item ? niceName(item) : '', kind: kindFromSection(section + ' ' + item), mc: speaker, pgm: pgm || lastPgm, cue: words.length > 14 ? '…' + words.slice(-14).join(' ') : words.join(' '), note: note.join(' · ') });
       if (/⚠/.test(c.note)) checks.push({ n: cues.length + 1, t: c.note });
       lastPgm = c.pgm; said = ''; cues.push(c); op.push({ k: 'c', t: x.t.trim(), id: c.id });
     });
@@ -1668,6 +1843,7 @@ document.addEventListener('click', e => {
   if (act === 'new-event') { if (S.canWrite) openNewDialog(); return; }
   if (act === 'theme') { toggleTheme(); return; }
   if (act === 'reload') { location.reload(); return; }
+  if (act === 'install-app') { const ev = S.installEvt; if (!ev) return; S.installEvt = null; ev.prompt(); (ev.userChoice || Promise.resolve()).finally(() => renderAll()); return; }
   if (act === 'forget-link') { if (!arm(b, 'forget', 'Press again to sign out')) return; forgetLink(); location.hash = ''; location.reload(); return; }
 });
 document.addEventListener('keydown', e => {
@@ -1757,9 +1933,10 @@ lv.addEventListener('click', e => {
   else if (act === 'prev') setLive(S.liveIdx - 1);
   else if (act === 'standby') callStandby();
   else if (act === 'go') callGo();
+  else if (act === 'count') { S.count = !S.count; LS.set('cs.count', S.count); callCancel(); renderLive(); }
   else if (act === 'call-cancel') callCancel();
   else if (act === 'mute') { S.mute = !S.mute; LS.set('cs.mute', S.mute); b.setAttribute('aria-pressed', String(S.mute)); b.textContent = S.mute ? 'Sound: off' : 'Sound: on'; if (!S.mute) beep(false); }
-  else if (act === 'fs') { const el = document.documentElement; try { if (document.fullscreenElement) document.exitFullscreen(); else if (el.requestFullscreen) el.requestFullscreen().catch(() => toast('Full screen is not available here.')); else toast('Full screen is not available here.'); } catch (x) { toast('Full screen is not available here.'); } }
+  else if (act === 'fs') { const el = document.documentElement; try { if (document.fullscreenElement) document.exitFullscreen(); else if (el.requestFullscreen) el.requestFullscreen().then(() => { try { screen.orientation && screen.orientation.lock && screen.orientation.lock('landscape').catch(() => {}); } catch (x) {} }).catch(() => toast('Full screen is not available here.')); else toast('Full screen is not available here.'); } catch (x) { toast('Full screen is not available here.'); } }
 });
 lv.addEventListener('change', e => { if (e.target.id === 'liveJump') setLive(Number(e.target.value)); });
 document.addEventListener('keydown', e => {
@@ -2009,7 +2186,15 @@ async function startWeb(link) {
     renderAll();
   }
 }
+document.addEventListener('submit', e => {
+  const f = e.target.closest('[data-form="paste-link"]'); if (!f) return;
+  e.preventDefault();
+  const v = f.querySelector('input').value;
+  if (!useLink(v)) { toast('That does not look like a Cue Sheet link. It should have #k= in it.', 'warn'); return; }
+  location.hash = 'rundown'; location.reload();
+});
 async function init() {
+  if (window.CS_API && isBeta()) { const b = document.getElementById('betaTag'); if (b) b.hidden = false; }
   const link = window.CS_API ? takeLink() : null;
   readHash(); renderTop();
   if (window.CS_API) { startWeb(link); return; }
@@ -2021,6 +2206,6 @@ async function init() {
 }
 init();
 /* test hook: only the local test runner (tests/run.html) defines __CS_TEST__ */
-if (typeof window.__CS_TEST__ === 'function') window.__CS_TEST__({ S, esc, normEvent, cueTimes, slug, stable, crewText, importFile, createEvent, selectEvent, renderAll, touch, flush, pdfRundown, pdfKru, pdfDirector, callInto, setLive, openPanel, closePanel, parseScript, importScript, pdfScript });
+if (typeof window.__CS_TEST__ === 'function') window.__CS_TEST__({ S, esc, normEvent, cueTimes, slug, stable, crewText, importFile, createEvent, selectEvent, renderAll, touch, flush, pdfRundown, pdfKru, pdfDirector, callInto, ltOf, nextLt, setLive, openPanel, closePanel, parseScript, importScript, pdfScript });
 })();
 </script>

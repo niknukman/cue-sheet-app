@@ -283,6 +283,13 @@ button.chip{cursor:pointer}
 .cp-sub{font-size:15px;opacity:.85}
 .cp-count{font:700 clamp(90px,18vw,200px)/.9 var(--f-mono);font-variant-numeric:tabular-nums}
 .cp-in{font-size:.35em;vertical-align:middle;opacity:.8}
+.call-panel.guide{background:var(--surface);border:1px solid var(--line);text-align:left;gap:8px}
+.g-step{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;padding:8px 12px;border-radius:9px}
+.g-step.sb{background:var(--warn-soft);border:1px solid color-mix(in srgb,var(--warn) 45%,transparent)}
+.g-step.go{background:color-mix(in srgb,var(--tally) 14%,transparent);border:1px solid color-mix(in srgb,var(--tally) 50%,transparent)}
+.g-n{font:700 14px/1 var(--f-mono);width:26px;height:26px;display:grid;place-items:center;border-radius:50%;background:var(--ink);color:var(--bg)}
+.g-say{font:700 clamp(20px,3.2vw,36px)/1.1 var(--f-display);text-wrap:balance}
+.call-panel.guide .cp-sub{font-size:14px}
 .call-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 8px;align-items:center;padding:2px 10px 8px}
 .call-l{font:600 9.5px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
 .rd .call-in{border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-size:12px;background:var(--surface);color:var(--ink);min-width:0;width:100%}
@@ -420,6 +427,28 @@ dialog::backdrop{background:rgba(8,12,16,.5)}
   .row2{grid-template-columns:1fr}
   .kru-list li{grid-template-columns:52px minmax(0,1fr)}
   .kl-num{padding-left:12px}
+}
+/* phone or tablet on its side: what matters in one screen, no scrolling */
+@media (orientation:landscape) and (max-height:600px){
+  .live{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:8px 12px;padding-block:8px 12px;align-items:start}
+  .live>.live-bar{grid-column:1/-1}
+  .live>.live-main{grid-column:1;grid-row:2/span 3;gap:8px}
+  .live>.call-bar,.live>.call-panel,.live>.live-next{grid-column:2}
+  .live>.tally-row{grid-column:1/-1}
+  .live>.live-grid,.live>.hint{display:none}
+  .live .live-bar{flex-wrap:nowrap;gap:8px}
+  .live .live-ctl{flex-wrap:nowrap;min-width:0}.live .live-ctl select{max-width:220px;min-width:0}
+  .live .live-clock{flex-wrap:nowrap;gap:8px}.live .live-clock .l{display:none}
+  .live .live-now{grid-template-columns:auto minmax(0,1fr);padding:10px 14px;gap:4px 14px}
+  .live .live-num{font-size:40px}
+  .live .live-seg{font-size:22px}
+  .live .live-cue{font-size:13px;margin-top:6px;padding:6px 10px}
+  .live .prompter{max-height:34vh}
+  .live .call-btn{min-height:44px;padding:10px 16px;font-size:16px}
+  .live .g-say{font-size:22px}
+  .live .cp-big{font-size:26px}.live .cp-count{font-size:80px}
+  .live .tally{padding:8px 12px}.live .tally .tv{font-size:16px}
+  .live .tally-row,.live .tally-row:has(.tally.lt){grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) minmax(0,1.4fr)}
 }
 @media print{
   .topbar,.toolbar,.banner,.tabs,.cue-panel{display:none!important}
@@ -575,7 +604,7 @@ const S = {
   dirty: false, saving: false, pending: false, retried: false, saveT: 0,
   view: 'rundown', filter: '', undo: [], undoKey: null, armed: null,
   liveIdx: 0, liveSince: Date.now(), wake: null,
-  call: null, callT: 0, callTick: 1000, beeps: 0, mute: LS.get('cs.mute', false),
+  call: null, callT: 0, callTick: 1000, beeps: 0, mute: LS.get('cs.mute', false), count: LS.get('cs.count', true),
   kruSrc: LS.get('cs.kru', null), kruAll: false,
   hidden: LS.get('cs.hidden', {}), paper: LS.get('cs.paper', 'a4'),
   panelId: null, crewCols: LS.get('cs.crewcols', false), rdMode: LS.get('cs.rdmode', 'list'), scriptImport: null
@@ -1068,10 +1097,11 @@ function renderLive() {
       </div>
     </div>
     ${n ? `<div class="call-bar">
-      <button class="btn call-btn sb" data-act="standby" title="Keyboard: S">STANDBY</button>
-      <button class="btn call-btn go" data-act="go" title="Keyboard: Space">GO · ${esc(callInto(ev, i + 1).count)} 3 2 1</button>
-      <button class="btn" data-act="call-cancel"${S.call ? '' : ' disabled'} title="Keyboard: Esc">Cancel</button>
-      <button class="btn" data-act="mute" aria-pressed="${S.mute ? 'true' : 'false'}">${S.mute ? 'Sound: off' : 'Sound: on'}</button>
+      ${S.count ? `<button class="btn call-btn sb" data-act="standby" title="Keyboard: S">STANDBY</button>` : ''}
+      <button class="btn call-btn go" data-act="go" title="Keyboard: Space">${S.count ? `GO · ${esc(callInto(ev, i + 1).count)} 3 2 1` : `GO ${icon('right')} cue ${pad(i + 2)}`}</button>
+      ${S.count ? `<button class="btn" data-act="call-cancel"${S.call ? '' : ' disabled'} title="Keyboard: Esc">Cancel</button>
+      <button class="btn" data-act="mute" aria-pressed="${S.mute ? 'true' : 'false'}">${S.mute ? 'Sound: off' : 'Sound: on'}</button>` : ''}
+      <button class="btn" data-act="count" aria-pressed="${S.count ? 'true' : 'false'}" title="Off: no countdown, the calls show as a guide for you to say">${S.count ? 'Countdown: on' : 'Countdown: off (guide)'}</button>
     </div>` : ''}
     <div id="callPanel" class="call-panel" aria-live="assertive"></div>
     <div class="live-main${ev.script ? ' has-script' : ''}">
@@ -1094,7 +1124,7 @@ function renderLive() {
     </div>
     <div class="live-grid">${ev.sources.map(s => liveCard(s, c, n)).join('')}</div>
     ${n ? `<div class="live-next"><span class="l">Up next</span> <b>${pad(i + 2)}</b> ${esc(n.seg === c.seg && n.item ? n.item : segLabel(n))}${n.mc ? ` · MC ${esc(n.mc)}` : ''}${n.cue ? `<div class="nq">${esc(n.cue)}</div>` : ''}</div>` : `<div class="live-next">This is the last cue.</div>`}
-    <p class="hint">Keyboard: <b>S</b> standby · <b>Space</b> GO (in 3 2 1) · <b>Esc</b> cancel · right / left arrow to move cues without a call.</p>`;
+    <p class="hint">${S.count ? 'Keyboard: <b>S</b> standby · <b>Space</b> GO (in 3 2 1) · <b>Esc</b> cancel · right / left arrow to move cues without a call.' : 'Guide mode: say the calls in your own time. <b>Space</b> or GO moves to the next cue · left arrow goes back.'}</p>`;
   tickLive(); drawCall();
   const pr = $('#prompter'); // keep the cue on air near the top of the prompter
   if (pr) { const t = pr.querySelector('.chip.now') || pr.querySelector('.zone'); pr.scrollTop = t ? Math.max(0, t.offsetTop - 24) : 0; }
@@ -1120,12 +1150,24 @@ function drawCall() {
   const c = S.call; el.className = 'call-panel' + (c ? ' ' + c.stage : '');
   const nxChip = $('#prompter .chip.next'); if (nxChip) nxChip.classList.toggle('sb', !!c);
   const cancel = $('[data-act="call-cancel"]'); if (cancel) cancel.disabled = !c;
+  if (!c && !S.count) { drawGuide(el); return; }
   if (!c) { el.innerHTML = ''; return; }
   const cl = callInto(S.ev, c.to); if (!cl) { el.innerHTML = ''; return; }
   const nx = S.ev.cues[c.to];
   if (c.stage === 'standby') el.innerHTML = `<div class="cp-l">STANDBY · cue ${pad(c.to + 1)} ${esc(segLabel(nx))}</div><div class="cp-big">${esc(cl.sb)}</div>${cl.src && nx.tasks[cl.src.id] ? `<div class="cp-sub">${esc(cl.src.code)}: ${esc(nx.tasks[cl.src.id])}</div>` : ''}${cl.ltName ? `<div class="cp-sub">LT: ${esc(cl.ltName)}</div>` : ''}`;
   else if (c.stage === 'count') el.innerHTML = `<div class="cp-l">${esc(cl.go)}</div><div class="cp-count">${c.n === 3 ? `<span class="cp-in">${esc(cl.count)}</span> ` : ''}${c.n}</div>`;
   else el.innerHTML = `<div class="cp-l">ON AIR · cue ${pad(c.to + 1)}</div><div class="cp-big">${esc(cl.go)}</div>`;
+}
+/** Countdown off: the next calls stay on screen as a guide (standby, then the cue in), no timer, no beeps. */
+function drawGuide(el) {
+  const to = S.liveIdx + 1, nx = S.ev.cues[to], cl = callInto(S.ev, to);
+  if (!nx || !cl) { el.className = 'call-panel'; el.innerHTML = ''; return; }
+  const task = cl.src && nx.tasks[cl.src.id] ? `${esc(cl.src.code)}: ${esc(nx.tasks[cl.src.id])}` : '';
+  el.className = 'call-panel guide';
+  el.innerHTML = `<div class="cp-l">Next · cue ${pad(to + 1)} ${esc(segLabel(nx))}</div>
+    <div class="g-step sb"><span class="g-n">1</span><span class="g-say">${esc(cl.sb)}</span></div>
+    <div class="g-step go"><span class="g-n">2</span><span class="g-say">${esc(cl.go)}</span></div>
+    ${nx.cue ? `<div class="cp-sub">On: <i>${esc(nx.cue)}</i></div>` : ''}${task || cl.ltName ? `<div class="cp-sub">${[task, cl.ltName ? 'LT: ' + esc(cl.ltName) : ''].filter(Boolean).join(' · ')}</div>` : ''}`;
 }
 let audioCtx = null;
 function beep(long) {
@@ -1145,6 +1187,7 @@ function callStandby() {
 }
 function callGo() {
   if (!S.ev || !S.ev.cues[S.liveIdx + 1]) return;
+  if (!S.count) { clearTimeout(S.callT); S.call = null; setLive(S.liveIdx + 1); return; } // guide mode: straight on
   if (S.call && S.call.stage !== 'standby') return; // already counting
   clearTimeout(S.callT); const to = S.liveIdx + 1;
   const step = n => {
@@ -1846,9 +1889,10 @@ lv.addEventListener('click', e => {
   else if (act === 'prev') setLive(S.liveIdx - 1);
   else if (act === 'standby') callStandby();
   else if (act === 'go') callGo();
+  else if (act === 'count') { S.count = !S.count; LS.set('cs.count', S.count); callCancel(); renderLive(); }
   else if (act === 'call-cancel') callCancel();
   else if (act === 'mute') { S.mute = !S.mute; LS.set('cs.mute', S.mute); b.setAttribute('aria-pressed', String(S.mute)); b.textContent = S.mute ? 'Sound: off' : 'Sound: on'; if (!S.mute) beep(false); }
-  else if (act === 'fs') { const el = document.documentElement; try { if (document.fullscreenElement) document.exitFullscreen(); else if (el.requestFullscreen) el.requestFullscreen().catch(() => toast('Full screen is not available here.')); else toast('Full screen is not available here.'); } catch (x) { toast('Full screen is not available here.'); } }
+  else if (act === 'fs') { const el = document.documentElement; try { if (document.fullscreenElement) document.exitFullscreen(); else if (el.requestFullscreen) el.requestFullscreen().then(() => { try { screen.orientation && screen.orientation.lock && screen.orientation.lock('landscape').catch(() => {}); } catch (x) {} }).catch(() => toast('Full screen is not available here.')); else toast('Full screen is not available here.'); } catch (x) { toast('Full screen is not available here.'); } }
 });
 lv.addEventListener('change', e => { if (e.target.id === 'liveJump') setLive(Number(e.target.value)); });
 document.addEventListener('keydown', e => {
